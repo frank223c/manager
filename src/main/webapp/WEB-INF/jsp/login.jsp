@@ -141,7 +141,7 @@
     function logoutAction() {
         $.ajax({
             type: "Get",
-            url: "${basePath}/base/logoutAction.do",
+            url: "${basePath}/base/logout.action",
             success: function (result) {
                 if (result.status !== 993) {
                     alertFunMessage('这都能出错了。。');
@@ -241,7 +241,7 @@
         if (flag) {
             $.ajax({
                 type: "post",
-                url: "${basePath}/base/loginAction.json",
+                url: "${basePath}/base/login.action",
                 data: param,
                 dataType: "json",
                 beforeSend: function () {
@@ -297,7 +297,7 @@
      * 跳转到管理页面
      */
     function goAdminPage() {
-        window.parent.location.href = "${basePath}/base/goAdminPage.html";
+        window.parent.location.href = "${basePath}/base/adminView.html";
     }
 
     /**

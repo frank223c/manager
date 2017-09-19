@@ -95,15 +95,15 @@ public class SystemLogAspect {
              /*  操作状态  */
             operationLog.setOperationStatus(true);
              /*   操作ip*/
-            operationLog.setOperationIp(WebUtils.getClientIpAdder(request));
+//            operationLog.setOperationIp(WebUtils.getClientIpAdder(request));
             /*   没有网络时则注释从网络获取ip，直接固定一个ip写入数据库     */
-//            operationLog.setOperationIp("182.85.141.54");
+            operationLog.setOperationIp("182.85.141.54");
              /*  操作地址 */
             //noinspection ConstantConditions
-            operationLog.setOperationAddress(WebUtils.getGeneralLocation(ip).getAddress());
+//            operationLog.setOperationAddress(WebUtils.getGeneralLocation(ip).getAddress());
 
             /*   没有网络时则注释从网络获取物理地址，直接固定一个物理地址写入数据库     */
-//            operationLog.setOperationAddress("江西省南昌市南昌县创新二路");
+            operationLog.setOperationAddress("江西省南昌市南昌县创新二路");
 
             System.out.println("准备向数据库插入操作记录");
             /*开始插入操作日志*/

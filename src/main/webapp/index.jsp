@@ -13,6 +13,6 @@
     <title>主页</title>
 </head>
 <body>
-<jsp:forward page="/base/loginPage.html"/>
+<jsp:forward page="/base/login.html"/>
 </body>
 </html>

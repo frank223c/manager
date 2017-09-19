@@ -118,7 +118,7 @@
                 </div>
             </li>
             <li id="logo" class="hidden-xs">
-                <a href="${basePath}/base/goAdminPage.html">
+                <a href="${basePath}/adminView.html">
                     <img src="${basePath}/images/logo.png"/>
                 </a>
                 <span id="system_title">协会管理系统</span>

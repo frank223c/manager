@@ -8,7 +8,8 @@ import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.ILoginHistoryService;
 import com.suny.association.utils.JsonResult;
 import com.suny.association.utils.TokenProcessor;
-import com.suny.association.utils.ValidActionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,9 +32,13 @@ import static com.suny.association.utils.WebUtils.getClientIpAdder;
 @RequestMapping("/base")
 public class LoginController {
 
+    private static Logger logger = LoggerFactory.getLogger(LoginController.class);
+
     private final IAccountService accountService;
 
     private final ILoginHistoryService loginHistoryService;
+
+    private static final String TOKEN = "token";
 
     @Autowired
     public LoginController(IAccountService accountService, ILoginHistoryService loginHistoryService) {
@@ -45,21 +50,21 @@ public class LoginController {
     /**
      * 登录页面
      */
-    @RequestMapping(value = "/loginPage.html", method = RequestMethod.GET)
+    @RequestMapping(value = {"/login.html","index.html"}, method = RequestMethod.GET)
     public String loginPage(HttpServletRequest request) {
         String token = TokenProcessor.getInstance().makeToken();
-        request.getSession().setAttribute("token", token);
-        System.out.println("产生的令牌值是" + token);
-        return "/loginPage";
+        request.getSession().setAttribute(TOKEN, token);
+        logger.info("产生的令牌值是 {}", token);
+        return "login";
     }
 
 
     /**
      * 全局错误页面
      */
-    @RequestMapping(value = "/errorPage.html", method = RequestMethod.GET)
+    @RequestMapping(value = "/error.html", method = RequestMethod.GET)
     public ModelAndView errorPage() {
-        return new ModelAndView("/errorPage");
+        return new ModelAndView("error");
     }
 
 
@@ -72,7 +77,7 @@ public class LoginController {
      * @param request  request请求
      * @return 验证的json结果
      */
-    @RequestMapping(value = "/loginAction.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/login.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult loginAction(@RequestParam("username") String username,
                                   @RequestParam("password") String password,
@@ -81,12 +86,12 @@ public class LoginController {
                                   HttpServletRequest request) {
         /*   首先验证表单提交的token跟session里面的token是否相等，相等就说明不是重复提交  */
         if (!isRepeatSubmit(token, request)) {
-            request.getSession().removeAttribute("token");
-            String sessionCode = (String) request.getSession().getAttribute("code");
+            request.getSession().removeAttribute(TOKEN);
+//            String sessionCode = (String) request.getSession().getAttribute("code");
             /*  匹配session里面的验证码跟表单上的验证码是否相等    */
-            if (!ValidActionUtil.matchCode(formCode, sessionCode)) {
-                return JsonResult.failResult(BaseEnum.VALIDATE_CODE_ERROR);
-            }
+//            if (!ValidActionUtil.matchCode(formCode, sessionCode)) {
+//                return JsonResult.failResult(BaseEnum.VALIDATE_CODE_ERROR);
+//            }
             /*  匹配认证状态   */
             boolean authStatus = authAction(username, password);
             if (authStatus) {
@@ -97,7 +102,7 @@ public class LoginController {
             saveLoginInfo(request, username, false);
             return JsonResult.failResult(BaseEnum.LOGIN_FAILURE);
         }
-        System.out.println("重复提交表单");
+        logger.warn("重复提交表单");
         return JsonResult.failResult(BaseEnum.REPEAT_SUBMIT);
     }
 
@@ -150,7 +155,7 @@ public class LoginController {
     }
 
     /**
-     * shiro验证成功后报存用户的登录信息
+     * 验证成功后报存用户的登录信息
      *
      * @param request  request请求
      * @param username 登录的用户名
@@ -168,7 +173,7 @@ public class LoginController {
      *
      * @return 管理员中心
      */
-    @RequestMapping(value = "/goAdminPage.html", method = RequestMethod.GET)
+    @RequestMapping(value = "/adminView.html", method = RequestMethod.GET)
     public ModelAndView goAdminPage() {
         return new ModelAndView("adminManager");
     }
@@ -179,7 +184,7 @@ public class LoginController {
      * @return 注销登录，然后返回注销结果
      */
     @SystemControllerLog(description = "注销操作")
-    @RequestMapping(value = "/logoutAction.do", method = RequestMethod.GET)
+    @RequestMapping(value = "/logout.action", method = RequestMethod.GET)
     @ResponseBody
     public JsonResult logoutAction(HttpServletRequest request) {
         // 防止自动创建session，传入false阻止自动创建

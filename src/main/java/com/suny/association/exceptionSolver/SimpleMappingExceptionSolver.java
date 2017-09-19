@@ -32,7 +32,7 @@ public class SimpleMappingExceptionSolver implements HandlerExceptionResolver {
             ex.printStackTrace();
             //非ajax请求就跳转到error.jsp页面
             logger.warn("普通请求异常，返回一个错误页面");
-            return new ModelAndView("errorPage", objectMap);
+            return new ModelAndView("error", objectMap);
         } else {
             //如果是ajax请求的话用json返回吧
             try {
