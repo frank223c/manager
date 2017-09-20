@@ -31,7 +31,7 @@ public class CodeController {
             'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
 
-    @RequestMapping("/generateCode.do")
+    @RequestMapping("/generateCode")
     public void generateCode(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
@@ -116,7 +116,7 @@ public class CodeController {
      * @param formCode 表单传过来的验证码
      * @return 验证验证码的结果
      */
-    @RequestMapping("/checkCode.do")
+    @RequestMapping("/checkCode")
     @ResponseBody
     public JsonResult checkCode(HttpServletRequest request,
                                 @RequestParam String formCode) {

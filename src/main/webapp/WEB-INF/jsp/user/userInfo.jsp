@@ -122,7 +122,7 @@
         oTableInit.Init = function () {
             layer.load(0, {shade: false, time: 1000}); //0代表加载的风格，支持0-2
             $('#table').bootstrapTable({
-                url: '${basePath}/session/queryByMemberId.json',         //请求后台的URL（*）
+                url: '${basePath}/session/queryByMemberId.action',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）

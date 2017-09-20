@@ -66,7 +66,7 @@
         $.ajax({
             type: 'post',
             contentType: "application/json",
-            url: '${pageContext.request.contextPath}/account/role/insert.json',
+            url: '${pageContext.request.contextPath}/account/role/insert.action',
             data: JSON.stringify({
                 description: roleNameVal
             }),

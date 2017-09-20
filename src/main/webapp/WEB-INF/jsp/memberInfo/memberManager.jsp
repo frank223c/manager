@@ -127,7 +127,7 @@
         oTableInit.Init = function () {
             layer.load(0, {shade: false, time: 1000}); //0代表加载的风格，支持0-2
             $('#tabs').bootstrapTable({
-                url: '${basePath}/member/queryAll.json',         //请求后台的URL（*）
+                url: '${basePath}/member/queryAll.action',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
@@ -316,7 +316,7 @@
     function deleteMember(memberId) {
         $.ajax({
             type: "get",
-            url: "${basePath}/member/deleteById.json/" + memberId,
+            url: "${basePath}/member/deleteById.action/" + memberId,
             success: function (result) {
                 if (result.status == 5) {
                     layer.msg("没有你要删除的信息", {icon: 4});

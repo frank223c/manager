@@ -466,7 +466,7 @@
         $.ajax({
             type: "POST",
             data: {punchMemberId: parseInt(${member.memberId})},
-            url: "${basePath}/punchLog/update.json",
+            url: "${basePath}/punchLog/update.action",
             success: function (result) {
                 var status = result.status;
                 if (status == 987) {
@@ -531,7 +531,7 @@
         }
         $.ajax({
             type: "post",
-            url: "${basePath}/account/changePassword.json",
+            url: "${basePath}/account/changePassword.action",
             data: {
                 passWord: passwordVal,
                 newPassword: newPasswordVal,
@@ -585,7 +585,7 @@
     function sendLogout() {
         $.ajax({
             type: "Get",
-            url: "${basePath}/base/logoutAction.do",
+            url: "${basePath}/base/logout.action",
             success: function (result) {
                 if (result.status !== 993) {
                     alertFunMessage('这都能出错了。。你是不是没登录就想注销');
@@ -598,7 +598,7 @@
         })
     }
     function login() {
-        window.parent.location.href = "${basePath}/base/loginPage.html";
+        window.parent.location.href = "${basePath}/base/login.html";
     }
 
 

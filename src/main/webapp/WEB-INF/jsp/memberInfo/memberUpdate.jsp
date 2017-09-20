@@ -101,7 +101,7 @@
         $.ajax({
             type: 'post',
             contentType: "application/json",
-            url: '${basePath}/member/update.json',
+            url: '${basePath}/member/update.action',
             data: JSON.stringify({
                 memberId: ${member.memberId},
                 memberName: memberNameVal,

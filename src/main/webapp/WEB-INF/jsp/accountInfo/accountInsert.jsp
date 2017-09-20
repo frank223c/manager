@@ -135,7 +135,7 @@
                         cache: false,
                         dataType: 'json',  //数据传输格式
                         contentType: "application/json ; charset=utf-8",
-                        url: '${basePath}/account/insert.json',
+                        url: '${basePath}/account/insert.action',
                         data: JSON.stringify({
                             accountName: accountNameVal,
                             accountPassword: accountPasswordVal,

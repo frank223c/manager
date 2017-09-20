@@ -71,7 +71,7 @@ public class MemberController extends BaseController {
      * @return 插入的结果
      */
     @SystemControllerLog(description = "插入成员信息")
-    @RequestMapping(value = "/insert.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult insert(@RequestBody Member member) {
         if (member.getMemberName() == null || "".equals(member.getMemberName())) {
@@ -108,7 +108,7 @@ public class MemberController extends BaseController {
     }
 
     @SystemControllerLog(description = "通过Excel文件批量新增数据")
-    @RequestMapping(value = "/uploadMemberInfo.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/uploadMemberInfo.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult uploadMemberInfo(@RequestParam("excelFile") MultipartFile excelFile) throws IOException {
         String fileType = excelFile.getContentType();
@@ -141,7 +141,7 @@ public class MemberController extends BaseController {
      * @param request  request请求
      * @param response response请求
      */
-    @RequestMapping(value = "downloadMemberTemplate.json", method = RequestMethod.GET)
+    @RequestMapping(value = "downloadMemberTemplate.action", method = RequestMethod.GET)
     public void downloadMemberTemplate(HttpServletRequest request, HttpServletResponse response) {
         String fileName = "memberTemplate.xlsx";
         ServletContext servletContext = request.getServletContext();
@@ -173,7 +173,7 @@ public class MemberController extends BaseController {
 
 
     @SystemControllerLog(description = "删除成员信息")
-    @RequestMapping(value = "/deleteById.json/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteById.action/{id}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResult deleteById(@PathVariable("id") Long id) {
         if (memberService.queryByLongId(id) == null) {
@@ -187,7 +187,7 @@ public class MemberController extends BaseController {
     }
 
     @SystemControllerLog(description = "更新成员信息")
-    @RequestMapping(value = "/update.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/update.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult update(@RequestBody Member member) {
         if (member.getMemberName() == null || "".equals(member.getMemberName())) {
@@ -215,7 +215,7 @@ public class MemberController extends BaseController {
     }
 
     @SystemControllerLog(description = "查询冻结的成员")
-    @RequestMapping(value = "/queryFreeze.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/queryFreeze.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult queryFreeze() {
         List<Member> memberList = memberService.queryNormalMember();
@@ -226,7 +226,7 @@ public class MemberController extends BaseController {
     }
 
     @SystemControllerLog(description = "查询正常的成员")
-    @RequestMapping(value = "/queryNormal.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/queryNormal.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult queryNormal() {
         List<Member> memberList = memberService.queryNormalMember();
@@ -236,7 +236,7 @@ public class MemberController extends BaseController {
         return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
     }
 
-    @RequestMapping(value = "/queryAll.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/queryAll.action", method = RequestMethod.GET)
     @ResponseBody
     public Map<Object, Object> queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
@@ -259,7 +259,7 @@ public class MemberController extends BaseController {
     }
 
     @SystemControllerLog(description = "查询指定成员")
-    @RequestMapping(value = "/queryById.do/{memberId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/queryById.action/{memberId}", method = RequestMethod.GET)
     public JsonResult queryById(@PathVariable("memberId") Integer memberId) {
         Member member = memberService.queryById(memberId);
         return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, member);

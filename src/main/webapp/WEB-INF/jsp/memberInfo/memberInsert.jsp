@@ -127,7 +127,7 @@
                 type: 'post',
                 dataType: 'json',
                 contentType: "application/json",
-                url: '${basePath}/member/insert.json',
+                url: '${basePath}/member/insert.action',
                 data: JSON.stringify({
                     memberName: memberNameVal,
                     memberClassName: memberClassVal,

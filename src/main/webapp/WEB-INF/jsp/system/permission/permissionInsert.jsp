@@ -85,7 +85,7 @@
                     cache: false,
                     dataType: 'json',  //数据传输格式
                     contentType: "application/json; charset=utf-8",
-                    url: '${basePath}/system/permission/insert.json',
+                    url: '${basePath}/system/permission/insert.action',
                     data: JSON.stringify({
                         permissionName: permissionNameVal,
                         description: permissionDescriptionVal,

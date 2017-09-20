@@ -41,7 +41,7 @@ public class PermissionAllotController extends BaseController {
 
 
     @SystemControllerLog(description = "【修改权限】删除权限后增加权限")
-    @RequestMapping(value = "/update.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/update.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult update(@RequestParam(value = "permissionArray[]") Integer[] permissionArray, Integer roleId) {
 

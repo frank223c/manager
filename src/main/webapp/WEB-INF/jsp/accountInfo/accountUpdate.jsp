@@ -132,7 +132,7 @@
                     cache: false,
                     dataType: 'json',  //数据传输格式
                     contentType: "application/json ; charset=utf-8",
-                    url: '${basePath}/account/update.json',
+                    url: '${basePath}/account/update.action',
                     data: JSON.stringify({
                         accountId: ${account.accountId},
                         accountName: accountNameVal,

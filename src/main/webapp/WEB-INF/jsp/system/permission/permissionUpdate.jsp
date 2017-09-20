@@ -86,7 +86,7 @@
                     cache: false,
                     dataType: 'json',  //数据传输格式
                     contentType: "application/json; charset=utf-8",
-                    url: '${basePath}/system/permission/update.json',
+                    url: '${basePath}/system/permission/update.action',
                     data: JSON.stringify({
                         permissionId:${permission.permissionId},
                         permissionName: permissionNameVal,

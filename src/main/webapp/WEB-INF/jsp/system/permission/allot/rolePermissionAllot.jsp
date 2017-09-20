@@ -90,7 +90,7 @@
         }
         $.ajax({
             type: "POST",
-            url: "${basePath}/system/permission/allot/update.json",
+            url: "${basePath}/system/permission/allot/update.action",
             dateType: "json",
             data: {
                 permissionArray: checked,

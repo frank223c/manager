@@ -37,7 +37,7 @@ public class MemberRoleController extends BaseController {
     }
 
     @SystemControllerLog(description = "删除成员角色")
-    @RequestMapping(value = "/delete.json/{memberRoleId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete.action/{memberRoleId}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResult delete(@PathVariable("memberRoleId") Integer memberRoleId) {
         if (memberService.quoteByMemberRoleId(memberRoleId).size() >= 1) {
@@ -86,7 +86,7 @@ public class MemberRoleController extends BaseController {
      */
     @SystemControllerLog(description = "新增成员角色")
     @ResponseBody
-    @RequestMapping(value = "/insert.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     public JsonResult insert(@RequestBody MemberRoles memberRoles) {
         if ("".equals(memberRoles.getMemberRoleName()) || memberRoles.getMemberRoleName() == null) {
             return failResult(BaseEnum.FIELD_NULL);
@@ -112,7 +112,7 @@ public class MemberRoleController extends BaseController {
      * @return 带查询条件的数据
      */
     @SystemControllerLog(description = "查询成员角色")
-    @RequestMapping(value = "/list.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
     public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {

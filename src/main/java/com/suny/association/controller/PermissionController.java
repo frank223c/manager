@@ -41,7 +41,7 @@ public class PermissionController extends BaseController {
      * @return 插入的json数据结果
      */
     @SystemControllerLog(description = "插入权限信息")
-    @RequestMapping(value = "/insert.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult insert(@RequestBody Permission permission) {
         if (permission.getpermissionName().equals("") || permission.getpermissionName() == null) {
@@ -73,7 +73,7 @@ public class PermissionController extends BaseController {
      * @return 操作结果
      */
     @SystemControllerLog(description = "删除权限信息")
-    @RequestMapping(value = "/deleteById.json/{permissionId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteById.action/{permissionId}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResult deleteById(@PathVariable("permissionId") int permissionId) {
         if (permissionService.queryPermissionQuote(permissionId).size() > 0) {
@@ -94,7 +94,7 @@ public class PermissionController extends BaseController {
      * @return 更新数据的结果
      */
     @SystemControllerLog(description = "更新权限信息")
-    @RequestMapping(value = "/update.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/update.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult update(@RequestBody Permission permission) {
         if (permission.getpermissionId() < 37) {
@@ -130,7 +130,7 @@ public class PermissionController extends BaseController {
      * @return 带查询条件的结果集
      */
     @SystemControllerLog(description = "查询所有的权限信息")
-    @RequestMapping(value = "/queryAll.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/queryAll.action", method = RequestMethod.GET)
     @ResponseBody
     public Map<Object, Object> queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,

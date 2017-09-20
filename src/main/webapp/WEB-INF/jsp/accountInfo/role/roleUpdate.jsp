@@ -67,7 +67,7 @@
         $.ajax({
             type:'post',
             contentType: "application/json",
-            url: '${basePath}/account/role/update.json',
+            url: '${basePath}/account/role/update.action',
             data:JSON.stringify({
                 roleId:roleIdVal,
                 description: roleNameVal

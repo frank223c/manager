@@ -50,7 +50,7 @@ public class LoginController {
     /**
      * 登录页面
      */
-    @RequestMapping(value = {"/login.html","index.html"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/login.html", "index.html"}, method = RequestMethod.GET)
     public String loginPage(HttpServletRequest request) {
         String token = TokenProcessor.getInstance().makeToken();
         request.getSession().setAttribute(TOKEN, token);
@@ -77,7 +77,7 @@ public class LoginController {
      * @param request  request请求
      * @return 验证的json结果
      */
-    @RequestMapping(value = "/login.action", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult loginAction(@RequestParam("username") String username,
                                   @RequestParam("password") String password,
@@ -130,19 +130,16 @@ public class LoginController {
         if ("".equals(token) || token == null) {
             return true;
         }
-        String sessionToken = (String) request.getSession().getAttribute("token");
+        String sessionToken = (String) request.getSession().getAttribute(TOKEN);
         if (sessionToken == null) {
             return true;
         }
-        if (sessionToken.equals(token)) {
-            return false;
-        }
-        return false;
+        return sessionToken.equals(token) ? false : false;
     }
 
 
     /**
-     * 提交给shiro认证用户的密码跟用户名
+     * 认证用户的密码跟用户名
      *
      * @param username 用户名
      * @param password 密码

@@ -31,7 +31,7 @@ public class SessionController extends BaseController {
         this.loginHistoryService = loginHistoryService;
     }
 
-    @RequestMapping(value = "/list.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
     public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
@@ -41,7 +41,7 @@ public class SessionController extends BaseController {
     }
 
     @SystemControllerLog(description = "查询指定账号登录记录")
-    @RequestMapping(value = "/queryByMemberId.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/queryByMemberId.action", method = RequestMethod.GET)
     @ResponseBody
     public Map<Object, Object> queryById(@RequestParam("memberId") int memberId) {
         List<LoginHistory> loginHistoryList = loginHistoryService.queryByMemberId(memberId);

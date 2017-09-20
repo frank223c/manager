@@ -41,7 +41,7 @@ public class PunchRecordController extends BaseController {
     }
 
     @SystemControllerLog(description = "考勤操作")
-    @RequestMapping(value = "/update.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/update.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult update(HttpServletRequest request, @RequestParam("punchMemberId") Integer punchMemberId) {
         /*   获取session中的Member信息，用来判断用户是否恶意操作   */
@@ -94,7 +94,7 @@ public class PunchRecordController extends BaseController {
      * @return 开启今日签到的操作结果
      */
     @SystemControllerLog(description = "管理员开启今日考勤操作")
-    @RequestMapping(value = "/insert.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult insert(HttpServletRequest request, @RequestParam("memberId") Long memberId) {
 
@@ -128,7 +128,7 @@ public class PunchRecordController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/list.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
     public Map query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {

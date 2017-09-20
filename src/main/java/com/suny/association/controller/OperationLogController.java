@@ -39,7 +39,7 @@ public class OperationLogController extends BaseController {
      * @param limit  查几个数据
      * @return 带查询条件的数据
      */
-    @RequestMapping(value = "/list.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
     public Map query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {

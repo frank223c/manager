@@ -108,7 +108,7 @@
         oTableInit.Init = function () {
             layer.load(0, {shade: false, time: 1000}); //0代表加载的风格，支持0-2
             $('#table').bootstrapTable({
-                url: '${basePath}/account/role/list.json',         //请求后台的URL（*）
+                url: '${basePath}/account/role/list.action',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
@@ -265,7 +265,7 @@
     function delectation(roleId) {
         $.ajax({
                     type: "get",
-                    url: "${basePath}/account/role/delete.json/" + roleId,
+                    url: "${basePath}/account/role/delete.action/" + roleId,
                     success: function (result) {
                         if (result.status == 103) {
                             layer.msg("删除成功，请刷新查看效果", {icon: 1});

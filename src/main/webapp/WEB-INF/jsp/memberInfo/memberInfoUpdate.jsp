@@ -30,7 +30,7 @@
         <hr>
         <p class="lead">上传模板前，请严格按照Excel模板进行修改信息，否则将会上传不成功，严格按照模板的顺序进行填写</p>
         <div class="col-md-4 input-group">
-            <a href="${basePath}/member/downloadMemberTemplate.json">下载Excel模板</a>
+            <a href="${basePath}/member/downloadMemberTemplate.action">下载Excel模板</a>
         </div>
         <hr>
         <label for="lefile" class="control-label col-md-4">选择文件:</label>
@@ -80,7 +80,7 @@
         var formData = new FormData();
         formData.append('excelFile', file);
         $.ajax({
-            url: '${basePath}/member/uploadMemberInfo.json',
+            url: '${basePath}/member/uploadMemberInfo.action',
             type: 'POST',
             cache: false,
             data: formData,

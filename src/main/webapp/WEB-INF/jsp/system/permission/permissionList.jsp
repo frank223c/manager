@@ -81,7 +81,7 @@
         oTableInit.Init = function () {
             layer.load(0, {shade: false, time: 1000}); //0代表加载的风格，支持0-2
             $('#mable').bootstrapTable({
-                url: '${basePath}/system/permission/queryAll.json',         //请求后台的URL（*）
+                url: '${basePath}/system/permission/queryAll.action',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
@@ -280,7 +280,7 @@
     function delectation(permissionId) {
         $.ajax({
                     type: "get",
-                    url: "${basePath}/system/permission/deleteById.json/" + permissionId,
+                    url: "${basePath}/system/permission/deleteById.action/" + permissionId,
                     success: function (result) {
                         var statusCode = result.status;
                         if (statusCode == 103) {

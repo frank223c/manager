@@ -53,7 +53,7 @@ public class AccountController extends BaseController {
      * @return 插入的json数据结果
      */
     @SystemControllerLog(description = "插入账号信息")
-    @RequestMapping(value = "/insert.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult insert(@RequestBody Account account) {
         Map resultMap = updateOrInsert(account);
@@ -94,7 +94,7 @@ public class AccountController extends BaseController {
      * @return 操作结果
      */
     @SystemControllerLog(description = "删除账号信息")
-    @RequestMapping(value = "/deleteById.json/{accountId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteById.action/{accountId}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResult deleteById(@PathVariable("accountId") Long accountId) {
         Account accountQuote = accountService.queryQuoteByAccountId(accountId);
@@ -151,7 +151,7 @@ public class AccountController extends BaseController {
      * @return 更新数据的结果
      */
     @SystemControllerLog(description = "更新账号信息")
-    @RequestMapping(value = "/update.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/update.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult update(@RequestBody Account account) {
         Map resultMap = updateOrInsert(account);
@@ -217,7 +217,7 @@ public class AccountController extends BaseController {
      * @return 带查询条件的结果集
      */
     @SystemControllerLog(description = "查询账号信息")
-    @RequestMapping(value = "/queryAll.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/queryAll.action", method = RequestMethod.GET)
     @ResponseBody
     public Map<Object, Object> queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
@@ -239,7 +239,7 @@ public class AccountController extends BaseController {
      * @return 修改密码的结果，要进行很多业务逻辑的判断
      */
     @SystemControllerLog(description = "修改用户密码操作")
-    @RequestMapping("/changePassword.json")
+    @RequestMapping("/changePassword.action")
     @ResponseBody
     public JsonResult changePassword(HttpServletRequest request,
                                      @RequestParam("accountId") Long accountId,

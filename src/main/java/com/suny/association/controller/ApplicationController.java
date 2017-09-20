@@ -54,7 +54,7 @@ public class ApplicationController extends BaseController {
      * @return 对应的操作结果json数据
      */
     @SystemControllerLog(description = "审批异议考勤记录")
-    @RequestMapping(value = "/setResult.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/setResult.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult setResult(@RequestParam(value = "memberId") int memberId,
                                 @RequestParam(value = "applicationId") int applicationId,
@@ -102,7 +102,7 @@ public class ApplicationController extends BaseController {
      * @param limit  查询几条记录数
      * @return 查询出来的数据
      */
-    @RequestMapping(value = "/queryAll.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/queryAll.action", method = RequestMethod.GET)
     @ResponseBody
     public Map query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
