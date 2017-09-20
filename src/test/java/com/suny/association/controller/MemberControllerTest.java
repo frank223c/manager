@@ -1,5 +1,6 @@
 package com.suny.association.controller;
 
+import com.suny.association.controller.core.MemberController;
 import junit.framework.TestCase;
 import org.junit.Test;
 

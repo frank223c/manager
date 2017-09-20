@@ -6,7 +6,7 @@ import com.suny.association.pojo.po.Account;
 import com.suny.association.pojo.po.Member;
 import com.suny.association.pojo.po.Roles;
 import com.suny.association.service.interfaces.IAccountService;
-import com.suny.association.service.interfaces.IMemberService;
+import com.suny.association.service.interfaces.core.IMemberService;
 import com.suny.association.service.interfaces.IRolesService;
 import com.suny.association.utils.JsonResult;
 import org.slf4j.Logger;

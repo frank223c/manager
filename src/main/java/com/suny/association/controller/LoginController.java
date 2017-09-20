@@ -5,7 +5,7 @@ import com.suny.association.enums.BaseEnum;
 import com.suny.association.pojo.po.Account;
 import com.suny.association.pojo.po.Member;
 import com.suny.association.service.interfaces.IAccountService;
-import com.suny.association.service.interfaces.ILoginHistoryService;
+import com.suny.association.service.interfaces.system.ILoginHistoryService;
 import com.suny.association.utils.JsonResult;
 import com.suny.association.utils.TokenProcessor;
 import org.slf4j.Logger;
@@ -77,7 +77,7 @@ public class LoginController {
      * @param request  request请求
      * @return 验证的json结果
      */
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult loginAction(@RequestParam("username") String username,
                                   @RequestParam("password") String password,
@@ -95,8 +95,8 @@ public class LoginController {
             /*  匹配认证状态   */
             boolean authStatus = authAction(username, password);
             if (authStatus) {
-                saveLoginInfo(request, username, true);
-                saveLoginUser(request, username);
+                saveLoginInfo(request, username, true);   // 保存登录日志
+                saveLoginUser(request, username);                     // 把登录信息放到response里面
                 return JsonResult.successResult(BaseEnum.LOGIN_SYSTEM);
             }
             saveLoginInfo(request, username, false);
@@ -107,7 +107,7 @@ public class LoginController {
     }
 
     /**
-     * 报存用户登录信息
+     * 保存用户登录信息
      *
      * @param request  请求数据
      * @param username 登录的用户名

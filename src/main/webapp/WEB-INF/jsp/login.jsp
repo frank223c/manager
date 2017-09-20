@@ -50,7 +50,7 @@
         <div style="width: 400px;">
             <div style="float:left;width:100px; margin-left: 13px; height:42px;">
                 <img style="width:100px; height:42px; cursor: pointer;" title="点击刷新" id="codePanel"
-                     src="${basePath}/code/generateCode"/>
+                     src="${basePath}/code/generateCode.action"/>
             </div>
         </div>
     </div>
@@ -106,7 +106,7 @@
 
     //切换验证码
     $("#codePanel").click(function () {
-        $(this).attr("src", '${basePath}/code/generateCode?rand=' + Math.random());
+        $(this).attr("src", '${basePath}/code/generateCode.action?rand=' + Math.random());
     });
 
     //输入用户名
@@ -192,7 +192,7 @@
         var flag = 1;
         if (flag) {
             $.ajax({
-                url: '${basePath}/code/checkCode',
+                url: '${basePath}/code/checkCode.action',
                 type: 'post',
                 data: {formCode: codeValue},
                 beforeSend: function () {
@@ -241,7 +241,7 @@
         if (flag) {
             $.ajax({
                 type: "post",
-                url: "${basePath}/base/login",
+                url: "${basePath}/base/login.action",
                 data: param,
                 dataType: "json",
                 beforeSend: function () {
@@ -304,7 +304,7 @@
      * 刷新验证码
      */
     function refresh() {
-        $("#codePanel").attr("src", '${basePath}/code/generateCode?rand=' + Math.random());
+        $("#codePanel").attr("src", '${basePath}/code/generateCode.action?rand=' + Math.random());
     }
 
     /**
