@@ -2,9 +2,13 @@ package com.suny.association.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.enums.BaseEnum;
+import com.suny.association.mapper.LoginTicketMapper;
 import com.suny.association.pojo.po.Account;
+import com.suny.association.pojo.po.HostHolder;
+import com.suny.association.pojo.po.LoginTicket;
 import com.suny.association.pojo.po.Member;
 import com.suny.association.service.interfaces.IAccountService;
+import com.suny.association.service.interfaces.ILoginService;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
 import com.suny.association.utils.JsonResult;
 import com.suny.association.utils.TokenProcessor;
@@ -18,8 +22,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.suny.association.utils.WebUtils.getClientIpAdder;
 
@@ -33,17 +45,22 @@ import static com.suny.association.utils.WebUtils.getClientIpAdder;
 public class LoginController {
 
     private static Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private static final String TICKET = "ticket";
 
     private final IAccountService accountService;
 
-    private final ILoginHistoryService loginHistoryService;
+
+    private final ILoginService loginService;
+
+    private final HostHolder hostHolder;
 
     private static final String TOKEN = "token";
 
     @Autowired
-    public LoginController(IAccountService accountService, ILoginHistoryService loginHistoryService) {
+    public LoginController(IAccountService accountService, ILoginHistoryService loginHistoryService, LoginTicketMapper loginTicketMapper, HostHolder hostHolder, ILoginService loginService) {
         this.accountService = accountService;
-        this.loginHistoryService = loginHistoryService;
+        this.hostHolder = hostHolder;
+        this.loginService = loginService;
     }
 
 
@@ -83,40 +100,45 @@ public class LoginController {
                                   @RequestParam("password") String password,
                                   @RequestParam("formCode") String formCode,
                                   @RequestParam("token") String token,
-                                  HttpServletRequest request) {
-        /*   首先验证表单提交的token跟session里面的token是否相等，相等就说明不是重复提交  */
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) {
+        //    1.  首先验证表单提交的token跟session里面的token是否相等，相等就说明不是重复提交
         if (!isRepeatSubmit(token, request)) {
+            //   1.1   把session里面的token标记先移除
             request.getSession().removeAttribute(TOKEN);
+            //   1.2    获取session中保存的本次服务器下发的验证码
 //            String sessionCode = (String) request.getSession().getAttribute("code");
-            /*  匹配session里面的验证码跟表单上的验证码是否相等    */
+            //   1.3    匹配session里面的验证码跟表单上的验证码是否相等，这里为了开发方便就先关闭
 //            if (!ValidActionUtil.matchCode(formCode, sessionCode)) {
 //                return JsonResult.failResult(BaseEnum.VALIDATE_CODE_ERROR);
 //            }
-            /*  匹配认证状态   */
-            boolean authStatus = authAction(username, password);
-            if (authStatus) {
-                saveLoginInfo(request, username, true);   // 保存登录日志
-                saveLoginUser(request, username);                     // 把登录信息放到response里面
+            //   1.4   获取登录的结果,也就是带有ticket则表示登录成功了
+            AtomicReference<Map<String, Object>> loginResult = loginService.login(username, password);
+            if (loginResult.get().containsKey(TICKET)) {
+                String ticket = (String) loginResult.get().get(TICKET);
+                //   1.4.1    把获取到的ticket放到Cookie中去
+                Cookie cookie = new Cookie(TICKET, ticket);
+                //    1.4.2  设置这个cookie的有效路径
+                cookie.setPath("/");
+                //    1.4.3   如果前端勾选了记住登录的话就设置过期时间
+//                if (remeberme) {
+//                    cookie.setMaxAge(3600 * 24 * 5);
+//                }
+                response.addCookie(cookie);
+                //    1.4.4   把一些进入主页面需要的数据先放进去
+                saveLoginUser(request, username);
+                logger.warn("登录成功了,给前端发送通知");
                 return JsonResult.successResult(BaseEnum.LOGIN_SYSTEM);
             }
-            saveLoginInfo(request, username, false);
+            //   1.5   没有返回ticket就是登录失败了,可能是由于面膜错误,账号错误，账号密码不匹配，参数为空等等
             return JsonResult.failResult(BaseEnum.LOGIN_FAILURE);
         }
+
+        //   2.  重复提交表单的业务逻辑处理
         logger.warn("重复提交表单");
         return JsonResult.failResult(BaseEnum.REPEAT_SUBMIT);
     }
 
-    /**
-     * 保存用户登录信息
-     *
-     * @param request  请求数据
-     * @param username 登录的用户名
-     */
-    private void saveLoginInfo(HttpServletRequest request, String username, boolean authStatus) {
-        String loginIp = getClientIpAdder(request);
-        String userAgent = request.getHeader("user-agent");
-        loginHistoryService.makeUpLoginInfo(userAgent, username, loginIp, authStatus);
-    }
 
     /**
      * 验证token是否相同，防止CSRF或者重复提交表单
@@ -137,19 +159,6 @@ public class LoginController {
         return sessionToken.equals(token) ? false : false;
     }
 
-
-    /**
-     * 认证用户的密码跟用户名
-     *
-     * @param username 用户名
-     * @param password 密码
-     */
-    private boolean authAction(String username, String password) {
-        Account account = accountService.queryByName(username);
-//        return account != null && account.getAccountPassword().equals(EncryptUtil.encryptToMD5(password));
-        return account != null && account.getAccountPassword().equals(password);
-
-    }
 
     /**
      * 验证成功后报存用户的登录信息

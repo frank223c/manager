@@ -1,6 +1,7 @@
 package com.suny.association.pojo.po;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -12,9 +13,9 @@ public class LoginTicket implements Serializable {
 
     private int id;
     // 账号ID
-    private int accountId;
+    private long accountId;
     // 标记过期的时间
-    private LocalTime expired;
+    private LocalDateTime expired;
     // 标记当前的状态,是否过期 0为有效,1为过期
     private int status;
     // 标记字符
@@ -23,7 +24,7 @@ public class LoginTicket implements Serializable {
     public LoginTicket() {
     }
 
-    public LoginTicket(int id, int accountId, LocalTime expired, int status, String ticket) {
+    public LoginTicket(int id, int accountId, LocalDateTime expired, int status, String ticket) {
         this.id = id;
         this.accountId = accountId;
         this.expired = expired;
@@ -39,19 +40,19 @@ public class LoginTicket implements Serializable {
         this.id = id;
     }
 
-    public int getAccountId() {
+    public long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(int accountId) {
+    public void setAccountId(long accountId) {
         this.accountId = accountId;
     }
 
-    public LocalTime getExpired() {
+    public LocalDateTime getExpired() {
         return expired;
     }
 
-    public void setExpired(LocalTime expired) {
+    public void setExpired(LocalDateTime expired) {
         this.expired = expired;
     }
 

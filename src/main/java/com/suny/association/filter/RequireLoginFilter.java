@@ -2,7 +2,9 @@ package com.suny.association.filter;
 
 import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.LoginTicketMapper;
-import com.suny.association.pojo.po.*;
+import com.suny.association.pojo.po.Account;
+import com.suny.association.pojo.po.HostHolder;
+import com.suny.association.pojo.po.LoginTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -13,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
@@ -68,7 +71,7 @@ public class RequireLoginFilter implements Filter {
                 // 3.1  根据ticket字符串去数据库里面查询是否有这个,防止客户端伪造ticket
                 LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
                 // 3.2  如果查出来数据库里面没有这个ticket或者是已经过期了的话就让它重新登录
-                if (loginTicket == null || loginTicket.getExpired().isBefore(LocalTime.now())) {
+                if (loginTicket == null || loginTicket.getExpired().isBefore(LocalDateTime.now()) || loginTicket.getStatus() != 1) {
                     logger.info("ticket过期时间为{},当前时间为{}", loginTicket != null ? loginTicket.getExpired().getNano() : 0, LocalTime.now().getNano());
                     logger.warn("cookie中的ticket{}已经过期了,需要重新登录,重定向到登录页面", ticket);
                     response.sendRedirect(LOGIN_URL);

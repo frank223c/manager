@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static com.suny.association.utils.WebUtils.getClientIpAdder;
 import static com.suny.association.utils.WebUtils.getOSVersion;
 
 /**
@@ -82,40 +83,41 @@ public class LoginHistoryServiceImpl extends AbstractBaseServiceImpl<LoginHistor
     /**
      * 收集用户登录信息
      *
-     * @param userAgent 用户代理
      * @param username  登录的用户名
-     * @param loginIp   登录的ip
      */
     @SystemServiceLog(description = "组装的登录信息插入失败")
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void makeUpLoginInfo(String userAgent, String username, String loginIp, boolean authStatus) {
-         /*  通过userAgent分析触登录的浏览器  */
-        String loginBrowser = WebUtils.getBrowserInfo(userAgent);
-         /*  手动new一个登录历史对象，然后往里面填充对象     */
+    public void saveLoginLog(String username, boolean authStatus) {
+        // 1. 首先构造一个登录记录的实体
         LoginHistory loginHistory = new LoginHistory();
-        /* 填充userAgent  */
+        //  2. 填充userAgent
+        String userAgent = WebUtils.getHttpServletRequest().getHeader("user-agent");
         loginHistory.setLoginUserAgent(userAgent);
-        /* 填充用户登录的ip  */
+        //  3.  通过userAgent分析触登录的浏览器
+        String loginBrowser = WebUtils.getBrowserInfo(userAgent);
+        //  4. 填充用户登录的ip
+        String loginIp = getClientIpAdder(WebUtils.getHttpServletRequest());
         loginHistory.setLastLoginIp(loginIp);
-        /*  填充用户登录的时间，可选，不填充则数据库生成 */
+        //  5.  填充用户登录的时间，可选，不填充则数据库生成
         loginHistory.setLastLoginTime(LocalDateTime.now());
-        /* 填充登录的浏览器信息  */
+        //  6. 填充登录的浏览器信息
         loginHistory.setLoginBrowser(loginBrowser);
-        /*  填充登录用户的浏览器版本 */
+        //  7.  填充登录用户的浏览器版本
         loginHistory.setLoginOsVersion(getOSVersion(userAgent));
-        /* 填充用户登录验证账号密码的状态   true为认证成功   false则为认证失败 */
+        //  8. 填充用户登录验证账号密码的状态   true为认证成功   false则为认证失败
         loginHistory.setLoginStatus(authStatus);
-        /*  通过登录的用户名查询触对应的一条账号信息    */
+        //  9.  通过登录的用户名查询触对应的一条账号信息
         Account account = accountMapper.queryByName(username);
-        /* 填充 字段 登录用户   */
+        //  10. 填充 字段 登录用户
         loginHistory.setHistoryAccountId(account);
-        /*  通过ip地址去获取普通的定位地址  */
+        //  11.通过ip地址去获取普通的定位地址
         GeneralLocationResult generalLocation = WebUtils.getGeneralLocation(loginIp);
-        /*  如果得到的普通定位地址为空的话就给登录地址自动设置一个默认的值      */
+        //   11.1 判断是否得到了通过定位到的IP得到的地址
         if (generalLocation != null) {
             loginHistory.setLoginAddress(generalLocation.getStatus() == 0 ? generalLocation.getAddress() : "未知位置");
         } else {
+            //    11.2   普通定位地址为空的话就给登录地址自动设置一个默认的值
             logger.warn("连接网络可能出了点问题，把操作位置默认设为未知位置");
             loginHistory.setLoginAddress("未知位置");
         }

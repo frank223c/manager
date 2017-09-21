@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.suny.association.pojo.po.baiduLocation.GeneralLocationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -21,6 +23,30 @@ import java.util.Objects;
 public class WebUtils {
     private static final Logger logger = LoggerFactory.getLogger(WebUtils.class);
 
+    private static final String UNKNOWN = "unknown";
+
+    /**
+     * 获取当前请求的request请求实例
+     *
+     * @return HttpServletRequest
+     */
+    public static HttpServletRequest getHttpServletRequest() {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        return requestAttributes.getRequest();
+    }
+
+
+    /**
+     * 返回项目的绝对路径
+     *
+     * @param request 请求对象
+     * @return 绝对路径
+     */
+    private static String getBasePath(HttpServletRequest request) {
+        String path = request.getContextPath();
+        return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+    }
+
     /**
      * 获取普通精度的位置
      *
@@ -33,8 +59,7 @@ public class WebUtils {
         try {
             ipString = URLEncoder.encode(ip, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            logger.warn("不支持的编码异常");
-            e.printStackTrace();
+            logger.warn("不支持的编码异常{}", e.getMessage());
         }
         String key = "8256e813b3dec54c5a6aac371c05e5eaa";   // 百度定位密匙
         String url = String.format("http://api.map.baidu.com/location/ip?ak=%s&ip=%s&coor=bd09ll", key, ipString);
@@ -59,8 +84,7 @@ public class WebUtils {
             } catch (UnknownHostException e) {
                 logger.error("无法获取hosts地址，检查是否有网络连接");
             } catch (IOException e1) {
-                logger.error("发生输入输出流异常");
-                e1.printStackTrace();
+                logger.error("发生输入输出流异常{}", e1.getMessage());
             }
         }
         return null;
@@ -100,92 +124,42 @@ public class WebUtils {
     }
 
 
-//    /**
-//     * 获取客户端ip地址(可以穿透代理)
-//     */
-//    public static String getRemoteAddr(HttpServletRequest request) {
-//        String ip = request.getHeader("X-Forwarded-For");
-//        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//            ip = request.getHeader("Proxy-Client-IP");
-//        }
-//        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//            ip = request.getHeader("WL-Proxy-Client-IP");
-//        }
-//        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//            ip = request.getHeader("HTTP_CLIENT_IP");
-//        }
-//        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-//        }
-//        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//            ip = request.getRemoteAddr();
-//        }
-//        return ip;
-//    }
-//
-//    private static final String[] HEADERS_TO_TRY = {
-//            "X-Forwarded-For",
-//            "Proxy-Client-IP",
-//            "WL-Proxy-Client-IP",
-//            "HTTP_X_FORWARDED_FOR",
-//            "HTTP_X_FORWARDED",
-//            "HTTP_X_CLUSTER_CLIENT_IP",
-//            "HTTP_CLIENT_IP",
-//            "HTTP_FORWARDED_FOR",
-//            "HTTP_FORWARDED",
-//            "HTTP_VIA",
-//            "REMOTE_ADDR",
-//            "X-Real-IP"};
-//
-//    /***
-//     * 获取客户端ip地址(可以穿透代理)
-//     */
-//    public static String getClientIpAddress(HttpServletRequest request) {
-//        for (String header : HEADERS_TO_TRY) {
-//            String ip = request.getHeader(header);
-//            if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
-//                return ip;
-//            }
-//        }
-//        return request.getRemoteAddr();
-//    }
-
     /***
      * 获取客户端ip地址(可以穿透代理)
      */
     public static String getClientIpAdder(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("HTTP_X_FORWARDED_FOR");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("HTTP_X_FORWARDED");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("HTTP_X_CLUSTER_CLIENT_IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("HTTP_CLIENT_IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("HTTP_FORWARDED_FOR");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("HTTP_FORWARDED");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("HTTP_VIA");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("REMOTE_ADDR");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
         if ("127.0.0.1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip))
@@ -204,7 +178,7 @@ public class WebUtils {
      */
     public static String getOSVersion(String userAgent) {
         if (Objects.equals(userAgent, "") || userAgent == null) {
-            return "UnKnown";
+            return UNKNOWN;
         }
         if (userAgent.contains("Windows")) {//主流应用靠前
             if (userAgent.contains("Windows NT 10.0")) {//Windows 10
@@ -337,7 +311,7 @@ public class WebUtils {
             String IEVersion = (userAgent.substring(userAgent.indexOf("rv")).split(" ")[0]).replace("rv:", "-");
             return "IE" + IEVersion.substring(0, IEVersion.length() - 1);
         }
-        return "UnKnown";
+        return UNKNOWN;
 
     }
 

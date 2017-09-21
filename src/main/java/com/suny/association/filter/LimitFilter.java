@@ -34,12 +34,12 @@ public class LimitFilter implements Filter {
         // 1. 项目中的第一个Filter,如果是一些生成验证码或者是请求登录,验证账号信息等请求的话直接放行
         if (isExcludeUrl(reqURI, req)) {
             //  1.1     如果是被排除的URL的话就直接放行,不要阻拦了,直接跳过剩下的Filter
-            //  1.1.1   在每个Filter中定义一个标记,然后放入ServletRequest中,在别的Filter中取出标记进行判断是否跳过
+            //  1.1.1   在每个Filter中定义一个标记，然后放入ServletRequest中,在别的Filter中取出标记进行判断是否跳过
             logger.info("请求的地址为{},直接放行到Servlet,不再经过Filter", reqURI);
             req.setAttribute(EXECUTE_NEXT_FILTER, false);
-        }
+        } else req.setAttribute(EXECUTE_NEXT_FILTER, true);
         // 2. 放行到登录下一个登录验证过滤器
-        logger.info("请求的url{}地址是否需要进行下一步认证{}", reqURI, req.getAttribute(EXECUTE_NEXT_FILTER));
+        logger.info("请求的url{},地址是否需要进行下一步认证{}", reqURI, req.getAttribute(EXECUTE_NEXT_FILTER));
         chain.doFilter(request, response);
     }
 

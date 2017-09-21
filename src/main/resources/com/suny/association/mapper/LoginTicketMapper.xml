@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suny.association.mapper.LoginTicketMapper">
-    <sql id="selectFields">
-        id, account_id, ticket, expired, status
-    </sql>
+    <sql id="selectFields">  id, account_id, ticket, expired, status </sql>
+    <sql id="insertFields">  account_id, ticket, expired, status </sql>
+
+    <update id="update" parameterType="com.suny.association.pojo.po.LoginTicket">
+        UPDATE login_ticket
+        SET ticket = #{ticket}, expired = #{expired}, status = #{status}
+        WHERE account_id = #{accountId};
+    </update>
+    <insert id="insert" parameterType="com.suny.association.pojo.po.LoginTicket">
+        insert into login_ticket (<include refid="insertFields"/>) values (#{accountId},#{ticket},#{expired},#{status});
+    </insert>
 
     <!--通过账号的ID去查询-->
     <select id="selectByAccountId" resultType="com.suny.association.pojo.po.LoginTicket">
         SELECT
         <include refid="selectFields"/>
-        FROM login_ticket
-        WHERE account_id=#{accountId}
+        FROM login_ticket WHERE account_id=#{accountId}
     </select>
     <select id="selectByTicket" resultType="com.suny.association.pojo.po.LoginTicket">
         SELECT
         <include refid="selectFields"/>
-        FROM login_ticket
-        WHERE ticket=#{ticket}
+        FROM login_ticket WHERE ticket=#{ticket}
     </select>
 </mapper>
