@@ -16,7 +16,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>协会系统前端页面</title>
+    <title>协会管理系统</title>
     <link rel="stylesheet" type="text/css" href="${basePath}/css/base.css">
     <link rel="stylesheet" type="text/css" href="${basePath}/css/login.css">
 </head>
@@ -27,7 +27,7 @@
 <!-- 登录框 -->
 <div id="loginBox">
     <div class="topPart">
-        <h2>成员登陆入口</h2>
+        <h2>登陆入口</h2>
         <div id="toolbar">
             <a class="waves-effect waves-button" href="javascript:;" onclick="logoutAction()"><i
                     class="zmdi zmdi-run"></i> 强制退出</a>
@@ -241,7 +241,7 @@
         if (flag) {
             $.ajax({
                 type: "post",
-                url: "${basePath}/login.action",
+                url: "${basePath}/backend/login.action",
                 data: param,
                 dataType: "json",
                 beforeSend: function () {
@@ -297,7 +297,7 @@
      * 跳转到管理页面
      */
     function goAdminPage() {
-        window.parent.location.href = "${basePath}/userCenter.html";
+        window.parent.location.href = "${basePath}/backend/userCenter.html";
     }
 
     /**

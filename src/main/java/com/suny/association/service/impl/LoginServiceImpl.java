@@ -19,8 +19,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.suny.association.utils.WebUtils.getClientIpAdder;
-
 /**
  * Created by 孙建荣 on 17-9-21.上午8:09
  */
@@ -31,15 +29,13 @@ public class LoginServiceImpl implements ILoginService {
     private final LoginTicketMapper loginTicketMapper;
     private final AccountMapper accountMapper;
     private final HostHolder hostHolder;
-    private final HttpServletRequest request;
     private final ILoginHistoryService loginHistoryService;
 
     @Autowired
-    public LoginServiceImpl(LoginTicketMapper loginTicketMapper, AccountMapper accountMapper, HostHolder hostHolder, HttpServletRequest request, ILoginHistoryService loginHistoryService) {
+    public LoginServiceImpl(LoginTicketMapper loginTicketMapper, AccountMapper accountMapper, HostHolder hostHolder, ILoginHistoryService loginHistoryService) {
         this.loginTicketMapper = loginTicketMapper;
         this.accountMapper = accountMapper;
         this.hostHolder = hostHolder;
-        this.request = request;
         this.loginHistoryService = loginHistoryService;
     }
 

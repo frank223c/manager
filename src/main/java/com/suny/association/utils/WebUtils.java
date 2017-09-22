@@ -99,7 +99,7 @@ public class WebUtils {
     private static GeneralLocationResult parseJsonDate(String jsonData) {
         GeneralLocationResult generalLocationResult = new GeneralLocationResult();
         /*  如果包含HTML标签则说明访问到一个错误页面   */
-        if (jsonData.contains("<html>")) {
+        if (jsonData.contains("<html>") || jsonData.substring(0, 20).contains("<!DOCTYPE html>")) {
             logger.warn("访问到一个错误页面，无法进行解析");
             generalLocationResult.setStatus(200);
             return generalLocationResult;

@@ -1,134 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suny.association.mapper.LoginHistoryMapper">
-    <resultMap id="BaseResultMap" type="com.suny.association.pojo.po.LoginHistory">
+    <!--<resultMap id="BaseResultMap" type="com.suny.association.pojo.po.LoginHistory">
         <id property="loginHistoryId" column="login_history_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
-        <result property="lastLoginIp" column="last_login_ip" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="loginIp" column="login_ip" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="loginName" column="login_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="loginAddress" column="login_address" jdbcType="VARCHAR" javaType="java.lang.String"/>
-        <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
+        <result property="loginTime" column="login_time" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
         <result property="loginBrowser" column="login_browser" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="loginOsVersion" column="login_os_version" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="loginUserAgent" column="login_user_agent" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="loginStatus" column="login_status" jdbcType="BOOLEAN" javaType="java.lang.Boolean"/>
-        <association property="historyAccountId" column="history_account_id"
-                     javaType="com.suny.association.pojo.po.Account" select="getAccount"/>
-    </resultMap>
+        &lt;!&ndash;<association property="historyAccountId" column="history_account_id"&ndash;&gt;
+        &lt;!&ndash;javaType="com.suny.association.pojo.po.Account" select="getAccount"/>&ndash;&gt;
+    </resultMap>-->
     <insert id="insert" parameterType="com.suny.association.pojo.po.LoginHistory">
         INSERT INTO login_history
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test=" loginHistoryId != null">
-                login_history_id ,
-            </if>
-            <if test=" lastLoginIp!= null">
-                last_login_ip ,
-            </if>
-            <if test=" loginAddress!= null">
-                login_address ,
-            </if>
-            <if test=" lastLoginTime != null">
-                last_login_time ,
-            </if>
-            <if test=" loginBrowser!= null">
-                login_browser ,
-            </if>
-            <if test=" loginOsVersion!= null">
-                login_os_version,
-            </if>
-            <if test=" loginUserAgent != null">
-                login_user_agent,
-            </if>
-            <if test=" loginStatus != null">
-                login_status ,
-            </if>
-            <if test=" historyAccountId.accountId != null">
-                history_account_id
-            </if>
+            <if test=" loginHistoryId != null">login_history_id ,</if>
+            <if test=" loginIp!= null">login_ip ,</if>
+            <if test=" loginAddress!= null">login_address ,</if>
+            <if test=" loginTime != null">login_time ,</if>
+            <if test=" loginBrowser!= null">login_browser ,</if>
+            <if test=" loginOsVersion!= null">login_os_version,</if>
+            <if test=" loginUserAgent != null">login_user_agent ,</if>
+            <if test=" loginStatus != null">login_status ,</if>
+            <if test=" loginName != null">login_name</if>
         </trim>
         <trim prefix="values(" suffix=")" suffixOverrides=",">
-            <if test=" loginHistoryId != null">
-                #{loginHistoryId} ,
-            </if>
-            <if test=" lastLoginIp!= null">
-                #{lastLoginIp} ,
-            </if>
-            <if test=" loginAddress!= null">
-                #{loginAddress} ,
-            </if>
-            <if test=" lastLoginTime != null">
-                #{lastLoginTime} ,
-            </if>
-            <if test=" loginBrowser!= null">
-                #{loginBrowser} ,
-            </if>
-            <if test=" loginOsVersion!= null">
-                #{loginOsVersion},
-            </if>
-            <if test=" loginUserAgent != null">
-                #{loginUserAgent},
-            </if>
-            <if test=" loginStatus != null">
-                #{loginStatus} ,
-            </if>
-            <if test=" historyAccountId.accountId != null">
-                #{historyAccountId.accountId}
-            </if>
+            <if test=" loginHistoryId != null">#{loginHistoryId} ,</if>
+            <if test=" loginIp!= null">#{loginIp} ,</if>
+            <if test=" loginAddress!= null">#{loginAddress} ,</if>
+            <if test=" loginTime != null">#{loginTime} ,</if>
+            <if test=" loginBrowser!= null">#{loginBrowser} ,</if>
+            <if test=" loginOsVersion!= null">#{loginOsVersion},</if>
+            <if test=" loginUserAgent != null">#{loginUserAgent} ,</if>
+            <if test=" loginStatus != null">#{loginStatus},</if>
+            <if test=" loginName != null">#{login_name}</if>
         </trim>
     </insert>
 
-    <resultMap id="AccountInfo" type="com.suny.association.pojo.po.Account">
-        <id property="accountId" column="account_id"/>
-        <result property="accountName" column="account_name"/>
-    </resultMap>
+    <sql id="selectFields">
+        login_history_id, login_name, login_ip, login_address, login_time, login_browser, login_os_version, login_user_agent, login_status
+    </sql>
 
-    <select id="getAccount" parameterType="int" resultMap="AccountInfo">
+    <select id="list" parameterType="hashmap" resultType="com.suny.association.pojo.po.LoginHistory">
         SELECT
-        a.account_id,
-        a.account_name
-        FROM account AS a
-        WHERE a.account_id = #{ historyAccountId }
-    </select>
-
-
-    <select id="list" parameterType="hashmap" resultMap="BaseResultMap">
-        SELECT
-            l.login_history_id,
-            l.history_account_id,
-            l.last_login_ip,
-            l.login_address,
-            l.last_login_time,
-            l.login_browser,
-            l.login_os_version,
-            l.login_user_agent,
-            l.login_status
-        FROM login_history AS l
-        ORDER BY l.last_login_time DESC
-        LIMIT
-            #{offset},
-            #{limit}
+        <include refid="selectFields"/>
+        FROM login_history
+        ORDER BY last_login_time DESC
+        LIMIT #{offset}, #{limit}
     </select>
 
     <select id="queryCount" resultType="int">
         SELECT count(*)
         FROM login_history;
-    </select>
-    <select id="queryByMemberId" parameterType="int" resultMap="BaseResultMap">
-        SELECT
-        lh.login_history_id,
-        lh.history_account_id,
-        lh.last_login_ip,
-        lh.login_address,
-        lh.last_login_time,
-        lh.login_browser,
-        lh.login_os_version,
-        lh.login_user_agent,
-        lh.login_status
-        FROM login_history AS lh
-        WHERE
-        lh.history_account_id = (SELECT account_id
-        FROM account AS a
-        WHERE a.account_member_id = #{memberId})
-        ORDER BY lh.last_login_time DESC
-        LIMIT 0, 5
     </select>
 
 

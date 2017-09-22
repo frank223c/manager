@@ -24,7 +24,8 @@ import java.util.stream.Collectors;
  */
 public class PermissionFilter implements Filter {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(PermissionFilter.class);
-    private static final String LOGIN_URL = "/base/login.html";
+    private static final String PORTAL_LOGIN_URL = "/login.html";
+    private static final String BACKEND_LOGIN_URL = "/backend/login.html";
     private static final String NO_PERMISSION = "/403.jsp";
     private IPermissionAllotService permissionAllotService;
     private IAccessPermissionService accessPermissionService;
@@ -76,7 +77,7 @@ public class PermissionFilter implements Filter {
             } else {
                 // 【3】. 没有取到Account信息,所以就直接重定向到登录页面
                 logger.error("权限认证Filter中没有取到登录账号信息,直接发到登录页面");
-                response.sendRedirect(request.getContextPath() + LOGIN_URL);
+                response.sendRedirect(request.getContextPath() + PORTAL_LOGIN_URL);
             }
         }
 

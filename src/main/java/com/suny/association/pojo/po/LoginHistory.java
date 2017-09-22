@@ -11,13 +11,13 @@ public class LoginHistory implements Serializable {
     private static final long serialVersionUID = -8878807427599819429L;
     private Long loginHistoryId;
 
-    private Account historyAccountId;
+    private String loginName;
 
-    private String lastLoginIp;
+    private String loginIp;
 
     private String loginAddress;
 
-    private LocalDateTime lastLoginTime;
+    private transient LocalDateTime loginTime;
 
     private String loginBrowser;
 
@@ -30,16 +30,19 @@ public class LoginHistory implements Serializable {
     public LoginHistory() {
     }
 
-    public LoginHistory(Long loginHistoryId, Account historyAccountId, String lastLoginIp, String loginAddress, LocalDateTime lastLoginTime, String loginBrowser, String loginOsVersion, String loginUserAgent, boolean loginStatus) {
-        this.loginHistoryId = loginHistoryId;
-        this.historyAccountId = historyAccountId;
-        this.lastLoginIp = lastLoginIp;
+    public LoginHistory(String loginName, String loginIp, String loginAddress, LocalDateTime loginTime, String loginBrowser, String loginOsVersion, String loginUserAgent, boolean loginStatus) {
+        this.loginName = loginName;
+        this.loginIp = loginIp;
         this.loginAddress = loginAddress;
-        this.lastLoginTime = lastLoginTime;
+        this.loginTime = loginTime;
         this.loginBrowser = loginBrowser;
         this.loginOsVersion = loginOsVersion;
         this.loginUserAgent = loginUserAgent;
         this.loginStatus = loginStatus;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public Long getLoginHistoryId() {
@@ -50,20 +53,20 @@ public class LoginHistory implements Serializable {
         this.loginHistoryId = loginHistoryId;
     }
 
-    public Account getHistoryAccountId() {
-        return historyAccountId;
+    public String getLoginName() {
+        return loginName;
     }
 
-    public void setHistoryAccountId(Account historyAccountId) {
-        this.historyAccountId = historyAccountId;
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
     }
 
-    public String getLastLoginIp() {
-        return lastLoginIp;
+    public String getLoginIp() {
+        return loginIp;
     }
 
-    public void setLastLoginIp(String lastLoginIp) {
-        this.lastLoginIp = lastLoginIp;
+    public void setLoginIp(String loginIp) {
+        this.loginIp = loginIp;
     }
 
     public String getLoginAddress() {
@@ -74,12 +77,12 @@ public class LoginHistory implements Serializable {
         this.loginAddress = loginAddress;
     }
 
-    public LocalDateTime getLastLoginTime() {
-        return lastLoginTime;
+    public LocalDateTime getLoginTime() {
+        return loginTime;
     }
 
-    public void setLastLoginTime(LocalDateTime lastLoginTime) {
-        this.lastLoginTime = lastLoginTime;
+    public void setLoginTime(LocalDateTime loginTime) {
+        this.loginTime = loginTime;
     }
 
     public String getLoginBrowser() {
@@ -118,10 +121,10 @@ public class LoginHistory implements Serializable {
     public String toString() {
         return "LoginHistory{" +
                 "loginHistoryId=" + loginHistoryId +
-                ", historyAccountId=" + historyAccountId +
-                ", lastLoginIp='" + lastLoginIp + '\'' +
+                ", loginName='" + loginName + '\'' +
+                ", loginIp='" + loginIp + '\'' +
                 ", loginAddress='" + loginAddress + '\'' +
-                ", lastLoginTime=" + lastLoginTime +
+                ", loginTime=" + loginTime +
                 ", loginBrowser='" + loginBrowser + '\'' +
                 ", loginOsVersion='" + loginOsVersion + '\'' +
                 ", loginUserAgent='" + loginUserAgent + '\'' +

@@ -98,9 +98,9 @@ public class LoginHistoryServiceImpl extends AbstractBaseServiceImpl<LoginHistor
         String loginBrowser = WebUtils.getBrowserInfo(userAgent);
         //  4. 填充用户登录的ip
         String loginIp = getClientIpAdder(WebUtils.getHttpServletRequest());
-        loginHistory.setLastLoginIp(loginIp);
-        //  5.  填充用户登录的时间，可选，不填充则数据库生成
-        loginHistory.setLastLoginTime(LocalDateTime.now());
+        loginHistory.setLoginIp(loginIp);
+        //  5.  填充用户登录的时间
+        loginHistory.setLoginTime(LocalDateTime.now());
         //  6. 填充登录的浏览器信息
         loginHistory.setLoginBrowser(loginBrowser);
         //  7.  填充登录用户的浏览器版本
@@ -108,9 +108,9 @@ public class LoginHistoryServiceImpl extends AbstractBaseServiceImpl<LoginHistor
         //  8. 填充用户登录验证账号密码的状态   true为认证成功   false则为认证失败
         loginHistory.setLoginStatus(authStatus);
         //  9.  通过登录的用户名查询触对应的一条账号信息
-        Account account = accountMapper.queryByName(username);
+//        Account account = accountMapper.queryByName(username);
         //  10. 填充 字段 登录用户
-        loginHistory.setHistoryAccountId(account);
+        loginHistory.setLoginName(username);
         //  11.通过ip地址去获取普通的定位地址
         GeneralLocationResult generalLocation = WebUtils.getGeneralLocation(loginIp);
         //   11.1 判断是否得到了通过定位到的IP得到的地址
@@ -125,9 +125,9 @@ public class LoginHistoryServiceImpl extends AbstractBaseServiceImpl<LoginHistor
     }
 
     /*  通过成员的id去查询一条登录历史记录  */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+   /* @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public List<LoginHistory> queryByMemberId(int memberId) {
         return loginHistoryMapper.queryByMemberId(memberId);
-    }
+    }*/
 }

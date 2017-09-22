@@ -13,5 +13,5 @@ import java.util.List;
 public interface ILoginHistoryService extends IBaseService<LoginHistory> {
     void saveLoginLog(String username, boolean authStatus);
 
-    List<LoginHistory> queryByMemberId(int memberId);
+//    List<LoginHistory> queryByMemberId(int memberId);
 }

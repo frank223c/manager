@@ -45,8 +45,9 @@ public class SessionController extends BaseController {
     @RequestMapping(value = "/queryByMemberId.action", method = RequestMethod.GET)
     @ResponseBody
     public Map<Object, Object> queryById(@RequestParam("memberId") int memberId) {
-        List<LoginHistory> loginHistoryList = loginHistoryService.queryByMemberId(memberId);
-        return ConversionUtil.convertToBootstrapTableResult(loginHistoryList, 5);
+//        List<LoginHistory> loginHistoryList = loginHistoryService.queryByMemberId(memberId);
+//        return ConversionUtil.convertToBootstrapTableResult(loginHistoryList, 5);
+        return null;
     }
 
     @SystemControllerLog(description = "查看登录记录页面")
