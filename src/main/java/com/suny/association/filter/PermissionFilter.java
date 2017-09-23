@@ -35,7 +35,6 @@ public class PermissionFilter implements Filter {
     private IAccessPermissionService accessPermissionService;
     private LoginTicketMapper loginTicketMapper;
     private AccountMapper accountMapper;
-    private HostHolder hostHolder;
 
 
     /**
@@ -51,7 +50,6 @@ public class PermissionFilter implements Filter {
         accessPermissionService = (IAccessPermissionService) context.getBean("accessPermissionService");
         loginTicketMapper = (LoginTicketMapper) context.getBean("loginTicketMapper");
         accountMapper = (AccountMapper) context.getBean("accountMapper");
-        hostHolder = (HostHolder) context.getBean("hostHolder");
         logger.info("===============权限验证过滤器开始初始化============");
     }
 

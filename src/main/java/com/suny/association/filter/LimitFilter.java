@@ -1,24 +1,11 @@
 package com.suny.association.filter;
 
-import com.suny.association.mapper.AccountMapper;
-import com.suny.association.mapper.LoginTicketMapper;
-import com.suny.association.pojo.po.Account;
-import com.suny.association.pojo.po.HostHolder;
-import com.suny.association.pojo.po.LoginTicket;
-import com.suny.association.utils.LoginTicketUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 /**
  * 基本访问URL操作,当用户访问项目第一个进入的过滤器.
@@ -28,24 +15,15 @@ public class LimitFilter implements Filter {
 
     private static Logger logger = LoggerFactory.getLogger(LimitFilter.class);
     private static final String EXECUTE_NEXT_FILTER = "EXECUTE_NEXT_FILTER";
-    private static final String IS_LOGIN = "IS_LOGIN";
-    private LoginTicketMapper loginTicketMapper;
-    private HostHolder hostHolder;
-    private AccountMapper accountMapper;
 
     /*   不需要登录就可以访问的资源*/
     private static final String[] INHERENT_ESCAPE_URIS = {
-             "/login.html", "/login.action",
+            "/login.html", "/login.action",
             "/backend/login.html", "/backend/index.html"
     };
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        ServletContext servletContext = filterConfig.getServletContext();
-        ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-        loginTicketMapper = (LoginTicketMapper) context.getBean("loginTicketMapper");
-        hostHolder = (HostHolder) context.getBean("hostHolder");
-        accountMapper = (AccountMapper) context.getBean("accountMapper");
         logger.info("===============URL验证过滤器开始初始化============");
     }
 
@@ -55,11 +33,15 @@ public class LimitFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         String reqURI = req.getRequestURI();
         // 1. 项目中的第一个Filter,如果是一些生成验证码或者是请求登录,验证账号信息等请求的话直接放行
+        if (req.getAttribute("account") != null) {
+            req.setAttribute(EXECUTE_NEXT_FILTER, false);
+            logger.warn("session中有账号信息");
+        }
         if (isExcludeUrl(reqURI, req)) {
             //  1.1     如果是被排除的URL的话就直接放行,不要阻拦了,直接跳过剩下的Filter
             logger.info("【LimitFilter】请求的url【{}】直接放行", reqURI);
             req.setAttribute(EXECUTE_NEXT_FILTER, false);
-        }else request.setAttribute(EXECUTE_NEXT_FILTER,true);
+        } else request.setAttribute(EXECUTE_NEXT_FILTER, true);
         // 2. 放行到登录下一个登录验证过滤器
         logger.info("【LimitFilter】请求的url为【{}】,请求地址地址进行下一步认证【{}】", reqURI, req.getAttribute(EXECUTE_NEXT_FILTER));
         chain.doFilter(request, response);

@@ -18,9 +18,9 @@ public class Account implements Serializable {
 
     private Boolean accountStatus;
 
-    private transient Roles accountRoles;
+    private  Roles accountRoles;
 
-    private transient Member accountMember;
+    private  Member accountMember;
 
 
     public Account() {

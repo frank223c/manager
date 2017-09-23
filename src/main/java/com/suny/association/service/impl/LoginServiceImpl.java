@@ -4,7 +4,6 @@ import com.suny.association.enums.OperateType;
 import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.LoginTicketMapper;
 import com.suny.association.pojo.po.Account;
-import com.suny.association.pojo.po.HostHolder;
 import com.suny.association.pojo.po.LoginTicket;
 import com.suny.association.service.interfaces.ILoginService;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
@@ -27,14 +26,12 @@ public class LoginServiceImpl implements ILoginService {
 
     private final LoginTicketMapper loginTicketMapper;
     private final AccountMapper accountMapper;
-    private final HostHolder hostHolder;
     private final ILoginHistoryService loginHistoryService;
 
     @Autowired
-    public LoginServiceImpl(LoginTicketMapper loginTicketMapper, AccountMapper accountMapper, HostHolder hostHolder, ILoginHistoryService loginHistoryService) {
+    public LoginServiceImpl(LoginTicketMapper loginTicketMapper, AccountMapper accountMapper, ILoginHistoryService loginHistoryService) {
         this.loginTicketMapper = loginTicketMapper;
         this.accountMapper = accountMapper;
-        this.hostHolder = hostHolder;
         this.loginHistoryService = loginHistoryService;
     }
 
@@ -51,7 +48,7 @@ public class LoginServiceImpl implements ILoginService {
         //  2.     ==========账号密码匹配成功的业务逻辑=============
         if (authAction(username, password)) {
             Account account = accountMapper.selectByName(username);
-            hostHolder.setAccounts(account);
+//            hostHolder.setAccounts(account);
             //  2.1   查看数据库里面ticket是否存在
             LoginTicket loginTicket = loginTicketMapper.selectByAccountId(account.getAccountId());
             //  2.2   数据库中存在这个用户的ticket

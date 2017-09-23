@@ -2,8 +2,6 @@ package com.suny.association.filter;
 
 import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.LoginTicketMapper;
-import com.suny.association.pojo.po.Account;
-import com.suny.association.pojo.po.HostHolder;
 import com.suny.association.pojo.po.LoginTicket;
 import com.suny.association.utils.LoginTicketUtils;
 import org.slf4j.Logger;
@@ -12,12 +10,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 /**
  * Created by 孙建荣 on 17-9-20.上午9:17
@@ -28,7 +23,6 @@ public class RequireLoginFilter implements Filter {
     private static final String EXECUTE_NEXT_FILTER = "EXECUTE_NEXT_FILTER";
     private static final String PORTAL_LOGIN_URL = "/login.html";
     private static final String BACKEND_LOGIN_URL = "/backend/login.html";
-    private HostHolder hostHolder;
     private LoginTicketMapper loginTicketMapper;
     private AccountMapper accountMapper;
 
@@ -42,7 +36,6 @@ public class RequireLoginFilter implements Filter {
     public void init(FilterConfig filterConfig) {
         ServletContext servletContext = filterConfig.getServletContext();
         ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-        hostHolder = (HostHolder) context.getBean("hostHolder");
         loginTicketMapper = (LoginTicketMapper) context.getBean("loginTicketMapper");
         accountMapper = (AccountMapper) context.getBean("accountMapper");
         logger.info("===============登录验证过滤器开始初始化============");
@@ -59,6 +52,10 @@ public class RequireLoginFilter implements Filter {
             // 1.1 如果发现了IS_LOGIN这个标记为true的话就说明是自动登录状态
             logger.info("【RequireLoginFilter】当前过滤器直接放行");
             chain.doFilter(req, resp);
+        } else if (req.getAttribute("Account") != null ) {
+            // 如果session中由用户就直接放行到下一个
+            request.setAttribute(EXECUTE_NEXT_FILTER, true);
+            chain.doFilter(request, response);
         } else {
             // 2.   判断是否有登录标记ticket,ticket是从Cookie中进行获取,循环遍历验证室友存在ticket值
             String ticket = LoginTicketUtils.getTicket(request);

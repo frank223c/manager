@@ -2,13 +2,10 @@ package com.suny.association.controller.portal;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.enums.BaseEnum;
-import com.suny.association.mapper.LoginTicketMapper;
 import com.suny.association.pojo.po.Account;
-import com.suny.association.pojo.po.HostHolder;
 import com.suny.association.pojo.po.Member;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.ILoginService;
-import com.suny.association.service.interfaces.system.ILoginHistoryService;
 import com.suny.association.utils.JsonResult;
 import com.suny.association.utils.TokenProcessor;
 import org.slf4j.Logger;
@@ -25,7 +22,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -45,14 +41,11 @@ public class PortalLoginController {
 
     private final ILoginService loginService;
 
-    private final HostHolder hostHolder;
-
     private static final String TOKEN = "token";
 
     @Autowired
-    public PortalLoginController(IAccountService accountService, ILoginHistoryService loginHistoryService, LoginTicketMapper loginTicketMapper, HostHolder hostHolder, ILoginService loginService) {
+    public PortalLoginController(IAccountService accountService, ILoginService loginService) {
         this.accountService = accountService;
-        this.hostHolder = hostHolder;
         this.loginService = loginService;
     }
 
@@ -64,10 +57,9 @@ public class PortalLoginController {
     public String loginPage(HttpServletRequest request) {
         String token = TokenProcessor.getInstance().makeToken();
         request.getSession().setAttribute(TOKEN, token);
-        logger.info("产生的令牌值是 {}", token);
+        logger.info("给登录页面产生的令牌值是 {}", token);
         return "portal/login";
     }
-
 
 
     /**
@@ -88,11 +80,13 @@ public class PortalLoginController {
      * @param request  request请求
      * @return 验证的json结果
      */
+    @SuppressWarnings("Duplicates")
     @RequestMapping(value = "/login.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult loginAction(@RequestParam("username") String username,
                                   @RequestParam("password") String password,
                                   @RequestParam("formCode") String formCode,
+                                  @RequestParam(value = "rememberMe", defaultValue = "true") Boolean rememberMe,
                                   @RequestParam("token") String token,
                                   HttpServletRequest request,
                                   HttpServletResponse response) {
@@ -109,25 +103,22 @@ public class PortalLoginController {
             //   1.4   获取登录的结果,也就是带有ticket则表示登录成功了
             AtomicReference<Map<String, Object>> loginResult = loginService.login(username, password);
             if (loginResult.get().containsKey(TICKET)) {
-                String ticket = (String) loginResult.get().get(TICKET);
                 //   1.4.1    把获取到的ticket放到Cookie中去
+                String ticket = (String) loginResult.get().get(TICKET);
                 Cookie cookie = new Cookie(TICKET, ticket);
-                //    1.4.2  设置这个cookie的有效路径
                 cookie.setPath("/");
-                //    1.4.3   如果前端勾选了记住登录的话就设置过期时间
-//                if (remeberme) {
-//                    cookie.setMaxAge(3600 * 24 * 5);
-//                }
+                if (rememberMe) {
+                    cookie.setMaxAge(3600 * 24 * 5);
+                }
                 response.addCookie(cookie);
                 //    1.4.4   把一些进入主页面需要的数据先放进去
-                saveLoginUser(request, username);
+                saveUser(request, username);
                 logger.warn("登录成功了,给前端发送通知");
                 return JsonResult.successResult(BaseEnum.LOGIN_SYSTEM);
             }
             //   1.5   没有返回ticket就是登录失败了,可能是由于面膜错误,账号错误，账号密码不匹配，参数为空等等
             return JsonResult.failResult(BaseEnum.LOGIN_FAILURE);
         }
-
         //   2.  重复提交表单的业务逻辑处理
         logger.warn("重复提交表单");
         return JsonResult.failResult(BaseEnum.REPEAT_SUBMIT);
@@ -141,6 +132,7 @@ public class PortalLoginController {
      * @param request request值
      * @return 比较的结果
      */
+
     private boolean isRepeatSubmit(String token, HttpServletRequest request) {
         // 如果token是空的则说明重复提交了表单
         if ("".equals(token) || token == null) {
@@ -160,7 +152,7 @@ public class PortalLoginController {
      * @param request  request请求
      * @param username 登录的用户名
      */
-    private void saveLoginUser(HttpServletRequest request, String username) {
+    private void saveUser(HttpServletRequest request, String username) {
         Member member = accountService.selectByName(username).getAccountMember();
         Account account = accountService.selectByName(username);
         request.getSession().setAttribute("member", member);
@@ -173,7 +165,7 @@ public class PortalLoginController {
      *
      * @return 管理员中心
      */
-    @RequestMapping(value = {"/","index.html"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/", "index.html"}, method = RequestMethod.GET)
     public ModelAndView userCenter() {
         return new ModelAndView("/portal/userCenter");
     }
@@ -194,6 +186,7 @@ public class PortalLoginController {
             session.removeAttribute("member");
             return JsonResult.successResult(BaseEnum.LOGOUT_SUCCESS);
         }
+        request.getSession().removeAttribute("ticket");
         return JsonResult.failResult(BaseEnum.LOGOUT_FAIL);
     }
 
