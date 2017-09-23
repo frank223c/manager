@@ -71,6 +71,17 @@ public class LoginTicket implements Serializable {
     public void setTicket(String ticket) {
         this.ticket = ticket;
     }
+
+    @Override
+    public String toString() {
+        return "LoginTicket{" +
+                "id=" + id +
+                ", accountId=" + accountId +
+                ", expired=" + expired +
+                ", status=" + status +
+                ", ticket='" + ticket + '\'' +
+                '}';
+    }
 }
 
 

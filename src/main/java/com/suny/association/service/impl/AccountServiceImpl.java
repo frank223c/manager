@@ -58,7 +58,7 @@ public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> impleme
     @SystemServiceLog(description = "删除账号失败")
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         accountMapper.deleteById(id);
     }
 
@@ -82,7 +82,7 @@ public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> impleme
      */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public Account queryById(int id) {
+    public Account queryById(long id) {
         return accountMapper.queryById(id);
     }
 

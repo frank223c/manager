@@ -16,6 +16,10 @@ public abstract class AbstractBaseServiceImpl<T> implements IBaseService<T> {
     public AbstractBaseServiceImpl() {
     }
 
+    public AbstractBaseServiceImpl(IMapper<T> mapper) {
+        this.mapper = mapper;
+    }
+
 
     @Override
     public void insert(T t) {
@@ -26,7 +30,7 @@ public abstract class AbstractBaseServiceImpl<T> implements IBaseService<T> {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         mapper.deleteById(id);
 
     }
@@ -39,7 +43,7 @@ public abstract class AbstractBaseServiceImpl<T> implements IBaseService<T> {
     }
 
     @Override
-    public T queryById(int id) {
+    public T queryById(long id) {
         return mapper.queryById(id);
     }
 

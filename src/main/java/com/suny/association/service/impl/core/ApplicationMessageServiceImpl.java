@@ -53,7 +53,7 @@ public class ApplicationMessageServiceImpl extends AbstractBaseServiceImpl<Appli
      */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public ApplicationMessage queryById(int id) {
+    public ApplicationMessage queryById(long id) {
         return applicationMessageMapper.queryById(id);
     }
 

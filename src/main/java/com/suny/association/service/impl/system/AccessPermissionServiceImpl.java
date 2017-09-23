@@ -30,7 +30,7 @@ public class AccessPermissionServiceImpl implements IAccessPermissionService {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
 
     }
 
@@ -40,7 +40,7 @@ public class AccessPermissionServiceImpl implements IAccessPermissionService {
     }
 
     @Override
-    public AccessPermission queryById(int id) {
+    public AccessPermission queryById(long id) {
         return null;
     }
 

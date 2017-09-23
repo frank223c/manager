@@ -37,7 +37,7 @@ public class PermissionAllotServiceImpl extends AbstractBaseServiceImpl<Permissi
     @Transactional(rollbackFor = Exception.class)
     @SystemServiceLog(description = "删除角色所有权限失败")
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         permissionAllotMapper.deleteById(id);
     }
 

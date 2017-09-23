@@ -3,7 +3,6 @@ package com.suny.association.service.impl.system;
 import com.suny.association.annotation.SystemServiceLog;
 import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.LoginHistoryMapper;
-import com.suny.association.pojo.po.Account;
 import com.suny.association.pojo.po.LoginHistory;
 import com.suny.association.pojo.po.baiduLocation.GeneralLocationResult;
 import com.suny.association.service.AbstractBaseServiceImpl;

@@ -1,9 +1,12 @@
 package com.suny.association.filter;
 
 
+import com.suny.association.mapper.AccountMapper;
+import com.suny.association.mapper.LoginTicketMapper;
 import com.suny.association.pojo.po.*;
 import com.suny.association.service.interfaces.system.IAccessPermissionService;
 import com.suny.association.service.interfaces.system.IPermissionAllotService;
+import com.suny.association.utils.LoginTicketUtils;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -24,11 +27,14 @@ import java.util.stream.Collectors;
  */
 public class PermissionFilter implements Filter {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(PermissionFilter.class);
+    private static final String IS_LOGIN = "IS_LOGIN";
     private static final String PORTAL_LOGIN_URL = "/login.html";
     private static final String BACKEND_LOGIN_URL = "/backend/login.html";
     private static final String NO_PERMISSION = "/403.jsp";
     private IPermissionAllotService permissionAllotService;
     private IAccessPermissionService accessPermissionService;
+    private LoginTicketMapper loginTicketMapper;
+    private AccountMapper accountMapper;
     private HostHolder hostHolder;
 
 
@@ -43,6 +49,8 @@ public class PermissionFilter implements Filter {
         ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         permissionAllotService = (IPermissionAllotService) context.getBean("permissionAllotService");
         accessPermissionService = (IAccessPermissionService) context.getBean("accessPermissionService");
+        loginTicketMapper = (LoginTicketMapper) context.getBean("loginTicketMapper");
+        accountMapper = (AccountMapper) context.getBean("accountMapper");
         hostHolder = (HostHolder) context.getBean("hostHolder");
         logger.info("===============权限验证过滤器开始初始化============");
     }
@@ -55,28 +63,33 @@ public class PermissionFilter implements Filter {
         // 1.判断是否要继续执行下一个Filter,executeNextFilter值为false的话就直接放行到下一个Filter
         Boolean executeNextFilter = (Boolean) req.getAttribute("EXECUTE_NEXT_FILTER");
         if (!executeNextFilter) {
-            logger.info("EXECUTE_NEXT_FILTER值为{},权限认证Filter放行", executeNextFilter);
+            logger.info("【PermissionFilter】当前过滤器直接放行");
             chain.doFilter(req, resp);
         } else {
             String reqURI = request.getRequestURI();
             //   【1】. 如果可以在本地线程变量里面取到Account信息,根据URL判断是否有对应的操作权限,否则就要求登录
-            Account account = hostHolder.getAccount();
+            String ticket = LoginTicketUtils.getTicket(request);
+            // 3.判断登录标记是否过期,不过期就自动登录,过期就需要重新登录
+            // 3.1  根据ticket字符串去数据库里面查询是否有这个,防止客户端伪造ticket
+            LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
+            Account account = accountMapper.queryByLongId(loginTicket.getAccountId());
+//            Account account = hostHolder.getAccount();
             //   【2】. 判断是否已经存在Account信息
             if (account != null) {
                 // 2.1 判断是否有对应的权限
                 boolean isPermission = isPermission(account, reqURI);
                 //    2.1.1 有权限则放行到下一个Filter
                 if (isPermission) {
-                    logger.info("用户{}具有访问{}的权限,验证通过放行", account.getAccountName(), reqURI);
+                    logger.info("【PermissionFilter】用户【{}】具有访问【{}】的权限,验证通过放行", account.getAccountName(), reqURI);
                     chain.doFilter(request, response);
                 } else {
                     // 2.1.2   重定向到无权限页面友情提示页面
-                    logger.info("用户{}不具有访问{}的权限,验证失败,重定向到{}页面", account.getAccountName(), reqURI, NO_PERMISSION);
+                    logger.warn("【PermissionFilter】用户【{}】不具有访问【{}】的权限,验证失败,重定向到{}页面", account.getAccountName(), reqURI, NO_PERMISSION);
                     response.sendRedirect(NO_PERMISSION);
                 }
             } else {
                 // 【3】. 没有取到Account信息,所以就直接重定向到登录页面
-                logger.error("权限认证Filter中没有取到登录账号信息,直接发到登录页面");
+                logger.warn("【PermissionFilter】没有取到登录账号的信息,直接发到登录页面");
                 response.sendRedirect(request.getContextPath() + PORTAL_LOGIN_URL);
             }
         }

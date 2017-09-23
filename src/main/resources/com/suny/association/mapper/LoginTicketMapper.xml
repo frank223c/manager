@@ -4,6 +4,7 @@
     <sql id="selectFields">  id, account_id, ticket, expired, status </sql>
     <sql id="insertFields">  account_id, ticket, expired, status </sql>
 
+
     <update id="update" parameterType="com.suny.association.pojo.po.LoginTicket">
         UPDATE login_ticket
         SET ticket = #{ticket}, expired = #{expired}, status = #{status}

@@ -125,7 +125,7 @@ public class LoginServiceImpl implements ILoginService {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
 
     }
 
@@ -135,7 +135,7 @@ public class LoginServiceImpl implements ILoginService {
     }
 
     @Override
-    public LoginTicket queryById(int id) {
+    public LoginTicket queryById(long id) {
         return null;
     }
 

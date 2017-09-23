@@ -35,7 +35,7 @@ public class MemberRolesServiceImpl extends AbstractBaseServiceImpl<MemberRoles>
     @SystemServiceLog(description = "删除一条成员角色记录失败")
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteById(int memberRoleId) {
+    public void deleteById(long memberRoleId) {
         memberRolesMapper.deleteById(memberRoleId);
     }
 
@@ -56,7 +56,7 @@ public class MemberRolesServiceImpl extends AbstractBaseServiceImpl<MemberRoles>
     /*  通过成员角色id查询一个成员角色    */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public MemberRoles queryById(int id) {
+    public MemberRoles queryById(long id) {
         return memberRolesMapper.queryById(id);
     }
 

@@ -10,9 +10,9 @@ import java.util.Map;
  */
 public interface IBaseService<T> {
     void insert(T t);
-    void deleteById(int id);
+    void deleteById(long id);
     void update(T t);
-    T queryById(int id);
+    T queryById(long id);
 
     T queryByName(String name);
 

@@ -107,7 +107,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     @SystemServiceLog(description = "删除成员信息记录失败")
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         memberMapper.deleteById(id);
     }
 
@@ -324,7 +324,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     /*  通过id查询一条成员信息    */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public Member queryById(int id) {
+    public Member queryById(long id) {
         return memberMapper.queryById(id);
     }
 

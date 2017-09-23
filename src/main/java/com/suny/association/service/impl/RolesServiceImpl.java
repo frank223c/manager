@@ -33,7 +33,7 @@ public class RolesServiceImpl extends AbstractBaseServiceImpl<Roles> implements 
     @SystemServiceLog(description = "删除账号角色信息失败")
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         rolesMapper.deleteById(id);
     }
 
@@ -73,7 +73,7 @@ public class RolesServiceImpl extends AbstractBaseServiceImpl<Roles> implements 
     /* 通过账号角色id查询账号角色     */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public Roles queryById(int id) {
+    public Roles queryById(long id) {
         return rolesMapper.queryById(id);
     }
 

@@ -173,7 +173,7 @@ public class PortalLoginController {
      *
      * @return 管理员中心
      */
-    @RequestMapping(value = {"/","index.html","index.jsp"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/","index.html"}, method = RequestMethod.GET)
     public ModelAndView userCenter() {
         return new ModelAndView("/portal/userCenter");
     }

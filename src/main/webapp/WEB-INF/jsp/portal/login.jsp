@@ -297,7 +297,7 @@
      * 跳转到管理页面
      */
     function goAdminPage() {
-        window.parent.location.href = "${basePath}/userCenter.html";
+        window.parent.location.href = "${basePath}/index.html";
     }
 
     /**

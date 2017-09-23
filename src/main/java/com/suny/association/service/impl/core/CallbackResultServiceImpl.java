@@ -71,7 +71,7 @@ public class CallbackResultServiceImpl extends AbstractBaseServiceImpl<CallbackR
     /* 通过id查询异议考勤审批结果*/
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public CallbackResult queryById(int id) {
+    public CallbackResult queryById(long id) {
         return callbackResultMapper.queryById(id);
     }
 

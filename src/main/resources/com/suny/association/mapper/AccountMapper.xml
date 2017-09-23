@@ -123,60 +123,32 @@
 
     <!--=============================================================================================-->
 
+    <sql id="BaseSelectFields">
+        account_id, account_name, account_password, account_phone, account_email, account_status, account_role_id, account_member_id
+    </sql>
+
 
     <insert id="insert" parameterType="com.suny.association.pojo.po.Account">
         INSERT INTO account
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="accountId != null">
-                account_id ,
-            </if>
-            <if test="accountName != null">
-                account_name ,
-            </if>
-            <if test="accountPassword != null">
-                account_password ,
-            </if>
-            <if test="accountPhone != null">
-                account_phone ,
-            </if>
-            <if test="accountEmail != null">
-                account_email,
-            </if>
-            <if test="accountStatus != null">
-                account_status,
-            </if>
-            <if test="accountMember != null">
-                account_member_id,
-            </if>
-            <if test="accountRoles != null">
-                account_role_id,
-            </if>
+            <if test="accountId != null">account_id ,</if>
+            <if test="accountName != null">account_name ,</if>
+            <if test="accountPassword != null">account_password ,</if>
+            <if test="accountPhone != null">account_phone ,</if>
+            <if test="accountEmail != null">account_email,</if>
+            <if test="accountStatus != null">account_status,</if>
+            <if test="accountMember != null">account_member_id,</if>
+            <if test="accountRoles != null">account_role_id,</if>
         </trim>
         <trim prefix="values(" suffix=")" suffixOverrides=",">
-            <if test="accountId != null">
-                #{accountId,jdbcType=BIGINT},
-            </if>
-            <if test="accountName != null">
-                #{accountName,jdbcType=VARCHAR},
-            </if>
-            <if test="accountPassword != null">
-                #{accountPassword,jdbcType=VARCHAR},
-            </if>
-            <if test="accountPhone != null">
-                #{accountPhone,jdbcType=BIGINT},
-            </if>
-            <if test="accountEmail != null">
-                #{accountEmail,jdbcType=VARCHAR},
-            </if>
-            <if test="accountStatus != null">
-                #{accountStatus,jdbcType=BOOLEAN},
-            </if>
-            <if test="accountMember != null">
-                #{accountMember.memberId,jdbcType=BIGINT},
-            </if>
-            <if test="accountRoles != null">
-                #{accountRoles.roleId,jdbcType=INTEGER},
-            </if>
+            <if test="accountId != null">#{accountId,jdbcType=BIGINT},</if>
+            <if test="accountName != null">#{accountName,jdbcType=VARCHAR},</if>
+            <if test="accountPassword != null">#{accountPassword,jdbcType=VARCHAR},</if>
+            <if test="accountPhone != null">#{accountPhone,jdbcType=BIGINT},</if>
+            <if test="accountEmail != null">#{accountEmail,jdbcType=VARCHAR},</if>
+            <if test="accountStatus != null">#{accountStatus,jdbcType=BOOLEAN},</if>
+            <if test="accountMember != null">#{accountMember.memberId,jdbcType=BIGINT},</if>
+            <if test="accountRoles != null">#{accountRoles.roleId,jdbcType=INTEGER},</if>
         </trim>
     </insert>
 
@@ -184,87 +156,41 @@
             keyProperty="accountId">
         INSERT INTO account
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="accountId != null">
-                account_id ,
-            </if>
-            <if test="accountName != null">
-                account_name ,
-            </if>
-            <if test="accountPassword != null">
-                account_password ,
-            </if>
-            <if test="accountPhone != null">
-                account_phone ,
-            </if>
-            <if test="accountEmail != null">
-                account_email,
-            </if>
-            <if test="accountStatus != null">
-                account_status,
-            </if>
-            <if test="accountMember != null">
-                account_member_id,
-            </if>
-            <if test="accountRoles != null">
-                account_role_id,
-            </if>
+            <if test="accountId != null">account_id ,</if>
+            <if test="accountName != null">account_name ,</if>
+            <if test="accountPassword != null">account_password ,</if>
+            <if test="accountPhone != null">account_phone ,</if>
+            <if test="accountEmail != null">account_email,</if>
+            <if test="accountStatus != null">account_status,</if>
+            <if test="accountMember != null">account_member_id,</if>
+            <if test="accountRoles != null">account_role_id,</if>
         </trim>
         <trim prefix="values(" suffix=")" suffixOverrides=",">
-            <if test="accountId != null">
-                #{accountId,jdbcType=BIGINT},
-            </if>
-            <if test="accountName != null">
-                #{accountName,jdbcType=VARCHAR},
-            </if>
-            <if test="accountPassword != null">
-                #{accountPassword,jdbcType=VARCHAR},
-            </if>
-            <if test="accountPhone != null">
-                #{accountPhone,jdbcType=BIGINT},
-            </if>
-            <if test="accountEmail != null">
-                #{accountEmail,jdbcType=VARCHAR},
-            </if>
-            <if test="accountStatus != null">
-                #{accountStatus,jdbcType=BOOLEAN},
-            </if>
-            <if test="accountMember != null">
-                #{accountMember.memberId,jdbcType=BIGINT},
-            </if>
-            <if test="accountRoles != null">
-                #{accountRoles.roleId,jdbcType=INTEGER},
-            </if>
+            <if test="accountId != null">#{accountId,jdbcType=BIGINT},</if>
+            <if test="accountName != null">#{accountName,jdbcType=VARCHAR},</if>
+            <if test="accountPassword != null">#{accountPassword,jdbcType=VARCHAR},</if>
+            <if test="accountPhone != null">#{accountPhone,jdbcType=BIGINT},</if>
+            <if test="accountEmail != null">#{accountEmail,jdbcType=VARCHAR},</if>
+            <if test="accountStatus != null">#{accountStatus,jdbcType=BOOLEAN},</if>
+            <if test="accountMember != null">#{accountMember.memberId,jdbcType=BIGINT},</if>
+            <if test="accountRoles != null">#{accountRoles.roleId,jdbcType=INTEGER},</if>
         </trim>
     </insert>
 
     <update id="update" parameterType="com.suny.association.pojo.po.Account">
-        UPDATE account as a
+        UPDATE account
         <trim prefix="set" suffixOverrides=",">
-            <if test="accountName != null">
-                account_name =#{accountName,jdbcType=VARCHAR},
-            </if>
-            <if test="accountPassword != null">
-                account_password =#{accountPassword,jdbcType=VARCHAR},
-            </if>
-            <if test="accountPhone != null">
-                account_phone =#{accountPhone,jdbcType=BIGINT},
-            </if>
-            <if test="accountEmail != null">
-                account_email =#{accountEmail,jdbcType=VARCHAR},
-            </if>
-            <if test="accountStatus != null">
-                account_status =#{accountStatus,jdbcType=BOOLEAN},
-            </if>
-            <if test="accountMember != null">
-                account_member_id =#{accountMember.memberId,jdbcType=BIGINT},
-            </if>
-            <if test="accountRoles != null">
-                account_role_id =#{accountRoles.roleId,jdbcType=INTEGER},
-            </if>
+            <if test="accountName != null">account_name =#{accountName,jdbcType=VARCHAR},</if>
+            <if test="accountPassword != null">account_password=#{accountPassword,jdbcType=VARCHAR},</if>
+            <if test="accountPhone != null">account_phone =#{accountPhone,jdbcType=BIGINT},</if>
+            <if test="accountEmail != null">account_email =#{accountEmail,jdbcType=VARCHAR},</if>
+            <if test="accountStatus != null">account_status =#{accountStatus,jdbcType=BOOLEAN},</if>
+            <if test="accountMember != null">account_member_id =#{accountMember.memberId,jdbcType=BIGINT},</if>
+            <if test="accountRoles != null">account_role_id =#{accountRoles.roleId,jdbcType=INTEGER},</if>
         </trim>
-        WHERE
-        a.account_id = #{accountId,jdbcType=BIGINT}
+        WHERE a.account_id = #{accountId,jdbcType=BIGINT}
     </update>
+
     <update id="changePassword">
         UPDATE account
         SET account_password = #{newPassword}
@@ -273,16 +199,9 @@
 
     <select id="queryByMemberId" parameterType="int" resultMap="BaseResultMap">
         SELECT
-            a.account_id,
-            a.account_name,
-            a.account_password,
-            a.account_phone,
-            a.account_email,
-            a.account_status,
-            a.account_role_id,
-            a.account_member_id
-        FROM account AS a
-        WHERE a.account_member_id = #{memberId}
+        <include refid="BaseSelectFields"/>
+        FROM account
+        WHERE account_member_id = #{memberId}
     </select>
 
     <select id="queryQuoteByAccountId" parameterType="Long" resultMap="BaseResultMap">
@@ -304,42 +223,28 @@
 
     <select id="queryByName" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT
-            a.account_id,
-            a.account_name,
-            a.account_password,
-            a.account_phone,
-            a.account_email,
-            a.account_status,
-            a.account_role_id,
-            a.account_member_id
-        FROM account AS a
-        WHERE a.account_name = #{accountName}
+        <include refid="BaseSelectFields"/>
+        FROM account
+        WHERE account_name = #{accountName}
     </select>
 
 
     <delete id="deleteById" parameterType="java.lang.Integer">
-        DELETE FROM account AS a
-        WHERE a.account_id = #{accountId,jdbcType=BIGINT}
+        DELETE FROM account
+        WHERE account_id = #{accountId,jdbcType=BIGINT}
     </delete>
 
 
     <delete id="deleteByLongId" parameterType="java.lang.Long">
-        DELETE FROM account AS a
-        WHERE a.account_id = #{accountId,jdbcType=BIGINT}
+        DELETE FROM account
+        WHERE account_id = #{accountId,jdbcType=BIGINT}
     </delete>
 
     <select id="queryById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT
-            a.account_id,
-            a.account_name,
-            a.account_password,
-            a.account_phone,
-            a.account_email,
-            a.account_status,
-            a.account_role_id,
-            a.account_member_id
-        FROM account AS a
-        WHERE a.account_id = #{accountId,jdbcType=BIGINT}
+        <include refid="BaseSelectFields"/>
+        FROM account
+        WHERE account_id = #{accountId,jdbcType=BIGINT}
     </select>
 
     <select id="queryByLongId" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -370,29 +275,13 @@
 
     <select id="queryAll" resultMap="BaseResultMap">
         SELECT
-            a.account_id,
-            a.account_name,
-            a.account_password,
-            a.account_email,
-            a.account_phone,
-            a.account_role_id,
-            a.account_status,
-            a.account_member_id
-        FROM
-            account AS a
+        <include refid="BaseSelectFields"/>
+       FROM account
     </select>
     <select id="list" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
-        a.account_id,
-        a.account_name,
-        a.account_password,
-        a.account_email,
-        a.account_phone,
-        a.account_role_id,
-        a.account_status,
-        a.account_member_id
-        FROM
-        account AS a
+        <include refid="BaseSelectFields"/>
+        FROM account
         <where>
             1=1
             <if test="status != null">

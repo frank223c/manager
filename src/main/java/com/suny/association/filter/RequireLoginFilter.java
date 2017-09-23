@@ -5,6 +5,7 @@ import com.suny.association.mapper.LoginTicketMapper;
 import com.suny.association.pojo.po.Account;
 import com.suny.association.pojo.po.HostHolder;
 import com.suny.association.pojo.po.LoginTicket;
+import com.suny.association.utils.LoginTicketUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -55,44 +56,33 @@ public class RequireLoginFilter implements Filter {
         // 1.判断是否要继续执行下一个Filter,executeNextFilter值为false的话就直接放行到下一个Filter
         Boolean executeNextFilter = (Boolean) req.getAttribute("EXECUTE_NEXT_FILTER");
         if (!executeNextFilter) {
-            logger.info("EXECUTE_NEXT_FILTER值为{},直接放行到下一个Filter", executeNextFilter);
+            // 1.1 如果发现了IS_LOGIN这个标记为true的话就说明是自动登录状态
+            logger.info("【RequireLoginFilter】当前过滤器直接放行");
             chain.doFilter(req, resp);
         } else {
             // 2.   判断是否有登录标记ticket,ticket是从Cookie中进行获取,循环遍历验证室友存在ticket值
-            String ticket = null;
-            if (request.getCookies() != null) {
-                for (Cookie cookie : request.getCookies()) {
-                    if (cookie.getName().equals("ticket")) {
-                        ticket = cookie.getValue();
-                        break;
-                    }
-                }
-            }
+            String ticket = LoginTicketUtils.getTicket(request);
             // 3.判断登录标记是否过期,不过期就自动登录,过期就需要重新登录
             if (ticket != null) {
                 // 3.1  根据ticket字符串去数据库里面查询是否有这个,防止客户端伪造ticket
                 LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
                 // 3.2  如果查出来数据库里面没有这个ticket或者是已经过期了的话就让它重新登录
-                if (loginTicket == null || loginTicket.getExpired().isBefore(LocalDateTime.now()) || loginTicket.getStatus() == 1) {
-                    logger.info("ticket过期时间为{},当前时间为{}", loginTicket != null ? loginTicket.getExpired().getNano() : 0, LocalTime.now().getNano());
-                    logger.warn("cookie中的ticket{}已经过期了,需要重新登录,重定向到登录页面", ticket);
-                    response.sendRedirect(PORTAL_LOGIN_URL);
+                if (loginTicket == null || LoginTicketUtils.isExpired(loginTicket)) {
+                    request.getRequestDispatcher(PORTAL_LOGIN_URL).forward(request, response);
+//                    response.sendRedirect(PORTAL_LOGIN_URL);
+                    logger.warn("【RequireLoginFilter】ticket过期了或者是前端伪造的了,强制需要重新登录");
                     req.setAttribute(EXECUTE_NEXT_FILTER, false);
                 } else {
                     // 3.3 到这里说明ticket是还没有过期的,根据数据库中login_ticket表中的账号去查询账号信息
-                    logger.info("有效的ticket值为{},直接为登录状态,发送到权限验证过滤器", ticket);
+                    logger.info("【RequireLoginFilter】有效的ticket值为【{}】,直接为登录状态,发送到下一个过滤器", ticket);
                     req.setAttribute(EXECUTE_NEXT_FILTER, true);
-                    // 3.4  判断如果本地本地变量没有Account信息的话,就先保存Account信息到本地县城变量
-                    if (hostHolder.getAccount() == null) {
-                        Account account = accountMapper.queryByLongId(loginTicket.getAccountId());
-                        hostHolder.setAccounts(account);
-                    }
                     chain.doFilter(req, resp);
                 }
             } else {
                 // 4. 没有登录过,直接跳转到登录页面
-                response.sendRedirect(PORTAL_LOGIN_URL);
-                req.setAttribute(EXECUTE_NEXT_FILTER, false);
+//                response.sendRedirect(PORTAL_LOGIN_URL);
+                request.getRequestDispatcher(PORTAL_LOGIN_URL).forward(request, response);
+                logger.warn("【RequireLoginFilter】请求头没有携带ticket,需要重新登录");
             }
         }
 

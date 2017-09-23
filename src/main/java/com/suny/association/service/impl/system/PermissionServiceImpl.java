@@ -38,7 +38,7 @@ public class PermissionServiceImpl extends AbstractBaseServiceImpl<Permission> i
     @Transactional(rollbackFor = Exception.class)
     @SystemServiceLog(description = "删除权限失败")
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         permissionMapper.deleteById(id);
     }
 
@@ -62,7 +62,7 @@ public class PermissionServiceImpl extends AbstractBaseServiceImpl<Permission> i
     }
 
     @Override
-    public Permission queryById(int id) {
+    public Permission queryById(long id) {
         return permissionMapper.queryById(id);
     }
 

@@ -16,11 +16,11 @@ public interface IMapper<T> {
 
     int insertAndGetId(T t);
 
-    void deleteById(int id);
+    void deleteById(long id);
 
     void update(T t);
 
-    T queryById(int id);
+    T queryById(long id);
 
     T queryByName(String name);
 

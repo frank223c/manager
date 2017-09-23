@@ -36,7 +36,7 @@
             <if test=" loginOsVersion!= null">#{loginOsVersion},</if>
             <if test=" loginUserAgent != null">#{loginUserAgent} ,</if>
             <if test=" loginStatus != null">#{loginStatus},</if>
-            <if test=" loginName != null">#{login_name}</if>
+            <if test=" loginName != null">#{loginName}</if>
         </trim>
     </insert>
 

@@ -116,7 +116,7 @@ public class CodeController {
      * @param formCode 表单传过来的验证码
      * @return 验证验证码的结果
      */
-    @RequestMapping("/checkCode.action")
+    @RequestMapping("/checkCode")
     @ResponseBody
     public JsonResult checkCode(HttpServletRequest request,
                                 @RequestParam String formCode) {
