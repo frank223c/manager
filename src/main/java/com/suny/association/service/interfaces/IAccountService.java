@@ -15,7 +15,6 @@ public interface IAccountService extends IBaseService<Account> {
 
     Account queryByMail(String email);
 
-    Account queryByLongId(Long id);
 
     Account queryQuoteByAccountId(Long accountId);
 
@@ -23,7 +22,6 @@ public interface IAccountService extends IBaseService<Account> {
 
     Account queryByMemberId(int memberId);
 
-    void deleteByLongId(Long id);
 
     int changePassword(Long accountId, String newPassword);
 

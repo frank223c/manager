@@ -13,9 +13,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * Create Date: 2017/03/07 22:12
  */
 public interface IMemberService extends IBaseService<Member> {
-    void deleteByLongId(Long id);
-
-    Member queryByLongId(Long id);
 
     Member queryQuote(int memberId);
 

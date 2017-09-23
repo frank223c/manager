@@ -12,6 +12,4 @@ import com.suny.association.pojo.po.PunchType;
 
 public interface PunchTypeMapper extends IMapper<PunchType> {
 
-    @Override
-    PunchType selectByName(String name);
 }

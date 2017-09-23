@@ -112,13 +112,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     }
 
 
-    /*  通过Long类型的id删除一条成员信息    */
-    @SystemServiceLog(description = "删除成员信息失败")
-    @Transactional(rollbackFor = {Exception.class})
-    @Override
-    public void deleteByLongId(Long id) {
-        memberMapper.deleteByLongId(id);
-    }
+
 
     /*  更新一条成员信息    */
     @SystemServiceLog(description = "更新成员信息失败")
@@ -335,12 +329,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
         return memberMapper.selectByName(name);
     }
 
-    /*  通过Long型的id查询一条账号信息    */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @Override
-    public Member queryByLongId(Long id) {
-        return memberMapper.queryByLongId(id);
-    }
+
 
     /*   查询所有的成员记录   */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)

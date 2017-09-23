@@ -9,117 +9,40 @@
         <result property="accountEmail" column="account_email"/>
         <result property="accountStatus" column="account_status"/>
         <!--账号角色复杂类型关联-->
-        <association property="accountRoles" column="account_role_id" select="getRoles"
-                     javaType="com.suny.association.pojo.po.Roles"/>
+        <association property="accountRoles" column="account_role_id"
+                     javaType="com.suny.association.pojo.po.Roles">
+            <id property="roleId" column="role_id"/>
+            <result property="description" column="role_name"/>
+            <result property="createTime" column="role_create_time"/>
+        </association>
         <!--复杂类型的集-->
-        <association property="accountMember" column="account_member_id" javaType="com.suny.association.pojo.po.Member"
-                     select="getMember">
+        <association property="accountMember" column="account_member_id" javaType="com.suny.association.pojo.po.Member">
             <id property="memberId" column="member_id"/>
             <result property="memberName" column="member_name"/>
             <result property="memberClassName" column="member_class_name"/>
             <result property="memberSex" column="member_sex"/>
             <result property="memberGradeNumber" column="member_grade_number"/>
             <result property="memberStatus" column="member_status"/>
-            <!--部门复杂类型关联-->
-            <association property="memberDepartment" column="member_department_id"
-                         javaType="com.suny.association.pojo.po.Department"
-                         select="getDepartment"/>
-            <!--成员角色复杂类型关联-->
-            <association property="memberRoles" column="member_role_id"
-                         javaType="com.suny.association.pojo.po.MemberRoles"
-                         select="getMemberRole"/>
-            <!--//这里有问题-->
-            <!--协会成员对应的管理员复杂类型集合-->
-            <association property="memberManager" column="member_manager_id"
-                         javaType="com.suny.association.pojo.po.Member"
-                         select="getMemberManage"/>
         </association>
     </resultMap>
 
-    <!--成员管理员-->
-    <resultMap id="memberManagerResult" type="com.suny.association.pojo.po.Member">
-        <id property="memberId" column="member_id"/>
-        <result property="memberName" column="member_name"/>
-        <result property="memberClassName" column="member_class_name"/>
-        <result property="memberSex" column="member_sex"/>
-        <result property="memberGradeNumber" column="member_grade_number"/>
-        <result property="memberStatus" column="member_status"/>
-        <!--部门复杂类型关联-->
-        <association property="memberDepartment" column="member_department_id"
-                     javaType="com.suny.association.pojo.po.Department"
-                     select="getDepartment"/>
-        <!--成员角色复杂类型关联-->
-        <association property="memberRoles" column="member_role_id" javaType="com.suny.association.pojo.po.MemberRoles"
-                     select="getMemberRole"/>
-
-        <!--协会成员对应的管理员复杂类型集合-->
-        <association property="memberManager" column="member_manager_id" javaType="com.suny.association.pojo.po.Member"
-                     select="getMember"/>
-    </resultMap>
-
-
-    <!--查询账号角色表信息-->
-    <select id="getRoles" parameterType="int" resultMap="accountRolesResult">
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
         SELECT
-            r.role_id,
-            r.role_name,
-            r.role_create_time
-        FROM roles AS r
-        WHERE role_id = #{ roleId }
+            a.account_id,
+            a.account_name,
+            a.account_status,
+            a.account_member_id,
+            a.account_role_id,
+            r.role_id          AS role_id,
+            r.role_description AS role_name,
+            m.member_id        AS member_id,
+            m.member_name      AS member_name
+        FROM account a
+            JOIN roles r
+                ON a.account_role_id = r.role_id
+            JOIN member m ON a.account_member_id = m.member_id
+        WHERE a.account_id = #{accountId};
     </select>
-
-    <!--查询成员-->
-    <select id="getMember" parameterType="int" resultMap="memberManagerResult">
-        SELECT *
-        FROM member
-        WHERE member_id = #{ accountMember }
-    </select>
-
-    <!--获得成员角色-->
-    <select id="getMemberRole" parameterType="int" resultMap="memberRolesResult">
-        SELECT
-            m.member_role_id,
-            m.member_role_name
-        FROM member_roles AS m
-        WHERE m.member_role_id = #{memberRoles.memberRoleId}
-    </select>
-
-    <!--查询部门-->
-    <select id="getDepartment" parameterType="int" resultMap="memberDepartmentResult">
-        SELECT
-            d.department_id,
-            d.department_name
-        FROM department AS d
-        WHERE d.department_id = #{memberDepartment.departmentId}
-    </select>
-
-    <!--查询管理员信息-->
-    <select id="getMemberManage" resultMap="memberManagerResult">
-        SELECT *
-        FROM member AS m
-        WHERE m.member_id = #{ memberManager }
-    </select>
-
-    <!--账号角色-->
-    <resultMap id="accountRolesResult" type="com.suny.association.pojo.po.Roles">
-        <id property="roleId" column="role_id"/>
-        <result property="description" column="role_name"/>
-        <result column="role_create_time" property="createTime"/>
-    </resultMap>
-
-
-    <!--成员角色-->
-    <resultMap id="memberRolesResult" type="com.suny.association.pojo.po.MemberRoles">
-        <id property="memberRoleId" column="member_role_id"/>
-        <result property="memberRoleName" column="member_role_name"/>
-    </resultMap>
-
-    <!--部门-->
-    <resultMap id="memberDepartmentResult" type="com.suny.association.pojo.po.Department">
-        <id column="department_id" property="departmentId"/>
-        <result column="department_name" property="departmentName"/>
-    </resultMap>
-
 
     <!--=============================================================================================-->
 
@@ -235,26 +158,13 @@
     </delete>
 
 
-    <delete id="deleteByLongId" parameterType="java.lang.Long">
-        DELETE FROM account
-        WHERE account_id = #{accountId,jdbcType=BIGINT}
-    </delete>
-
-    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--<select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
         SELECT
         <include refid="BaseSelectFields"/>
         FROM account
         WHERE account_id = #{accountId,jdbcType=BIGINT}
-    </select>
+    </select>-->
 
-    <select id="queryByLongId" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        SELECT
-            a.account_id,
-            a.account_name,
-            a.account_password
-        FROM account AS a
-        WHERE a.account_id = #{accountId,jdbcType=BIGINT}
-    </select>
 
     <select id="queryByPhone" parameterType="java.lang.Long" resultMap="BaseResultMap">
         SELECT
@@ -276,7 +186,7 @@
     <select id="selectAll" resultMap="BaseResultMap">
         SELECT
         <include refid="BaseSelectFields"/>
-       FROM account
+        FROM account
     </select>
     <select id="list" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT

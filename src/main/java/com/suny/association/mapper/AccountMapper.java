@@ -18,9 +18,6 @@ public interface AccountMapper extends IMapper<Account> {
 
     Account queryQuoteByMemberId(Long memberId);
 
-    Account queryByLongId(Long id);
-
-    void deleteByLongId(Long id);
 
     Account queryByMemberId(int memberId);
 

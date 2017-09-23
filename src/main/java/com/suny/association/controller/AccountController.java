@@ -101,10 +101,10 @@ public class AccountController extends BaseController {
         if (accountQuote != null && (null != accountQuote.getAccountMember())) {
             return failResult(BaseEnum.HAVE_QUOTE);
         }
-        if (accountService.queryByLongId(accountId) == null) {
+        if (accountService.selectById(accountId) == null) {
             return failResult(BaseEnum.SELECT_FAILURE);
         }
-        accountService.deleteByLongId(accountId);
+        accountService.deleteById(accountId);
         return successResult(BaseEnum.DELETE_SUCCESS);
     }
 
@@ -155,7 +155,7 @@ public class AccountController extends BaseController {
     @ResponseBody
     public JsonResult update(@RequestBody Account account) {
         Map resultMap = updateOrInsert(account);
-        Account byIdResult = accountService.queryByLongId(account.getAccountId());
+        Account byIdResult = accountService.selectById(account.getAccountId());
         if (byIdResult == null) {
             return failResult(BaseEnum.SELECT_FAILURE);
         }
@@ -255,7 +255,7 @@ public class AccountController extends BaseController {
                 logger.warn("207字段的长度有错误，密码强制性必须大于9位");
                 return JsonResult.failResult(BaseEnum.FIELD_LENGTH_WRONG);
             }
-            Account databaseAccount = accountService.queryByLongId(accountId);
+            Account databaseAccount = accountService.selectById(accountId);
             if (databaseAccount == null) {
                 logger.error("数据库不存在要更改密码的账号,可能存在用户恶意修改密码风险");
                 return JsonResult.failResult(BaseEnum.SELECT_FAILURE);

@@ -104,7 +104,7 @@ public class PunchRecordController extends BaseController {
             logger.warn("987,用户没有登录进行操作");
             return JsonResult.failResult(BaseEnum.NO_LOGIN_IN);
         } else {
-            Member dataBaseMember = memberService.queryByLongId(memberId);
+            Member dataBaseMember = memberService.selectById(memberId);
             if (dataBaseMember == null) {
                 logger.info("005，数据库没有查询到开启签到的管理员信息，恶意操作");
                 return JsonResult.failResult(BaseEnum.SELECT_FAILURE);

@@ -111,17 +111,7 @@ public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> impleme
         return accountMapper.queryByMail(email);
     }
 
-    /**
-     * 通过Long类型的id查询一条记录
-     *
-     * @param id 账号id
-     * @return 一条账号信息
-     */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @Override
-    public Account queryByLongId(Long id) {
-        return accountMapper.queryByLongId(id);
-    }
+
 
     /**
      * 查询一条账号信息是否被引用
@@ -165,15 +155,7 @@ public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> impleme
         return accountMapper.queryByMemberId(memberId);
     }
 
-    /**
-     * 通过Long类型的账号id删除一条账号信息
-     */
-    @SystemServiceLog(description = "删除账号失败")
-    @Transactional(rollbackFor = {Exception.class})
-    @Override
-    public void deleteByLongId(Long id) {
-        accountMapper.deleteByLongId(id);
-    }
+
 
     @SystemServiceLog(description = "修改用户密码失败")
     @Transactional(rollbackFor = Exception.class)

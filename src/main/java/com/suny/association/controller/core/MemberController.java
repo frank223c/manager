@@ -177,13 +177,13 @@ public class MemberController extends BaseController {
     @RequestMapping(value = "/deleteById.action/{id}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResult deleteById(@PathVariable("id") Long id) {
-        if (memberService.queryByLongId(id) == null) {
+        if (memberService.selectById(id) == null) {
             return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
         }
         if (accountService.queryQuoteByMemberId(id) != null) {
             return JsonResult.failResult(BaseEnum.HAVE_QUOTE);
         }
-        memberService.deleteByLongId(id);
+        memberService.deleteById(id);
         return successResult(BaseEnum.DELETE_SUCCESS);
     }
 
