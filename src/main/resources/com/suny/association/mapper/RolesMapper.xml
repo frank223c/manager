@@ -42,7 +42,7 @@
     </update>
 
 
-    <select id="queryAll" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
         SELECT
         r.role_id,
         r.role_name,
@@ -51,7 +51,7 @@
         FROM roles AS r
     </select>
 
-    <select id="queryById" parameterType="Integer" resultMap="BaseResultMap">
+    <select id="selectById" parameterType="Integer" resultMap="BaseResultMap">
         SELECT
         r.role_id,
         r.role_name,
@@ -61,7 +61,7 @@
         WHERE r.role_id = #{roleId}
     </select>
 
-    <select id="queryByName" parameterType="String" resultMap="BaseResultMap">
+    <select id="selectByName" parameterType="String" resultMap="BaseResultMap">
         SELECT
         r.role_id,
         r.role_name,
@@ -84,7 +84,7 @@
             #{limit}
     </select>
 
-    <select id="queryCount" resultType="int">
+    <select id="selectCount" resultType="int">
         SELECT count(*)
         FROM roles;
     </select>

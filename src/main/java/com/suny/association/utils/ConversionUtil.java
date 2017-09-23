@@ -81,7 +81,7 @@ public class ConversionUtil {
      * @return 动态封装查询条件
      */
     static Map<Object, Object> dynamicCriteriaMap(Class clazz) {
-        String queryAllMethodName = "queryAll";
+        String queryAllMethodName = "selectAll";
         String className = clazz.getSimpleName();
         Method[] methods = clazz.getDeclaredMethods();
         Object[] threeArrayParam = new Object[]{"String", "int", "int"};

@@ -5,14 +5,14 @@
         <result column="access_url" property="accessUrl"/>
         <result column="access_permission" property="accessPermission"/>
     </resultMap>
-    <select id="queryAll" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
         SELECT
             ap.access_url,
             ap.access_permission
         FROM access_url_permission AS ap
     </select>
 
-    <select id="queryByName" parameterType="String" resultMap="BaseResultMap">
+    <select id="selectByName" parameterType="String" resultMap="BaseResultMap">
         SELECT
             ap.access_url,
             ap.access_permission

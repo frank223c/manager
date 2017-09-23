@@ -10,14 +10,18 @@ import java.util.Map;
  */
 public interface IBaseService<T> {
     void insert(T t);
+
     void deleteById(long id);
+
     void update(T t);
-    T queryById(long id);
 
-    T queryByName(String name);
+    T selectById(long id);
 
-    int queryCount();
-    List<T> queryAll();
+    T selectByName(String name);
+
+    int selectCount();
+
+    List<T> selectAll();
 
     List<T> list(Map<Object, Object> criteriaMap);
 }

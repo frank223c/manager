@@ -61,7 +61,7 @@
     </update>
 
 
-    <select id="queryByName" resultMap="BaseResultMap" parameterType="String">
+    <select id="selectByName" resultMap="BaseResultMap" parameterType="String">
         SELECT
             p.permission_id,
             p.permission_name,
@@ -72,7 +72,7 @@
         WHERE permission_name = #{name}
     </select>
 
-    <select id="queryById" parameterType="int" resultMap="BaseResultMap">
+    <select id="selectById" parameterType="int" resultMap="BaseResultMap">
         SELECT
             p.permission_id,
             p.permission_name,
@@ -106,13 +106,13 @@
         LIMIT #{offset} ,#{limit}
     </select>
 
-    <select id="queryCount" resultType="int">
+    <select id="selectCount" resultType="int">
         SELECT count(*)
         FROM permission
     </select>
 
 
-    <select id="queryAll" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
         SELECT
             p.permission_id,
             p.permission_name,

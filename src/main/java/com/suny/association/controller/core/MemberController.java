@@ -98,8 +98,8 @@ public class MemberController extends BaseController {
     @RequestMapping(value = "/insertPage.html", method = RequestMethod.GET)
     public ModelAndView insertPage(ModelAndView modelAndView) {
         List<Member> managerList = memberService.queryNormalManager();
-        List<Department> departmentList = departmentService.queryAll();
-        List<MemberRoles> memberRolesList = memberRolesService.queryAll();
+        List<Department> departmentList = departmentService.selectAll();
+        List<MemberRoles> memberRolesList = memberRolesService.selectAll();
         modelAndView.addObject("departmentList", departmentList);
         modelAndView.addObject("memberRolesList", memberRolesList);
         modelAndView.addObject("managerList", managerList);
@@ -203,10 +203,10 @@ public class MemberController extends BaseController {
 
     @RequestMapping(value = "/update.html/{id}", method = RequestMethod.GET)
     public ModelAndView updatePage(@PathVariable("id") Integer id, ModelAndView modelAndView) {
-        Member member = memberService.queryById(id);
+        Member member = memberService.selectById(id);
         List<Member> managerList = memberService.queryNormalManager();
-        List<Department> departmentList = departmentService.queryAll();
-        List<MemberRoles> memberRolesList = memberRolesService.queryAll();
+        List<Department> departmentList = departmentService.selectAll();
+        List<MemberRoles> memberRolesList = memberRolesService.selectAll();
         modelAndView.addObject("member", member);
         modelAndView.addObject("departmentList", departmentList);
         modelAndView.addObject("memberRolesList", memberRolesList);
@@ -249,7 +249,7 @@ public class MemberController extends BaseController {
         }
         List<Member> memberList = memberService.list(ConversionUtil.convertToCriteriaMap(offset, limit, departmentname, status));
         if (memberList.size() != 0 && !memberList.isEmpty()) {
-            int total = memberService.queryCount();
+            int total = memberService.selectCount();
             tableDate.put("rows", memberList);
             tableDate.put("total", total);
             return tableDate;
@@ -262,7 +262,7 @@ public class MemberController extends BaseController {
     @SystemControllerLog(description = "查询指定成员")
     @RequestMapping(value = "/queryById.action/{memberId}", method = RequestMethod.GET)
     public JsonResult queryById(@PathVariable("memberId") Integer memberId) {
-        Member member = memberService.queryById(memberId);
+        Member member = memberService.selectById(memberId);
         return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, member);
     }
 

@@ -42,15 +42,15 @@ public class PunchTypeServiceImpl extends AbstractBaseServiceImpl<PunchType> imp
     /*  通过考勤类型名字查询一条记录   */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public PunchType queryByName(String name) {
-        return punchTypeMapper.queryByName(name);
+    public PunchType selectByName(String name) {
+        return punchTypeMapper.selectByName(name);
     }
 
     /*  查询考勤类型表的总记录数    */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public int queryCount() {
-        return punchTypeMapper.queryCount();
+    public int selectCount() {
+        return punchTypeMapper.selectCount();
     }
 
     /*  通过查询条件查询考勤类型记录    */

@@ -55,7 +55,7 @@ public class PunchRecordController extends BaseController {
             logger.info("211,要操作的Member主键Id与Session中保存的Member主键Id不同，属于恶意操作");
             return JsonResult.failResult(BaseEnum.MALICIOUS_OPERATION);
         } else {
-            Member databaseMember = memberService.queryById(punchMemberId);
+            Member databaseMember = memberService.selectById(punchMemberId);
             if (databaseMember == null) {
                 logger.info("005，数据库没有查询考勤的成员Id，恶意操作");
                 return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
@@ -134,7 +134,7 @@ public class PunchRecordController extends BaseController {
     public Map query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         List<PunchRecord> punchRecordList = punchRecordService.list(ConversionUtil.convertToCriteriaMap(offset, limit));
-        int total = punchRecordService.queryCount();
+        int total = punchRecordService.selectCount();
         return ConversionUtil.convertToBootstrapTableResult(punchRecordList, total);
     }
 

@@ -43,7 +43,7 @@ public class MemberRoleController extends BaseController {
     public JsonResult delete(@PathVariable("memberRoleId") Integer memberRoleId) {
         if (memberService.quoteByMemberRoleId(memberRoleId).size() >= 1) {
             return failResult(BaseEnum.HAVE_QUOTE);
-        } else if (memberRolesService.queryById(memberRoleId) == null) {
+        } else if (memberRolesService.selectById(memberRoleId) == null) {
             return failResult(BaseEnum.DELETE_FAILURE);
         }
         memberRolesService.deleteById(memberRoleId);
@@ -54,7 +54,7 @@ public class MemberRoleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/update.json", method = RequestMethod.POST)
     public JsonResult update(@RequestBody MemberRoles memberRoles) {
-        if (memberRoles.getMemberRoleId() == null || memberRolesService.queryById(memberRoles.getMemberRoleId()) == null) {
+        if (memberRoles.getMemberRoleId() == null || memberRolesService.selectById(memberRoles.getMemberRoleId()) == null) {
             return failResult(BaseEnum.SELECT_FAILURE);
         }
         if ("".equals(memberRoles.getMemberRoleName()) || memberRoles.getMemberRoleName() == null) {
@@ -67,9 +67,9 @@ public class MemberRoleController extends BaseController {
     @RequestMapping(value = "/update.html/{memberRoleId}", method = RequestMethod.GET)
     public ModelAndView updatePage(@PathVariable int memberRoleId
             , ModelAndView modelAndView) {
-        MemberRoles memberRoles = memberRolesService.queryById(memberRoleId);
+        MemberRoles memberRoles = memberRolesService.selectById(memberRoleId);
         if (memberRoles == null) {
-            memberRoles = memberRolesService.queryById(0);
+            memberRoles = memberRolesService.selectById(0);
             modelAndView.addObject("role", memberRoles);
             return modelAndView;
         }
@@ -92,7 +92,7 @@ public class MemberRoleController extends BaseController {
         if ("".equals(memberRoles.getMemberRoleName()) || memberRoles.getMemberRoleName() == null) {
             return failResult(BaseEnum.FIELD_NULL);
         }
-        if (memberRolesService.queryByName(memberRoles.getMemberRoleName()) != null) {
+        if (memberRolesService.selectByName(memberRoles.getMemberRoleName()) != null) {
             return failResult(BaseEnum.REPEAT_ADD);
         }
         memberRolesService.insert(memberRoles);
@@ -118,7 +118,7 @@ public class MemberRoleController extends BaseController {
     public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         List<MemberRoles> rolesList = memberRolesService.list(ConversionUtil.convertToCriteriaMap(offset, limit));
-        int total = memberRolesService.queryCount();
+        int total = memberRolesService.selectCount();
         return ConversionUtil.convertToBootstrapTableResult(rolesList, total);
     }
 

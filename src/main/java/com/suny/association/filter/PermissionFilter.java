@@ -116,7 +116,7 @@ public class PermissionFilter implements Filter {
             // 3.2 把权限集合放到一个有序的集合里面去
             permissions.get().addAll(permissionArrayList.stream().map(Permission::getpermissionName).collect(Collectors.toList()));
             // 3.3 查询当前访问的URL需要什么权限
-            AccessPermission accessPermission = accessPermissionService.queryByName(path);
+            AccessPermission accessPermission = accessPermissionService.selectByName(path);
             // 3.4 前面虽然已经判断了一次,但是有些URL也是可以匿名访问的
             if (accessPermission == null) {
                 logger.info("这个页面不需要权限就可以访问");

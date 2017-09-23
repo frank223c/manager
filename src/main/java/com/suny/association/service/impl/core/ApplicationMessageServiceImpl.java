@@ -53,8 +53,8 @@ public class ApplicationMessageServiceImpl extends AbstractBaseServiceImpl<Appli
      */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public ApplicationMessage queryById(long id) {
-        return applicationMessageMapper.queryById(id);
+    public ApplicationMessage selectById(long id) {
+        return applicationMessageMapper.selectById(id);
     }
 
     /**
@@ -65,8 +65,8 @@ public class ApplicationMessageServiceImpl extends AbstractBaseServiceImpl<Appli
      */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public ApplicationMessage queryByName(String name) {
-        return applicationMessageMapper.queryByName(name);
+    public ApplicationMessage selectByName(String name) {
+        return applicationMessageMapper.selectByName(name);
     }
 
     /**
@@ -76,8 +76,8 @@ public class ApplicationMessageServiceImpl extends AbstractBaseServiceImpl<Appli
      */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public int queryCount() {
-        return applicationMessageMapper.queryCount();
+    public int selectCount() {
+        return applicationMessageMapper.selectCount();
     }
 
     /**

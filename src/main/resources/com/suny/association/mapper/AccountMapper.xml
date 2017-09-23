@@ -221,7 +221,7 @@
     </select>
 
 
-    <select id="queryByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT
         <include refid="BaseSelectFields"/>
         FROM account
@@ -240,7 +240,7 @@
         WHERE account_id = #{accountId,jdbcType=BIGINT}
     </delete>
 
-    <select id="queryById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT
         <include refid="BaseSelectFields"/>
         FROM account
@@ -273,7 +273,7 @@
     </select>
 
 
-    <select id="queryAll" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
         SELECT
         <include refid="BaseSelectFields"/>
        FROM account
@@ -291,7 +291,7 @@
         LIMIT #{offset},#{limit}
     </select>
 
-    <select id="queryCount" resultType="int">
+    <select id="selectCount" resultType="int">
         SELECT count(*)
         FROM account;
     </select>

@@ -124,10 +124,10 @@ public class PunchRecordServiceImpl extends AbstractBaseServiceImpl<PunchRecord>
         PunchType punchType = new PunchType();
         //  定义一个需要签到的角色，假如是2的话，那么低于2的角色成员都需要被签到，包括角色为2的成员
         int roleId = 2;
-        if (punchTypeMapper.queryByName("缺勤") == null) {
+        if (punchTypeMapper.selectByName("缺勤") == null) {
             punchType.setPunchTypeId(0);
         } else {
-            punchType = punchTypeMapper.queryByName("缺勤");
+            punchType = punchTypeMapper.selectByName("缺勤");
         }
         // 查询需要签到的成员信息
         List<Member> memberList = memberMapper.queryLimitMemberRole(roleId, getPunchMemberGrade());
@@ -181,8 +181,8 @@ public class PunchRecordServiceImpl extends AbstractBaseServiceImpl<PunchRecord>
     /*   查询考勤记录表中的总记录数   */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public int queryCount() {
-        return punchRecordMapper.queryCount();
+    public int selectCount() {
+        return punchRecordMapper.selectCount();
     }
 
     /*   通过查询条件查询考勤记录   */
@@ -203,7 +203,7 @@ public class PunchRecordServiceImpl extends AbstractBaseServiceImpl<PunchRecord>
     /*  通过名字一条考勤记录    */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public PunchRecord queryByName(String name) {
-        return punchRecordMapper.queryByName(name);
+    public PunchRecord selectByName(String name) {
+        return punchRecordMapper.selectByName(name);
     }
 }

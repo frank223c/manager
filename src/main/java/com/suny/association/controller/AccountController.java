@@ -76,9 +76,9 @@ public class AccountController extends BaseController {
      */
     @RequestMapping(value = "/insert.html", method = RequestMethod.GET)
     public ModelAndView insertPage(ModelAndView modelAndView) {
-        List<Account> account = accountService.queryAll();
-        List<Member> memberList = memberService.queryAll();
-        List<Roles> rolesList = rolesService.queryAll();
+        List<Account> account = accountService.selectAll();
+        List<Member> memberList = memberService.selectAll();
+        List<Roles> rolesList = rolesService.selectAll();
         modelAndView.addObject("account", account);
         modelAndView.addObject("memberList", memberList);
         modelAndView.addObject("rolesList", rolesList);
@@ -116,7 +116,7 @@ public class AccountController extends BaseController {
      */
     private Map updateOrInsert(Account account) {
         Map<Object, Object> resultMap = new HashMap<>();
-        Account byNameResult = accountService.queryByName(account.getAccountName());
+        Account byNameResult = accountService.selectByName(account.getAccountName());
         Account byPhoneResult = accountService.queryByPhone(account.getAccountPhone());
         Account byMailResult = accountService.queryByMail(account.getAccountEmail());
         if ("".equals(account.getAccountName()) || (account.getAccountName() == null)) {
@@ -180,9 +180,9 @@ public class AccountController extends BaseController {
 //        if (subject.isPermitted("account:read")) {
         System.out.println("有【account:read 读取账号信息页面】这个权限");
               /*         这里是项目的代码，非测试代码             */
-        Account account = accountService.queryById(id);
-        List<Member> memberList = memberService.queryAll();
-        List<Roles> rolesList = rolesService.queryAll();
+        Account account = accountService.selectById(id);
+        List<Member> memberList = memberService.selectAll();
+        List<Roles> rolesList = rolesService.selectAll();
         modelAndView.addObject("account", account);
         modelAndView.addObject("memberList", memberList);
         modelAndView.addObject("rolesList", rolesList);
@@ -222,7 +222,7 @@ public class AccountController extends BaseController {
     public Map<Object, Object> queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
                                         @RequestParam(value = "status", required = false, defaultValue = "3") int status) {
-        int totalCount = accountService.queryCount();
+        int totalCount = accountService.selectCount();
         Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit, status);
         List<Account> accountList = accountService.list(criteriaMap);
         return convertToBootstrapTableResult(accountList, totalCount);

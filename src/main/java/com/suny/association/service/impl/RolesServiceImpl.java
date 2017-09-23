@@ -59,8 +59,8 @@ public class RolesServiceImpl extends AbstractBaseServiceImpl<Roles> implements 
     /* 查询所有的账号角色     */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<Roles> queryAll() {
-        return rolesMapper.queryAll();
+    public List<Roles> selectAll() {
+        return rolesMapper.selectAll();
     }
 
     /* 通过查询条件查询账号角色     */
@@ -73,15 +73,15 @@ public class RolesServiceImpl extends AbstractBaseServiceImpl<Roles> implements 
     /* 通过账号角色id查询账号角色     */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public Roles queryById(long id) {
-        return rolesMapper.queryById(id);
+    public Roles selectById(long id) {
+        return rolesMapper.selectById(id);
     }
 
     /* 通过账号角色表中的记录数     */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public int queryCount() {
-        return rolesMapper.queryCount();
+    public int selectCount() {
+        return rolesMapper.selectCount();
     }
 
     /* 查询触引用该角色的所有账号信息     */
@@ -94,7 +94,7 @@ public class RolesServiceImpl extends AbstractBaseServiceImpl<Roles> implements 
     /* 通过角色名字查询账号角色     */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public Roles queryByName(String name) {
-        return rolesMapper.queryByName(name);
+    public Roles selectByName(String name) {
+        return rolesMapper.selectByName(name);
     }
 }

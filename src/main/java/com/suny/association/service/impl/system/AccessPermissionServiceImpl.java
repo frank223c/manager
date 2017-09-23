@@ -40,23 +40,23 @@ public class AccessPermissionServiceImpl implements IAccessPermissionService {
     }
 
     @Override
-    public AccessPermission queryById(long id) {
+    public AccessPermission selectById(long id) {
         return null;
     }
 
     @Override
-    public AccessPermission queryByName(String name) {
-        return accessPermissionMapper.queryByName(name);
+    public AccessPermission selectByName(String name) {
+        return accessPermissionMapper.selectByName(name);
     }
 
     @Override
-    public int queryCount() {
+    public int selectCount() {
         return 0;
     }
 
     @Override
-    public List<AccessPermission> queryAll() {
-        return accessPermissionMapper.queryAll();
+    public List<AccessPermission> selectAll() {
+        return accessPermissionMapper.selectAll();
     }
 
     @Override

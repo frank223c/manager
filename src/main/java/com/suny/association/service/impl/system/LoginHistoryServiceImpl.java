@@ -60,15 +60,15 @@ public class LoginHistoryServiceImpl extends AbstractBaseServiceImpl<LoginHistor
     /*  通过登录用户名查询登录记录 */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public LoginHistory queryByName(String name) {
-        return loginHistoryMapper.queryByName(name);
+    public LoginHistory selectByName(String name) {
+        return loginHistoryMapper.selectByName(name);
     }
 
     /* 查询数据库里面的登录记录条数  */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public int queryCount() {
-        return loginHistoryMapper.queryCount();
+    public int selectCount() {
+        return loginHistoryMapper.selectCount();
     }
 
     /* 插入一条登录历史记录  */
@@ -107,7 +107,7 @@ public class LoginHistoryServiceImpl extends AbstractBaseServiceImpl<LoginHistor
         //  8. 填充用户登录验证账号密码的状态   true为认证成功   false则为认证失败
         loginHistory.setLoginStatus(authStatus);
         //  9.  通过登录的用户名查询触对应的一条账号信息
-//        Account account = accountMapper.queryByName(username);
+//        Account account = accountMapper.selectByName(username);
         //  10. 填充 字段 登录用户
         loginHistory.setLoginName(username);
         //  11.通过ip地址去获取普通的定位地址

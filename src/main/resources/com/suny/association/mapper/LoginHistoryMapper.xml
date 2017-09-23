@@ -52,7 +52,7 @@
         LIMIT #{offset}, #{limit}
     </select>
 
-    <select id="queryCount" resultType="int">
+    <select id="selectCount" resultType="int">
         SELECT count(*)
         FROM login_history;
     </select>

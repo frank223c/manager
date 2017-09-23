@@ -47,7 +47,7 @@ public class PermissionController extends BaseController {
     public JsonResult insert(@RequestBody Permission permission) {
         if (permission.getpermissionName().equals("") || permission.getpermissionName() == null) {
             return JsonResult.failResult(BaseEnum.FIELD_NULL);
-        } else if (permissionService.queryByName(permission.getpermissionName()) != null) {
+        } else if (permissionService.selectByName(permission.getpermissionName()) != null) {
             return JsonResult.failResult(BaseEnum.REPEAT_ADD);
         }
         permissionService.insert(permission);
@@ -80,7 +80,7 @@ public class PermissionController extends BaseController {
         if (permissionService.queryPermissionQuote(permissionId).size() > 0) {
             return failResult(BaseEnum.HAVE_QUOTE);
         }
-        if (permissionService.queryById(permissionId) == null) {
+        if (permissionService.selectById(permissionId) == null) {
             return failResult(BaseEnum.SELECT_FAILURE);
         }
         if (permissionId <= 37) return failResult(BaseEnum.SYSTEM_LIMIT);
@@ -115,7 +115,7 @@ public class PermissionController extends BaseController {
      */
     @RequestMapping(value = "/update.html/{id}", method = RequestMethod.GET)
     public ModelAndView updatePage(@PathVariable("id") Integer id, ModelAndView modelAndView) {
-        Permission permission = permissionService.queryById(id);
+        Permission permission = permissionService.selectById(id);
         modelAndView.addObject("permission", permission);
         modelAndView.setViewName("/system/permission/permissionUpdate");
         return modelAndView;
@@ -136,7 +136,7 @@ public class PermissionController extends BaseController {
     public Map<Object, Object> queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
                                         @RequestParam(value = "status", required = false, defaultValue = "3") int status) {
-        int totalCount = permissionService.queryCount();
+        int totalCount = permissionService.selectCount();
         Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit, status);
         List<Permission> permissionList = permissionService.list(criteriaMap);
         return convertToBootstrapTableResult(permissionList, totalCount);

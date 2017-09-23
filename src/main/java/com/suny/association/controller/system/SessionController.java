@@ -37,7 +37,7 @@ public class SessionController extends BaseController {
     public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         List<LoginHistory> loginHistoryList = loginHistoryService.list(ConversionUtil.convertToCriteriaMap(offset, limit));
-        int total = loginHistoryService.queryCount();
+        int total = loginHistoryService.selectCount();
         return ConversionUtil.convertToBootstrapTableResult(loginHistoryList, total);
     }
 

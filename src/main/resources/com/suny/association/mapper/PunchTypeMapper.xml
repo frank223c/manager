@@ -6,7 +6,7 @@
         <result column="punch_type_name" property="punchTypeName" jdbcType="VARCHAR" javaType="java.lang.String"/>
     </resultMap>
 
-    <select id="queryByName" resultMap="BaseResultMap" parameterType="string">
+    <select id="selectByName" resultMap="BaseResultMap" parameterType="string">
         SELECT
             p.punch_type_id,
             p.punch_type_name

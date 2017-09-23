@@ -47,7 +47,7 @@ public class CallbackResultServiceImpl extends AbstractBaseServiceImpl<CallbackR
     @SystemServiceLog(description = "组成一条异议考勤审批结果失败")
     @Transactional(rollbackFor = {Exception.class})
     public CallbackResult makeUpCallBackResult(ApplicationMessage applicationMessage, int managerId, Boolean resultStatus) {
-        Member manager = memberMapper.queryById(managerId);
+        Member manager = memberMapper.selectById(managerId);
         CallbackResult callbackResult = new CallbackResult();
         callbackResult.setApplicationMessageId(applicationMessage);
         callbackResult.setCallbackManagerId(manager);
@@ -71,22 +71,22 @@ public class CallbackResultServiceImpl extends AbstractBaseServiceImpl<CallbackR
     /* 通过id查询异议考勤审批结果*/
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public CallbackResult queryById(long id) {
-        return callbackResultMapper.queryById(id);
+    public CallbackResult selectById(long id) {
+        return callbackResultMapper.selectById(id);
     }
 
     /*  通过名字查询异议考勤审批结果记录 */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public CallbackResult queryByName(String name) {
-        return callbackResultMapper.queryByName(name);
+    public CallbackResult selectByName(String name) {
+        return callbackResultMapper.selectByName(name);
     }
 
     /*  查询审批结果表里面的总记录数   */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public int queryCount() {
-        return callbackResultMapper.queryCount();
+    public int selectCount() {
+        return callbackResultMapper.selectCount();
     }
 
     /**

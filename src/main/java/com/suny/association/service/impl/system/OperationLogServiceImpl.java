@@ -32,15 +32,15 @@ public class OperationLogServiceImpl extends AbstractBaseServiceImpl<OperationLo
     /*   通过名字去查询操作记录   */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public OperationLog queryByName(String name) {
-        return operationLogMapper.queryByName(name);
+    public OperationLog selectByName(String name) {
+        return operationLogMapper.selectByName(name);
     }
 
     /*   查询操作记录的总记录数   */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public int queryCount() {
-        return operationLogMapper.queryCount();
+    public int selectCount() {
+        return operationLogMapper.selectCount();
     }
 
     /*   通过查询条件查询操作记录   */

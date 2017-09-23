@@ -51,19 +51,19 @@ public class PermissionServiceImpl extends AbstractBaseServiceImpl<Permission> i
 
 
     @Override
-    public Permission queryByName(String name) {
-        return permissionMapper.queryByName(name);
+    public Permission selectByName(String name) {
+        return permissionMapper.selectByName(name);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public int queryCount() {
-        return permissionMapper.queryCount();
+    public int selectCount() {
+        return permissionMapper.selectCount();
     }
 
     @Override
-    public Permission queryById(long id) {
-        return permissionMapper.queryById(id);
+    public Permission selectById(long id) {
+        return permissionMapper.selectById(id);
     }
 
 
@@ -79,7 +79,7 @@ public class PermissionServiceImpl extends AbstractBaseServiceImpl<Permission> i
     }
 
     @Override
-    public List<Permission> queryAll() {
-        return permissionMapper.queryAll();
+    public List<Permission> selectAll() {
+        return permissionMapper.selectAll();
     }
 }

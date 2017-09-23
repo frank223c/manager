@@ -11,7 +11,6 @@ import com.suny.association.service.interfaces.system.ILoginHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +50,7 @@ public class LoginServiceImpl implements ILoginService {
         }
         //  2.     ==========账号密码匹配成功的业务逻辑=============
         if (authAction(username, password)) {
-            Account account = accountMapper.queryByName(username);
+            Account account = accountMapper.selectByName(username);
             hostHolder.setAccounts(account);
             //  2.1   查看数据库里面ticket是否存在
             LoginTicket loginTicket = loginTicketMapper.selectByAccountId(account.getAccountId());
@@ -112,7 +111,7 @@ public class LoginServiceImpl implements ILoginService {
      * @param password 密码
      */
     private boolean authAction(String username, String password) {
-        Account account = accountMapper.queryByName(username);
+        Account account = accountMapper.selectByName(username);
 //        return account != null && account.getAccountPassword().equals(EncryptUtil.encryptToMD5(password));
         return account != null && account.getAccountPassword().equals(password);
 
@@ -135,22 +134,22 @@ public class LoginServiceImpl implements ILoginService {
     }
 
     @Override
-    public LoginTicket queryById(long id) {
+    public LoginTicket selectById(long id) {
         return null;
     }
 
     @Override
-    public LoginTicket queryByName(String name) {
+    public LoginTicket selectByName(String name) {
         return null;
     }
 
     @Override
-    public int queryCount() {
+    public int selectCount() {
         return 0;
     }
 
     @Override
-    public List<LoginTicket> queryAll() {
+    public List<LoginTicket> selectAll() {
         return null;
     }
 

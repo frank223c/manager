@@ -92,8 +92,8 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     /*  查询成员表里面的总记录数    */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public int queryCount() {
-        return memberMapper.queryCount();
+    public int selectCount() {
+        return memberMapper.selectCount();
     }
 
     /*   插入一条成员信息并返回插入的行数   */
@@ -174,7 +174,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
                     Member member = parseMemberInfo(memberArray);
                     Account account = parseAccountInfo(memberArray);
                     //  首先通过成员的名字跟年级去判断是否是同一个成员，一般情况下同一个年级同一个名字的人概率比较的低    //
-                    Member queryMember = memberMapper.queryByName(member.getMemberName());
+                    Member queryMember = memberMapper.selectByName(member.getMemberName());
                     if (queryMember != null && Objects.equals(queryMember.getMemberGradeNumber(), member.getMemberGradeNumber())) {
                         logger.error("数据库中存在这个成员,成员名字:【{}】,班级【{}】,年级【{}】", queryMember.getMemberName(), member.getMemberClassName(), member.getMemberGradeNumber());
                         failList.get().add(member);
@@ -268,7 +268,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
      * @return 部门对应的ID
      */
     private Integer convertDepartId(String departName) {
-        Department department = departmentMapper.queryByName(departName);
+        Department department = departmentMapper.selectByName(departName);
         return department.getDepartmentId() != null ? department.getDepartmentId() : 0;
     }
 
@@ -324,15 +324,15 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     /*  通过id查询一条成员信息    */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public Member queryById(long id) {
-        return memberMapper.queryById(id);
+    public Member selectById(long id) {
+        return memberMapper.selectById(id);
     }
 
     /*  通过成员名字查询一条成员信息    */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public Member queryByName(String name) {
-        return memberMapper.queryByName(name);
+    public Member selectByName(String name) {
+        return memberMapper.selectByName(name);
     }
 
     /*  通过Long型的id查询一条账号信息    */
@@ -345,8 +345,8 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     /*   查询所有的成员记录   */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<Member> queryAll() {
-        return memberMapper.queryAll();
+    public List<Member> selectAll() {
+        return memberMapper.selectAll();
     }
 
     /*   通过查询条件查询成员记录   */

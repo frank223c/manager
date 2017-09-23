@@ -32,22 +32,22 @@ public class DepartmentServiceImpl extends AbstractBaseServiceImpl<Department> i
     /* 通过部门名字查询部门记录  */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public Department queryByName(String name) {
-        return departmentMapper.queryByName(name);
+    public Department selectByName(String name) {
+        return departmentMapper.selectByName(name);
     }
 
     /* 查询部门表总记录数  */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public int queryCount() {
-        return departmentMapper.queryCount();
+    public int selectCount() {
+        return departmentMapper.selectCount();
     }
 
     /* 查询部门表所有的记录  */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<Department> queryAll() {
-        return departmentMapper.queryAll();
+    public List<Department> selectAll() {
+        return departmentMapper.selectAll();
     }
 
     /**

@@ -270,7 +270,7 @@
         WHERE member_status = 1
     </select>
 
-    <select id="queryById" parameterType="Integer" resultMap="BaseResultMap">
+    <select id="selectById" parameterType="Integer" resultMap="BaseResultMap">
         SELECT
             member_id,
             member_name,
@@ -324,7 +324,7 @@
 
 
     </select>
-    <select id="queryAll" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
         SELECT
             member_id,
             member_name,
@@ -363,7 +363,7 @@
         LIMIT #{offset},#{limit}
     </select>
 
-    <select id="queryCount" resultType="int">
+    <select id="selectCount" resultType="int">
         SELECT count(*)
         FROM member;
     </select>
@@ -376,7 +376,7 @@
         WHERE m.member_role_id = #{memberRoleId}
     </select>
 
-    <select id="queryByName" resultMap="BaseResultMap" parameterType="string">
+    <select id="selectByName" resultMap="BaseResultMap" parameterType="string">
         SELECT
             m.member_id,
             m.member_name,

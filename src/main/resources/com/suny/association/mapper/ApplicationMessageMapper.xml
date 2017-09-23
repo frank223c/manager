@@ -200,14 +200,14 @@
         LIMIT #{offset}, #{limit}
     </select>
 
-    <select id="queryCount" resultType="int">
+    <select id="selectCount" resultType="int">
         SELECT count(*)
         FROM application_message
         WHERE application_result IS NULL
     </select>
 
 
-    <select id="queryById" parameterType="int" resultMap="BaseResultMap">
+    <select id="selectById" parameterType="int" resultMap="BaseResultMap">
         SELECT
             a.application_id,
             a.punch_type_id,

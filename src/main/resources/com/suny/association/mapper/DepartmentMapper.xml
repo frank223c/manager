@@ -6,14 +6,14 @@
         <result column="department_name" property="departmentName"/>
     </resultMap>
 
-    <select id="queryAll" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
         SELECT
             d.department_id,
             d.department_name
         FROM department AS d
     </select>
 
-    <select id="queryByName" parameterType="String" resultMap="BaseResultMap">
+    <select id="selectByName" parameterType="String" resultMap="BaseResultMap">
         SELECT
             d.department_id,
             d.department_name

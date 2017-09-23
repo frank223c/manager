@@ -20,13 +20,13 @@ public interface IMapper<T> {
 
     void update(T t);
 
-    T queryById(long id);
+    T selectById(long id);
 
-    T queryByName(String name);
+    T selectByName(String name);
 
-    int queryCount();
+    int selectCount();
 
-    List<T> queryAll();
+    List<T> selectAll();
 
     List<T> list(Map<Object, Object> criteriaMap);
 

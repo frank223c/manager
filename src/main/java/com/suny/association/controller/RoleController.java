@@ -39,7 +39,7 @@ public class RoleController extends BaseController {
     public JsonResult delete(@PathVariable("roleId") Integer roleId) {
         if (rolesService.queryQuote(roleId).size() >= 1) {
             return failResult(BaseEnum.HAVE_QUOTE);
-        } else if (rolesService.queryById(roleId) == null) {
+        } else if (rolesService.selectById(roleId) == null) {
             return failResult(BaseEnum.DELETE_FAILURE);
         }
         rolesService.deleteById(roleId);
@@ -50,7 +50,7 @@ public class RoleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/update.json", method = RequestMethod.POST)
     public JsonResult update(@RequestBody Roles roles) {
-        if (roles.getRoleId() == null || rolesService.queryById(roles.getRoleId()) == null) {
+        if (roles.getRoleId() == null || rolesService.selectById(roles.getRoleId()) == null) {
             return failResult(BaseEnum.SELECT_FAILURE);
         }
         if ("".equals(roles.getDescription()) || roles.getDescription() == null) {
@@ -63,10 +63,10 @@ public class RoleController extends BaseController {
     @RequestMapping(value = "/update.html/{roleId}", method = RequestMethod.GET)
     public ModelAndView updatePage(@PathVariable int roleId
             , ModelAndView modelAndView) {
-        Roles role = rolesService.queryById(roleId);
+        Roles role = rolesService.selectById(roleId);
         if (role == null) {
             int DEFAULT_ID = 0;
-            role = rolesService.queryById(DEFAULT_ID);
+            role = rolesService.selectById(DEFAULT_ID);
             modelAndView.addObject("role", role);
             return modelAndView;
         }
@@ -89,7 +89,7 @@ public class RoleController extends BaseController {
         if ("".equals(roles.getDescription()) || roles.getDescription() == null) {
             return failResult(BaseEnum.FIELD_NULL);
         }
-        if (rolesService.queryByName(roles.getDescription()) != null) {
+        if (rolesService.selectByName(roles.getDescription()) != null) {
             return failResult(BaseEnum.REPEAT_ADD);
         }
         rolesService.insert(roles);
@@ -114,7 +114,7 @@ public class RoleController extends BaseController {
     public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         List<Roles> rolesList = rolesService.list(ConversionUtil.convertToCriteriaMap(offset, limit));
-        int total = rolesService.queryCount();
+        int total = rolesService.selectCount();
         return ConversionUtil.convertToBootstrapTableResult(rolesList, total);
     }
 

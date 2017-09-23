@@ -167,7 +167,7 @@
     </select>
 
 
-    <select id="queryAll" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
         SELECT
             cr.callback_id,
             cr.application_message_id,
@@ -223,7 +223,7 @@
         </trim>
     </insert>
 
-    <select id="queryById" parameterType="int" resultMap="BaseResultMap">
+    <select id="selectById" parameterType="int" resultMap="BaseResultMap">
         SELECT cr.application_message_id
         FROM callback_result AS cr
         WHERE cr.application_message_id = #{applicationMessageId}
@@ -240,7 +240,7 @@
         FROM callback_result AS cr;
     </select>
 
-    <select id="queryCount" resultType="int">
+    <select id="selectCount" resultType="int">
         SELECT COUNT(*)
         FROM callback_result;
     </select>

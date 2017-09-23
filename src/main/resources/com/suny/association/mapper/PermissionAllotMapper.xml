@@ -35,7 +35,7 @@
         WHERE role_id = #{roleId}
     </delete>
 
-    <select id="queryAll" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
         SELECT
             pr.role_id               AS pr_role_id,
             p.permission_id          AS p_permission_id,

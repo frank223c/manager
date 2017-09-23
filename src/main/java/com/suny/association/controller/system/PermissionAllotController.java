@@ -46,7 +46,7 @@ public class PermissionAllotController extends BaseController {
     @ResponseBody
     public JsonResult update(@RequestParam(value = "permissionArray[]") Integer[] permissionArray, Integer roleId) {
 
-        if (rolesService.queryById(roleId) != null) {
+        if (rolesService.selectById(roleId) != null) {
             //  在修改权限之前先把角色所有的权限先清除
             if (permissionAllotService.queryByRoleId(roleId).size() > 0) {
                 permissionAllotService.deleteById(roleId);
@@ -86,7 +86,7 @@ public class PermissionAllotController extends BaseController {
         //  查询一个角色对应的权限
         List<PermissionAllot> permissionList = permissionAllotService.queryByRoleId(roleId);
         //    查询数据库所有的权限
-        List<Permission> permissions = permissionService.queryAll();
+        List<Permission> permissions = permissionService.selectAll();
         modelAndView.addObject("permissionList", permissionList);
         modelAndView.addObject("permissions", permissions);
         modelAndView.setViewName("system/permission/allot/rolePermissionAllot");
@@ -96,8 +96,8 @@ public class PermissionAllotController extends BaseController {
     @SystemControllerLog(description = "查看权限分配页面")
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
     public ModelAndView index(ModelAndView modelAndView) {
-        List<Roles> roleList = rolesService.queryAll();
-        List<PermissionAllot> permissionAllotList = permissionAllotService.queryAll();
+        List<Roles> roleList = rolesService.selectAll();
+        List<PermissionAllot> permissionAllotList = permissionAllotService.selectAll();
         modelAndView.addObject("roleList", roleList);
         modelAndView.addObject("permissionAllotList", permissionAllotList);
         modelAndView.setViewName("system/permission/allot/permissionAllot");

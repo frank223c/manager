@@ -42,22 +42,22 @@ public class MemberRolesServiceImpl extends AbstractBaseServiceImpl<MemberRoles>
     /*  通过成员的名字查询成员角色    */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public MemberRoles queryByName(String name) {
-        return memberRolesMapper.queryByName(name);
+    public MemberRoles selectByName(String name) {
+        return memberRolesMapper.selectByName(name);
     }
 
     /*  查询数据库中成员角色表的总记录数    */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public int queryCount() {
-        return memberRolesMapper.queryCount();
+    public int selectCount() {
+        return memberRolesMapper.selectCount();
     }
 
     /*  通过成员角色id查询一个成员角色    */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public MemberRoles queryById(long id) {
-        return memberRolesMapper.queryById(id);
+    public MemberRoles selectById(long id) {
+        return memberRolesMapper.selectById(id);
     }
 
     /**
@@ -67,8 +67,8 @@ public class MemberRolesServiceImpl extends AbstractBaseServiceImpl<MemberRoles>
      */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<MemberRoles> queryAll() {
-        return memberRolesMapper.queryAll();
+    public List<MemberRoles> selectAll() {
+        return memberRolesMapper.selectAll();
     }
 
     /**

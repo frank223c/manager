@@ -42,13 +42,13 @@ public class PermissionAllotServiceImpl extends AbstractBaseServiceImpl<Permissi
     }
 
     @Override
-    public PermissionAllot queryByName(String name) {
-        return permissionAllotMapper.queryByName(name);
+    public PermissionAllot selectByName(String name) {
+        return permissionAllotMapper.selectByName(name);
     }
 
     @Override
-    public int queryCount() {
-        return permissionAllotMapper.queryCount();
+    public int selectCount() {
+        return permissionAllotMapper.selectCount();
     }
 
     @Override
@@ -57,8 +57,8 @@ public class PermissionAllotServiceImpl extends AbstractBaseServiceImpl<Permissi
     }
 
     @Override
-    public List<PermissionAllot> queryAll() {
-        return permissionAllotMapper.queryAll();
+    public List<PermissionAllot> selectAll() {
+        return permissionAllotMapper.selectAll();
     }
 
     @Override

@@ -161,8 +161,8 @@ public class PortalLoginController {
      * @param username 登录的用户名
      */
     private void saveLoginUser(HttpServletRequest request, String username) {
-        Member member = accountService.queryByName(username).getAccountMember();
-        Account account = accountService.queryByName(username);
+        Member member = accountService.selectByName(username).getAccountMember();
+        Account account = accountService.selectByName(username);
         request.getSession().setAttribute("member", member);
         request.getSession().setAttribute("account", account);
     }

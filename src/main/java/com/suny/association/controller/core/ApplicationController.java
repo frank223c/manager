@@ -64,17 +64,17 @@ public class ApplicationController extends BaseController {
             return JsonResult.failResult(BaseEnum.FIELD_NULL);
         }
         // 这里判断是否有这个管理员，再判断这个管理员的角色是否大于一个可以操作考勤的角色
-        if (memberService.queryById(memberId) == null && memberService.queryById(memberId).getMemberRoles().getMemberRoleId() < 3) {
+        if (memberService.selectById(memberId) == null && memberService.selectById(memberId).getMemberRoles().getMemberRoleId() < 3) {
             return JsonResult.failResult(BaseEnum.LIMIT_MEMBER_Manager);
         }
         // 检查是否有要审批的异议考勤记录，再判断这条异议考勤记录是否已经有了结果
-        if (applicationMessageService.queryById(applicationId) == null || applicationMessageService.queryById(applicationId).getApplicationResult() != null) {
+        if (applicationMessageService.selectById(applicationId) == null || applicationMessageService.selectById(applicationId).getApplicationResult() != null) {
             return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
         }
         // 获取对应的那条异议申请记录
-        ApplicationMessage applicationMessage = applicationMessageService.queryById(applicationId);
+        ApplicationMessage applicationMessage = applicationMessageService.selectById(applicationId);
         // 判断审批结果表里面是否有这条异议考勤的结果，如果有就说明已经审批过了
-        if (callbackResultService.queryById(applicationMessage.getApplicationId()) != null) {
+        if (callbackResultService.selectById(applicationMessage.getApplicationId()) != null) {
             return JsonResult.successResult(BaseEnum.REPEAT_ADD);
         }
         if (!resultStatus) {
@@ -109,7 +109,7 @@ public class ApplicationController extends BaseController {
                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit);
         List<ApplicationMessage> punchRecordList = applicationMessageService.list(criteriaMap);
-        int total = applicationMessageService.queryCount();
+        int total = applicationMessageService.selectCount();
         return ConversionUtil.convertToBootstrapTableResult(punchRecordList, total);
     }
 

@@ -45,7 +45,7 @@ public class OperationLogController extends BaseController {
     public Map query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         List<OperationLog> operationLogList = operationLogService.list(convertToCriteriaMap(offset, limit));
-        int total = operationLogService.queryCount();
+        int total = operationLogService.selectCount();
         return convertToBootstrapTableResult(operationLogList, total);
     }
 

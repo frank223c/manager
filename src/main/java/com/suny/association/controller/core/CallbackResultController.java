@@ -43,7 +43,7 @@ public class CallbackResultController extends BaseController {
     public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         List<CallbackResult> callbackResultList = callbackResultService.list(ConversionUtil.convertToCriteriaMap(offset, limit));
-        int total = callbackResultService.queryCount();
+        int total = callbackResultService.selectCount();
         return ConversionUtil.convertToBootstrapTableResult(callbackResultList, total);
     }
 

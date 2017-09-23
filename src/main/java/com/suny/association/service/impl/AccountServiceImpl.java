@@ -82,8 +82,8 @@ public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> impleme
      */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public Account queryById(long id) {
-        return accountMapper.queryById(id);
+    public Account selectById(long id) {
+        return accountMapper.selectById(id);
     }
 
     /**
@@ -152,8 +152,8 @@ public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> impleme
      */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public Account queryByName(String name) {
-        return accountMapper.queryByName(name);
+    public Account selectByName(String name) {
+        return accountMapper.selectByName(name);
     }
 
     /**
@@ -188,8 +188,8 @@ public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> impleme
      */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public int queryCount() {
-        return accountMapper.queryCount();
+    public int selectCount() {
+        return accountMapper.selectCount();
     }
 
     /**
@@ -208,7 +208,7 @@ public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> impleme
      */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<Account> queryAll() {
-        return accountMapper.queryAll();
+    public List<Account> selectAll() {
+        return accountMapper.selectAll();
     }
 }
