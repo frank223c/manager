@@ -33,10 +33,6 @@ public class LimitFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         String reqURI = req.getRequestURI();
         // 1. 项目中的第一个Filter,如果是一些生成验证码或者是请求登录,验证账号信息等请求的话直接放行
-        if (req.getAttribute("account") != null) {
-            req.setAttribute(EXECUTE_NEXT_FILTER, false);
-            logger.warn("session中有账号信息");
-        }
         if (isExcludeUrl(reqURI, req)) {
             //  1.1     如果是被排除的URL的话就直接放行,不要阻拦了,直接跳过剩下的Filter
             logger.info("【LimitFilter】请求的url【{}】直接放行", reqURI);

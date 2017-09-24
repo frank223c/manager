@@ -7,6 +7,8 @@ import com.suny.association.pojo.po.Account;
 import com.suny.association.pojo.po.LoginTicket;
 import com.suny.association.service.interfaces.ILoginService;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
+import com.suny.association.utils.JedisAdapter;
+import com.suny.association.utils.RedisKeyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +29,14 @@ public class LoginServiceImpl implements ILoginService {
     private final LoginTicketMapper loginTicketMapper;
     private final AccountMapper accountMapper;
     private final ILoginHistoryService loginHistoryService;
+    private final JedisAdapter jedisAdapter;
 
     @Autowired
-    public LoginServiceImpl(LoginTicketMapper loginTicketMapper, AccountMapper accountMapper, ILoginHistoryService loginHistoryService) {
+    public LoginServiceImpl(LoginTicketMapper loginTicketMapper, AccountMapper accountMapper, ILoginHistoryService loginHistoryService, JedisAdapter jedisAdapter) {
         this.loginTicketMapper = loginTicketMapper;
         this.accountMapper = accountMapper;
         this.loginHistoryService = loginHistoryService;
+        this.jedisAdapter = jedisAdapter;
     }
 
     @Override
@@ -48,13 +52,14 @@ public class LoginServiceImpl implements ILoginService {
         //  2.     ==========账号密码匹配成功的业务逻辑=============
         if (authAction(username, password)) {
             Account account = accountMapper.selectByName(username);
-//            hostHolder.setAccounts(account);
             //  2.1   查看数据库里面ticket是否存在
             LoginTicket loginTicket = loginTicketMapper.selectByAccountId(account.getAccountId());
             //  2.2   数据库中存在这个用户的ticket
             if (loginTicket != null) {
                 //  2.2.1  数据库中存在不过期的ticket,添加到Map里面返回给Controller
                 if (loginTicket.getStatus() == 0 || loginTicket.getExpired().isAfter(LocalDateTime.now())) {
+                    // 把ticket添加到Redis里面
+                    jedisAdapter.sadd(RedisKeyUtils.getTicketKey(loginTicket.getTicket()), loginTicket.getTicket());
                     map.get().put(TICKET, loginTicket.getTicket());
                 } else {
                     //  2.2.2  数据库中存在已经过期的ticket,为了不删除ticket就直接更新过期时间跟状态,就直接更新

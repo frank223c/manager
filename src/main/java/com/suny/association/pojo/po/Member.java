@@ -2,7 +2,9 @@ package com.suny.association.pojo.po;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Member {
+import java.io.Serializable;
+
+public class Member implements Serializable {
     private Integer memberId;
 
     private String memberName;
