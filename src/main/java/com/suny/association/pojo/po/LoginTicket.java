@@ -11,6 +11,8 @@ import java.util.Date;
  */
 public class LoginTicket implements Serializable {
 
+
+    private static final long serialVersionUID = -1460593651742189724L;
     private int id;
     // 账号ID
     private long accountId;

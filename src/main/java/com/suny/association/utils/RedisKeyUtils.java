@@ -8,11 +8,16 @@ public class RedisKeyUtils {
 
     private static final String SPLIT = ":";
     private static final String BIZ_TICKET = "BIZ_TICKET";
+    private static final String BIZ_LOGIN_TICKET = "BIZ_LOGIN_TICKET";
     private static final String BIZ_ACCOUNT = "BIZ_ACCOUNT";
     private static final String BIZ_PERMISSION = "BIZ_PERMISSION";
 
     public static String getTicketKey(String ticket) {
         return BIZ_TICKET + SPLIT + ticket;
+    }
+
+    public static String getLoginticket(String ticket) {
+        return BIZ_LOGIN_TICKET + SPLIT + ticket;
     }
 
     public static String getAccountKey(String ticket) {

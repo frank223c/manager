@@ -8,7 +8,6 @@ import com.suny.association.pojo.po.LoginTicket;
 import com.suny.association.service.interfaces.ILoginService;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
 import com.suny.association.utils.JedisAdapter;
-import com.suny.association.utils.RedisKeyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,14 +28,12 @@ public class LoginServiceImpl implements ILoginService {
     private final LoginTicketMapper loginTicketMapper;
     private final AccountMapper accountMapper;
     private final ILoginHistoryService loginHistoryService;
-    private final JedisAdapter jedisAdapter;
 
     @Autowired
-    public LoginServiceImpl(LoginTicketMapper loginTicketMapper, AccountMapper accountMapper, ILoginHistoryService loginHistoryService, JedisAdapter jedisAdapter) {
+    public LoginServiceImpl(LoginTicketMapper loginTicketMapper, AccountMapper accountMapper, ILoginHistoryService loginHistoryService) {
         this.loginTicketMapper = loginTicketMapper;
         this.accountMapper = accountMapper;
         this.loginHistoryService = loginHistoryService;
-        this.jedisAdapter = jedisAdapter;
     }
 
     @Override
@@ -59,7 +56,6 @@ public class LoginServiceImpl implements ILoginService {
                 //  2.2.1  数据库中存在不过期的ticket,添加到Map里面返回给Controller
                 if (loginTicket.getStatus() == 0 || loginTicket.getExpired().isAfter(LocalDateTime.now())) {
                     // 把ticket添加到Redis里面
-                    jedisAdapter.sadd(RedisKeyUtils.getTicketKey(loginTicket.getTicket()), loginTicket.getTicket());
                     map.get().put(TICKET, loginTicket.getTicket());
                 } else {
                     //  2.2.2  数据库中存在已经过期的ticket,为了不删除ticket就直接更新过期时间跟状态,就直接更新

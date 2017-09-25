@@ -1,6 +1,5 @@
 package com.suny.association.utils;
 
-import com.sun.org.apache.regexp.internal.RE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,24 +17,12 @@ public class JedisAdapter implements InitializingBean {
 
     private JedisPool jedisPool;
 
-    public JedisAdapter() {
-        jedisPool = new JedisPool("redis://localhost:6379/10");
-    }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         jedisPool = new JedisPool("redis://localhost:6379/10");
     }
 
-
-    Jedis getJedis() {
-        try (Jedis jedis = jedisPool.getResource()) {
-            return jedis;
-        } catch (Exception e) {
-            logger.error("获取jedis实例失败");
-        }
-        return null;
-    }
 
 
     /**
@@ -159,6 +146,7 @@ public class JedisAdapter implements InitializingBean {
         }
         return null;
     }
+
 
 
     /**

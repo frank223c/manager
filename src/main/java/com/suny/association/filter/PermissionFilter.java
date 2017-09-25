@@ -69,7 +69,8 @@ public class PermissionFilter implements Filter {
             String ticket = LoginTicketUtils.getTicket(request);
             // 3.判断登录标记是否过期,不过期就自动登录,过期就需要重新登录
             // 3.1  根据ticket字符串去数据库里面查询是否有这个,防止客户端伪造ticket
-            Account account = LoginTicketUtils.selectAccount(ticket);
+            LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
+            Account account = accountMapper.selectById(loginTicket.getId());
             //   【2】. 判断是否已经存在Account信息
             if (account != null) {
                 // 2.1 判断是否有对应的权限

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 
 public class Member implements Serializable {
+
+    private static final long serialVersionUID = -43708088833959784L;
     private Integer memberId;
 
     private String memberName;

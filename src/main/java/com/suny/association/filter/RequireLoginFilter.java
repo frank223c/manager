@@ -66,7 +66,6 @@ public class RequireLoginFilter implements Filter {
                 // 3.2  如果查出来数据库里面没有这个ticket或者是已经过期了的话就让它重新登录
                 if (loginTicket == null || LoginTicketUtils.isExpired(loginTicket)) {
                     request.getRequestDispatcher(PORTAL_LOGIN_URL).forward(request, response);
-//                    response.sendRedirect(PORTAL_LOGIN_URL);
                     logger.warn("【RequireLoginFilter】ticket过期了或者是前端伪造的了,强制需要重新登录");
                     req.setAttribute(EXECUTE_NEXT_FILTER, false);
                 } else {
@@ -77,7 +76,6 @@ public class RequireLoginFilter implements Filter {
                 }
             } else {
                 // 4. 没有登录过,直接跳转到登录页面
-//                response.sendRedirect(PORTAL_LOGIN_URL);
                 request.getRequestDispatcher(PORTAL_LOGIN_URL).forward(request, response);
                 logger.warn("【RequireLoginFilter】请求头没有携带ticket,需要重新登录");
             }

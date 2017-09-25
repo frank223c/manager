@@ -10,11 +10,12 @@ import java.time.LocalDateTime;
 import static org.junit.Assert.*;
 
 /**
+ *
  * Created by 孙建荣 on 17-9-24.下午1:30
  */
 public class SerializeUtilTest {
 
-    JedisAdapter jedisAdapter = new JedisAdapter();
+    private JedisAdapter jedisAdapter;
 
 
     @Test
@@ -24,16 +25,20 @@ public class SerializeUtilTest {
         loginTicket.setAccountId(4);
         loginTicket.setExpired(LocalDateTime.now());
         loginTicket.setStatus(0);
-        loginTicket.setTicket("dsfdsafdsfds");
-        jedisAdapter.set("loginTicket".getBytes(), SerializeUtil.serialize(loginTicket));
-        byte[] bytes = jedisAdapter.get("loginTicket".getBytes());
-        System.out.println(bytes.toString());
+        loginTicket.setTicket("dsfdsfs");
+        jedisAdapter.set((RedisKeyUtils.getLoginticket(loginTicket.getTicket())).getBytes(), SerializeUtil.serialize(loginTicket));
+        byte[] bytes = jedisAdapter.get((RedisKeyUtils.getTicketKey(loginTicket.getTicket())).getBytes());
+        if (bytes != null) {
+            System.out.println(bytes.toString());
+        } else {
+            System.out.println("没有取到值");
+        }
 
     }
 
     @Test
     public void unserialize() throws Exception {
-        byte[] bytes = jedisAdapter.get("loginTicket".getBytes());
+        byte[] bytes = jedisAdapter.get((RedisKeyUtils.getTicketKey("dsfdsafdsfds")).getBytes());
         System.out.println(bytes.toString());
         Object o = SerializeUtil.unserialize(bytes);
         if (o != null) {

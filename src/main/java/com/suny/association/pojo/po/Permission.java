@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
  */
 public class Permission implements Serializable {
 
-    private static final long serialVersionUID = -4113455583527366316L;
+
+    private static final long serialVersionUID = -8178626404327345498L;
     private Integer permissionId;   /*  主键id  */
     private String permissionName;  /*   权限名字，后端使用 */
     private String description;   /*  权限解释，前端使用  */

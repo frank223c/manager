@@ -13,8 +13,8 @@ public class SerializeUtil {
     private static Logger logger = LoggerFactory.getLogger(SerializeUtil.class);
 
     public static byte[] serialize(Object o) {
-        ObjectOutputStream objectOutputStream = null;
-        ByteArrayOutputStream byteArrayOutputStream = null;
+        ObjectOutputStream objectOutputStream;
+        ByteArrayOutputStream byteArrayOutputStream;
         try {
             byteArrayOutputStream = new ByteArrayOutputStream();
             objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -28,7 +28,7 @@ public class SerializeUtil {
 
 
     public static Object unserialize(byte[] bytes) {
-        ByteArrayInputStream byteArrayInputStream = null;
+        ByteArrayInputStream byteArrayInputStream;
         try {
             byteArrayInputStream = new ByteArrayInputStream(bytes);
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);

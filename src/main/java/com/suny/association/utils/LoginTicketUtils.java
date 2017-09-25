@@ -19,38 +19,9 @@ import java.time.LocalDateTime;
  */
 public class LoginTicketUtils {
     private static Logger logger = LoggerFactory.getLogger(LoginTicketUtils.class);
-    private static LoginTicketMapper loginTicketMapper = (LoginTicketMapper) ApplicationContextHolder.get().getBean("loginTicketMapper");
-    private static AccountMapper accountMapper = (AccountMapper) ApplicationContextHolder.get().getBean("accountMapper");
 
     private LoginTicketUtils() {
     }
-
-    /**
-     * 直接通过一个ticket查询对应的Account信息
-     *
-     * @param ticket ticket标示
-     * @return 如果ticket在数据库中存在就会去查询Account, 不存在就直接返回null
-     */
-    public static Account selectAccount(String ticket) {
-        LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
-        if (loginTicket != null) {
-            return accountMapper.selectById(loginTicket.getId());
-        }
-        logger.warn("ticket{}在数据库中不存在,可能是客户端伪造", ticket);
-        return null;
-    }
-
-    /**
-     * 检查ticket是否存在
-     *
-     * @param ticket ticket标示
-     * @return 查询数据库中是否存在这个ticket, 存在返回true, 没有返回false
-     */
-    public static Boolean checkExits(String ticket) {
-        LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
-        return loginTicket != null;
-    }
-
 
     /**
      * 直接从request请求里面取出ticket
