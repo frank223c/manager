@@ -245,7 +245,7 @@
                                 class="zmdi zmdi-settings"></i> 修改密码</a>
                     </li>
                     <li>
-                        <a class="waves-effect" href="javascript:;" onclick="clickLogout()"><i
+                        <a class="waves-effect" href="javascript:" onclick="clickLogout()"><i
                                 class="zmdi zmdi-run"></i>
                             退出登录</a>
                     </li>
@@ -536,7 +536,7 @@
             data: {
                 passWord: passwordVal,
                 newPassword: newPasswordVal,
-                accountId:${account.accountId}
+                accountId: ${account.accountId}
             },
             success: function (result) {
                 var status = result.status;
@@ -570,6 +570,7 @@
         })
     }
     function clickLogout() {
+        console.log("注销登录操作");
         //询问框
         layer.confirm('您确定要退出登陆吗？', {
             btn: ['是的', '点错了'] //按钮
@@ -586,7 +587,7 @@
     function sendLogout() {
         $.ajax({
             type: "Get",
-            url: "${basePath}/base/logout.action",
+            url: "${basePath}/logout.action",
             success: function (result) {
                 if (result.status !== 993) {
                     alertFunMessage('这都能出错了。。你是不是没登录就想注销');
@@ -599,7 +600,7 @@
         })
     }
     function login() {
-        window.parent.location.href = "${basePath}/base/login.html";
+        window.parent.location.href = "${basePath}/backend/login.html";
     }
 
 

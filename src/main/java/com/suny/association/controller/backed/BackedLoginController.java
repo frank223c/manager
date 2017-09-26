@@ -53,7 +53,7 @@ public class BackedLoginController {
     /**
      * 登录页面
      */
-    @RequestMapping(value = {"/login.html"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/","/login.html"}, method = RequestMethod.GET)
     public String backendLogin(HttpServletRequest request) {
         String token = TokenProcessor.getInstance().makeToken();
         request.getSession().setAttribute(TOKEN, token);
@@ -112,7 +112,7 @@ public class BackedLoginController {
                 }
                 response.addCookie(cookie);
                 //    1.4.4   把一些进入主页面需要的数据先放进去
-                saveUser(request, username);
+                saveUser(response, username);
                 logger.warn("登录成功了,给前端发送通知");
                 return JsonResult.successResult(BaseEnum.LOGIN_SYSTEM);
             }
@@ -148,14 +148,18 @@ public class BackedLoginController {
     /**
      * 验证成功后报存用户的登录信息
      *
-     * @param request  request请求
+     * @param response  response请求
      * @param username 登录的用户名
      */
-    private void saveUser(HttpServletRequest request, String username) {
+    private void saveUser(HttpServletResponse response, String username) {
         Member member = accountService.selectByName(username).getAccountMember();
         Account account = accountService.selectByName(username);
-        request.getSession().setAttribute("member", member);
-        request.getSession().setAttribute("account", account);
+        Cookie nameCookie = new Cookie("account", account.getAccountName());
+        Cookie accountCookie = new Cookie("member", member.getMemberName());
+        response.addCookie(nameCookie);
+        response.addCookie(accountCookie);
+//        request.getSession().setAttribute("member", member);
+//        request.getSession().setAttribute("account", account);
     }
 
 
@@ -164,8 +168,8 @@ public class BackedLoginController {
      *
      * @return 管理员中心
      */
-    @RequestMapping(value = {"/","/userCenter.html"}, method = RequestMethod.GET)
-    public ModelAndView goAdminPage() {
+    @RequestMapping(value = {"/userCenter.html"}, method = RequestMethod.GET)
+    public ModelAndView userCenter() {
         return new ModelAndView("backend/userCenter");
     }
 
