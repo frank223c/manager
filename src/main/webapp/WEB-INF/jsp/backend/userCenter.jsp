@@ -227,7 +227,7 @@
                         <%--<shiro:principal/>--%>
                         <%--<shiro:user></shiro:user>--%>
                         <%--【${member.memberRoles.memberRoleName}】 ${member.memberName}，您好！--%>
-                        【${member.memberRoles.memberRoleName}】 ${member.memberName}，您好！
+                        【${cookie.account.value}】 ${cookie.member.value}，您好！
                         <i class="zmdi zmdi-caret-down"></i>
                     </div>
                 </a>
