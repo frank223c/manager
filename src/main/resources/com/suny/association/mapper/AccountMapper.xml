@@ -146,9 +146,21 @@
 
     <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT
-        <include refid="BaseSelectFields"/>
-        FROM account
-        WHERE account_name = #{accountName}
+            a.account_id,
+            a.account_name,
+            a.account_password,
+            a.account_status,
+            a.account_member_id,
+            a.account_role_id,
+            r.role_id          AS role_id,
+            r.role_description AS role_name,
+            m.member_id        AS member_id,
+            m.member_name      AS member_name
+        FROM account a
+            JOIN roles r
+                ON a.account_role_id = r.role_id
+            JOIN member m ON a.account_member_id = m.member_id
+        WHERE a.account_name = #{name};
     </select>
 
 
