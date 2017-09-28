@@ -112,7 +112,7 @@ public class BackedLoginController {
                 }
                 response.addCookie(cookie);
                 //    1.4.4   把一些进入主页面需要的数据先放进去
-                saveUser(response, username);
+                saveUser(request,response, username);
                 logger.warn("登录成功了,给前端发送通知");
                 return JsonResult.successResult(BaseEnum.LOGIN_SYSTEM);
             }
@@ -151,7 +151,7 @@ public class BackedLoginController {
      * @param response  response请求
      * @param username 登录的用户名
      */
-    private void saveUser(HttpServletResponse response, String username) {
+    private void saveUser(HttpServletRequest request,HttpServletResponse response, String username) {
         Member member = accountService.selectByName(username).getAccountMember();
         Account account = accountService.selectByName(username);
         Cookie nameCookie = new Cookie("account", account.getAccountName());
@@ -159,7 +159,7 @@ public class BackedLoginController {
         response.addCookie(nameCookie);
         response.addCookie(accountCookie);
 //        request.getSession().setAttribute("member", member);
-//        request.getSession().setAttribute("account", account);
+        request.getSession().setAttribute("account", account);
     }
 
 

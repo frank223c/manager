@@ -123,6 +123,12 @@
             <version>2.7.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.32</version>
+        </dependency>
+
 
         <!--junit组件-->
         <dependency>

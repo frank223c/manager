@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.List;
+
 /**
  * 操作Redis工具类
  * Created by 孙建荣 on 17-9-24.上午8:54
@@ -22,7 +24,6 @@ public class JedisAdapter implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         jedisPool = new JedisPool("redis://localhost:6379/10");
     }
-
 
 
     /**
@@ -148,7 +149,6 @@ public class JedisAdapter implements InitializingBean {
     }
 
 
-
     /**
      * 给key设置过期时间
      *
@@ -178,6 +178,26 @@ public class JedisAdapter implements InitializingBean {
             logger.error("查看过期时间发生了异常" + e.getMessage());
         }
         return 0;
+    }
+
+
+    public long lpush(String key, String value) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            return jedis.lpush(key, value);
+        } catch (Exception e) {
+            logger.error("发生了异常" + e.getMessage());
+        }
+        return 0;
+    }
+
+
+    public List<String> brpop(int timeout, String key) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            return jedis.brpop(key);
+        } catch (Exception e) {
+            logger.error("发生了异常" + e.getMessage());
+        }
+        return null;
     }
 
 

@@ -11,6 +11,7 @@ public class RedisKeyUtils {
     private static final String BIZ_LOGIN_TICKET = "BIZ_LOGIN_TICKET";
     private static final String BIZ_ACCOUNT = "BIZ_ACCOUNT";
     private static final String BIZ_PERMISSION = "BIZ_PERMISSION";
+    private static final String BIZ_EVENT_QUEUE = "BIZ_EVENT_QUEUE";
 
     public static String getTicketKey(String ticket) {
         return BIZ_TICKET + SPLIT + ticket;
@@ -26,6 +27,10 @@ public class RedisKeyUtils {
 
     public static String getPermissionKey(String accountName) {
         return BIZ_PERMISSION + SPLIT + accountName;
+    }
+
+    public static String getEventQueueKey() {
+        return BIZ_EVENT_QUEUE;
     }
 
 }
