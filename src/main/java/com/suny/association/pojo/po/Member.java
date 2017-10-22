@@ -116,24 +116,44 @@ public class Member implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o){
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
 
         Member member = (Member) o;
 
-        if (memberId != null ? !memberId.equals(member.memberId) : member.memberId != null) return false;
-        if (memberName != null ? !memberName.equals(member.memberName) : member.memberName != null) return false;
+        if (memberId != null ? !memberId.equals(member.memberId) : member.memberId != null) {
+            return false;
+        }
+        if (memberName != null ? !memberName.equals(member.memberName) : member.memberName != null) {
+            return false;
+        }
         if (memberClassName != null ? !memberClassName.equals(member.memberClassName) : member.memberClassName != null)
+        {
             return false;
-        if (memberSex != null ? !memberSex.equals(member.memberSex) : member.memberSex != null) return false;
+        }
+        if (memberSex != null ? !memberSex.equals(member.memberSex) : member.memberSex != null){
+            return false;
+        }
         if (memberGradeNumber != null ? !memberGradeNumber.equals(member.memberGradeNumber) : member.memberGradeNumber != null)
+        {
             return false;
+        }
         if (memberManager != null ? !memberManager.equals(member.memberManager) : member.memberManager != null)
+        {
             return false;
+        }
         if (memberDepartment != null ? !memberDepartment.equals(member.memberDepartment) : member.memberDepartment != null)
+        {
             return false;
+        }
         if (memberStatus != null ? !memberStatus.equals(member.memberStatus) : member.memberStatus != null)
+        {
             return false;
+        }
         return memberRoles != null ? memberRoles.equals(member.memberRoles) : member.memberRoles == null;
 
     }

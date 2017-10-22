@@ -37,7 +37,9 @@ public class LimitFilter implements Filter {
             //  1.1     如果是被排除的URL的话就直接放行,不要阻拦了,直接跳过剩下的Filter
             logger.info("【LimitFilter】请求的url【{}】直接放行", reqURI);
             req.setAttribute(EXECUTE_NEXT_FILTER, false);
-        } else request.setAttribute(EXECUTE_NEXT_FILTER, true);
+        } else{
+            request.setAttribute(EXECUTE_NEXT_FILTER, true);
+        }
         // 2. 放行到登录下一个登录验证过滤器
         logger.info("【LimitFilter】请求的url为【{}】,请求地址地址进行下一步认证【{}】", reqURI, req.getAttribute(EXECUTE_NEXT_FILTER));
         chain.doFilter(request, response);

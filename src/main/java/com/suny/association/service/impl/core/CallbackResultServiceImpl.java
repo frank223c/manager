@@ -44,6 +44,7 @@ public class CallbackResultServiceImpl extends AbstractBaseServiceImpl<CallbackR
      * @param managerId          审批的管理员
      * @param resultStatus       审批的结果
      */
+    @Override
     @SystemServiceLog(description = "组成一条异议考勤审批结果失败")
     @Transactional(rollbackFor = {Exception.class})
     public CallbackResult makeUpCallBackResult(ApplicationMessage applicationMessage, int managerId, Boolean resultStatus) {

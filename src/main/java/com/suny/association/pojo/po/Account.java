@@ -105,23 +105,41 @@ public class Account implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o){
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
 
         Account account = (Account) o;
 
-        if (accountId != null ? !accountId.equals(account.accountId) : account.accountId != null) return false;
-        if (accountName != null ? !accountName.equals(account.accountName) : account.accountName != null) return false;
+        if (accountId != null ? !accountId.equals(account.accountId) : account.accountId != null){
+            return false;
+        }
+        if (accountName != null ? !accountName.equals(account.accountName) : account.accountName != null){
+            return false;
+        }
         if (accountPassword != null ? !accountPassword.equals(account.accountPassword) : account.accountPassword != null)
+        {
             return false;
+        }
         if (accountPhone != null ? !accountPhone.equals(account.accountPhone) : account.accountPhone != null)
+        {
             return false;
+        }
         if (accountEmail != null ? !accountEmail.equals(account.accountEmail) : account.accountEmail != null)
+        {
             return false;
+        }
         if (accountStatus != null ? !accountStatus.equals(account.accountStatus) : account.accountStatus != null)
+        {
             return false;
+        }
         if (accountRoles != null ? !accountRoles.equals(account.accountRoles) : account.accountRoles != null)
+        {
             return false;
+        }
         return accountMember != null ? accountMember.equals(account.accountMember) : account.accountMember == null;
 
     }

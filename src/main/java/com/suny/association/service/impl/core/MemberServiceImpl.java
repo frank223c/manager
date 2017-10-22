@@ -97,6 +97,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     }
 
     /*   插入一条成员信息并返回插入的行数   */
+    @Override
     @SystemServiceLog(description = "插入成员信息失败")
     @Transactional(rollbackFor = {Exception.class})
     public int insertReturnCount(Member member) {

@@ -20,6 +20,7 @@ public class SimpleMappingExceptionSolver implements HandlerExceptionResolver {
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(SimpleMappingExceptionSolver.class);
 
+    @Override
     public ModelAndView resolveException(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response, Object handler, Exception ex) {
 
         //首先先判断是否为ajax请求，不是的话使用jsp返回

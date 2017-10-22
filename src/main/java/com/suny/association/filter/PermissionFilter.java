@@ -125,7 +125,9 @@ public class PermissionFilter implements Filter {
                 //  3.4.3  循环匹配每一个权限实体里面的权限字符串跟请求的权限字符串是否相等,如果为true就直接跳出循环
                 for (Permission per : permissionArrayList) {
                     hasPermission = per.getpermissionName().equals(urlPermission);
-                    if (hasPermission) break;
+                    if (hasPermission){
+                        break;
+                    }
                 }
                 //  3.4.4 有权限就直接放行,没有就返回false,有就返回true
                 if (hasPermission) {

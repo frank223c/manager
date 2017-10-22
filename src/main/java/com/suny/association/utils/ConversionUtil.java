@@ -25,7 +25,9 @@ public class ConversionUtil {
      */
     private static Boolean convertToBooleanStatus(int status) {
         Boolean booleanStatus;
-        if (status == 0) booleanStatus = false;
+        if (status == 0){
+            booleanStatus = false;
+        }
         else if (status == 1) {
             booleanStatus = true;
         } else {
@@ -124,7 +126,7 @@ public class ConversionUtil {
         int statusSize = matchStatus.size();
         for (int i = statusSize - 1; i >= 0; i--) {
             while (statusSize > 0) {
-                if (matchStatus.get(i) != matchStatus.get(statusSize - 1)) {
+                if (!(matchStatus.get(i)).equals(matchStatus.get(statusSize - 1))) {
                     return false;
                 }
                 statusSize--;
