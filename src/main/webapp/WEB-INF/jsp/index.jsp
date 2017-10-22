@@ -241,7 +241,7 @@
         if (flag) {
             $.ajax({
                 type: "post",
-                url: "${basePath}/backend/login.action",
+                url: "${basePath}/login.action",
                 data: param,
                 dataType: "json",
                 beforeSend: function () {
@@ -297,7 +297,7 @@
      * 跳转到管理页面
      */
     function goAdminPage() {
-        window.parent.location.href = "${basePath}/backend/userCenter.html";
+        window.parent.location.href = "${basePath}/userCenter.html";
     }
 
     /**

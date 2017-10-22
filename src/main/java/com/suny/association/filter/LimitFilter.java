@@ -19,7 +19,7 @@ public class LimitFilter implements Filter {
     /*   不需要登录就可以访问的资源*/
     private static final String[] INHERENT_ESCAPE_URIS = {
             "/index.jsp","/login.html", "/login.action",
-            "/backend/login.html", "/backend/index.html"
+            "/userCenter.html", "/index.html"
     };
 
     @Override
@@ -52,10 +52,12 @@ public class LimitFilter implements Filter {
      */
 
     private boolean isExcludeUrl(String requestURI, HttpServletRequest request) {
+        String contextPath = request.getContextPath();
         //  1. 把请求的url忽略大小写,如果是访问主页的话直接放行
         //  2.   循环匹配是否是直接放行的url地址,如果匹配成功的话就返回
         for (String uri : INHERENT_ESCAPE_URIS) {
-            if (requestURI != null && uri.equals(requestURI)) {
+            String url = contextPath +uri;
+            if (requestURI != null && url.equals(requestURI)) {
                 return true;
             }
         }

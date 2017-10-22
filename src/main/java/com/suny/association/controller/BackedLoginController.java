@@ -59,7 +59,7 @@ public class BackedLoginController {
         String token = TokenProcessor.getInstance().makeToken();
         request.getSession().setAttribute(TOKEN, token);
         logger.info("产生的令牌值是 {}", token);
-        return "/index.jsp";
+        return "/index";
     }
 
 
@@ -81,7 +81,6 @@ public class BackedLoginController {
      * @param request  request请求
      * @return 验证的json结果
      */
-    @SuppressWarnings("Duplicates")
     @RequestMapping(value = "/login.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult loginAction(@RequestParam("username") String username,

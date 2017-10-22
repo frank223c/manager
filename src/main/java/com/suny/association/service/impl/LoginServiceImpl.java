@@ -8,6 +8,8 @@ import com.suny.association.pojo.po.LoginTicket;
 import com.suny.association.service.interfaces.ILoginService;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
 import com.suny.association.utils.JedisAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Service
 public class LoginServiceImpl implements ILoginService {
+    private static Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
     private static final String TICKET = "ticket";
 
     private final LoginTicketMapper loginTicketMapper;
@@ -54,7 +57,7 @@ public class LoginServiceImpl implements ILoginService {
             //  2.2   数据库中存在这个用户的ticket
             if (loginTicket != null) {
                 //  2.2.1  数据库中存在不过期的ticket,添加到Map里面返回给Controller
-                if (loginTicket.getStatus() == 0 || loginTicket.getExpired().isAfter(LocalDateTime.now())) {
+                if (loginTicket.getExpired().isAfter(LocalDateTime.now())) {
                     // 把ticket添加到Redis里面
                     map.get().put(TICKET, loginTicket.getTicket());
                 } else {
@@ -95,8 +98,10 @@ public class LoginServiceImpl implements ILoginService {
         loginTicket.setStatus(0);
         loginTicket.setTicket(UUID.randomUUID().toString().replaceAll("-", ""));
         if (operateType == OperateType.INSERT) {
+            logger.warn("插入一条ticket值{}",loginTicket.toString());
             loginTicketMapper.insert(loginTicket);
         } else if (operateType == OperateType.UPDATE) {
+             logger.warn("更新数据库中的ticket值{}",loginTicket.toString());
             loginTicketMapper.update(loginTicket);
         }
     }
@@ -110,7 +115,6 @@ public class LoginServiceImpl implements ILoginService {
      */
     private boolean authAction(String username, String password) {
         Account account = accountMapper.selectByName(username);
-//        return account != null && account.getAccountPassword().equals(EncryptUtil.encryptToMD5(password));
         return account != null && account.getAccountPassword().equals(password);
 
     }

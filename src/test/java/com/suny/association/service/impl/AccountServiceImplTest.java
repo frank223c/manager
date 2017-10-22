@@ -11,6 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class AccountServiceImplTest {
     private AccountMapper accountMapper;
 
+
     @Before
     public void setUp(){
         ApplicationContext applicationContext=new ClassPathXmlApplicationContext("classpath:Spring/applicationContext.xml");

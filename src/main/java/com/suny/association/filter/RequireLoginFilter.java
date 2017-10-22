@@ -21,8 +21,7 @@ public class RequireLoginFilter implements Filter {
 
     private static Logger logger = LoggerFactory.getLogger(RequireLoginFilter.class);
     private static final String EXECUTE_NEXT_FILTER = "EXECUTE_NEXT_FILTER";
-    private static final String PORTAL_LOGIN_URL = "/index.jsp";
-    private static final String BACKEND_LOGIN_URL = "/backend/login.html";
+    private static final String PORTAL_LOGIN_URL = "/index.html";
     private LoginTicketMapper loginTicketMapper;
     private AccountMapper accountMapper;
 
@@ -65,9 +64,11 @@ public class RequireLoginFilter implements Filter {
                 LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
                 // 3.2  如果查出来数据库里面没有这个ticket或者是已经过期了的话就让它重新登录
                 if (loginTicket == null || LoginTicketUtils.isExpired(loginTicket)) {
-                    request.getRequestDispatcher(PORTAL_LOGIN_URL).forward(request, response);
-                    logger.warn("【RequireLoginFilter】ticket过期了或者是前端伪造的了,强制需要重新登录");
+//                    request.getRequestDispatcher(PORTAL_LOGIN_URL).forward(request, response);
+                    response.sendRedirect(((HttpServletRequest) req).getContextPath()+PORTAL_LOGIN_URL);
+                    logger.warn("【RequireLoginFilter】ticket过期了或者是前端伪造的了,强制需要重新登录,重定向到登录页面");
                     req.setAttribute(EXECUTE_NEXT_FILTER, false);
+                    chain.doFilter(req, resp);
                 } else {
                     // 3.3 到这里说明ticket是还没有过期的,根据数据库中login_ticket表中的账号去查询账号信息
                     logger.info("【RequireLoginFilter】有效的ticket值为【{}】,直接为登录状态,发送到下一个过滤器", ticket);
