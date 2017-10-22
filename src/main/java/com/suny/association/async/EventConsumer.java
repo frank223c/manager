@@ -26,7 +26,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
     private static Logger logger = LoggerFactory.getLogger(EventConsumer.class);
     private Map<EventType, List<EventHandler>> config = new HashMap<>();
     private ApplicationContext applicationContext;
-
+                                               
     private final JedisAdapter jedisAdapter;
 
     @Autowired

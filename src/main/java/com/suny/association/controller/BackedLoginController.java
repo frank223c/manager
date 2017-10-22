@@ -1,5 +1,6 @@
-package com.suny.association.controller.backed;
+package com.suny.association.controller;
 
+import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.enums.BaseEnum;
 import com.suny.association.pojo.po.Account;
 import com.suny.association.pojo.po.Member;
@@ -20,15 +21,15 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Comments:   基础公共Controller
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/05 11:05
  */
-@RequestMapping("/backend")
 @Controller
 public class BackedLoginController {
 
@@ -53,12 +54,12 @@ public class BackedLoginController {
     /**
      * 登录页面
      */
-    @RequestMapping(value = {"/","/login.html"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/","/index.html"}, method = RequestMethod.GET)
     public String backendLogin(HttpServletRequest request) {
         String token = TokenProcessor.getInstance().makeToken();
         request.getSession().setAttribute(TOKEN, token);
         logger.info("产生的令牌值是 {}", token);
-        return "backend/login";
+        return "/index.jsp";
     }
 
 
@@ -158,7 +159,6 @@ public class BackedLoginController {
         Cookie accountCookie = new Cookie("member", member.getMemberName());
         response.addCookie(nameCookie);
         response.addCookie(accountCookie);
-//        request.getSession().setAttribute("member", member);
         request.getSession().setAttribute("account", account);
     }
 
@@ -171,6 +171,27 @@ public class BackedLoginController {
     @RequestMapping(value = {"/userCenter.html"}, method = RequestMethod.GET)
     public ModelAndView userCenter() {
         return new ModelAndView("backend/userCenter");
+    }
+
+
+    /**
+     * 用户点击退出的操作
+     *
+     * @return 注销登录，然后返回注销结果
+     */
+    @SystemControllerLog(description = "注销操作")
+    @RequestMapping(value = "/logout.action", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonResult logout(HttpServletRequest request) {
+        // 防止自动创建session，传入false阻止自动创建
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.removeAttribute("account");
+            session.removeAttribute("member");
+            return JsonResult.successResult(BaseEnum.LOGOUT_SUCCESS);
+        }
+        request.getSession().removeAttribute("ticket");
+        return JsonResult.failResult(BaseEnum.LOGOUT_FAIL);
     }
 
 
