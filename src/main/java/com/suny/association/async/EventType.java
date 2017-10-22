@@ -6,6 +6,9 @@ package com.suny.association.async;
  */
 public enum EventType {
 
+    /**
+     * 登录事件类型
+     */
     LOGIN(0);
 
     private int value;

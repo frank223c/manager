@@ -264,16 +264,16 @@ public class WebUtils {
 
 
     public static String getBrowserInfo(String userAgent) {
-        String UserAgent = userAgent.toLowerCase();
-        if (UserAgent.contains("edge")) {
-            return (userAgent.substring(UserAgent.indexOf("edge")).split(" ")[0]).replace("/", "-");
-        } else if (UserAgent.contains("ucbrowser") || UserAgent.contains("ubrowser")) {
-            if (UserAgent.contains("ucbrowser")) {
-                return (UserAgent.substring(UserAgent.indexOf("ucbrowser")).split(" ")[0]).replace("/", "-").replace("ucbrowser", "UC浏览器");
-            } else if (UserAgent.contains("ubrowser")) {
-                return (UserAgent.substring(UserAgent.indexOf("ubrowser")).split(" ")[0]).replace("/", "-").replace("ubrowser", "UC浏览器");
+        String useragent = userAgent.toLowerCase();
+        if (useragent.contains("edge")) {
+            return (userAgent.substring(useragent.indexOf("edge")).split(" ")[0]).replace("/", "-");
+        } else if (useragent.contains("ucbrowser") || useragent.contains("ubrowser")) {
+            if (useragent.contains("ucbrowser")) {
+                return (useragent.substring(useragent.indexOf("ucbrowser")).split(" ")[0]).replace("/", "-").replace("ucbrowser", "UC浏览器");
+            } else if (useragent.contains("ubrowser")) {
+                return (useragent.substring(useragent.indexOf("ubrowser")).split(" ")[0]).replace("/", "-").replace("ubrowser", "UC浏览器");
             }
-        } else if (UserAgent.contains("msie")) {
+        } else if (useragent.contains("msie")) {
             if (userAgent.contains("MSIE 11.0")) {//Internet Explorer 10
                 return "Internet Explorer11";
             } else if (userAgent.contains("MSIE 10.0")) {//Internet Explorer 10
@@ -288,29 +288,29 @@ public class WebUtils {
                 return "Internet Explorer6";
             }
 //            return "Internet Explorer";
-            String substring = userAgent.substring(UserAgent.indexOf("msie")).split(";")[0];
+            String substring = userAgent.substring(useragent.indexOf("msie")).split(";")[0];
             return substring.replace("MSIE", "IE").replace(" ", "-");
-        } else if (UserAgent.contains("safari") && UserAgent.contains("version")) {
+        } else if (useragent.contains("safari") && useragent.contains("version")) {
             return (userAgent.substring(userAgent.indexOf("Safari")).split(" ")[0]).split("/")[0] + "-" + (userAgent.substring(userAgent.indexOf("Version")).split(" ")[0]).split("/")[1];
-        } else if (UserAgent.contains("opr") || UserAgent.contains("opera")) {
-            if (UserAgent.contains("opera")) {
-                return (userAgent.substring(UserAgent.indexOf("opera")).split(" ")[0]).split("/")[0] + "-" + (userAgent.substring(UserAgent.indexOf("version")).split(" ")[0]).split("/")[1];
-            } else if (UserAgent.contains("opr")) {
-                return ((userAgent.substring(UserAgent.indexOf("opr")).split(" ")[0]).replace("/", "-")).replace("OPR", "Opera");
+        } else if (useragent.contains("opr") || useragent.contains("opera")) {
+            if (useragent.contains("opera")) {
+                return (userAgent.substring(useragent.indexOf("opera")).split(" ")[0]).split("/")[0] + "-" + (userAgent.substring(useragent.indexOf("version")).split(" ")[0]).split("/")[1];
+            } else if (useragent.contains("opr")) {
+                return ((userAgent.substring(useragent.indexOf("opr")).split(" ")[0]).replace("/", "-")).replace("OPR", "Opera");
             }
-        } else if (UserAgent.contains("chrome")) {
+        } else if (useragent.contains("chrome")) {
             return (userAgent.substring(userAgent.indexOf("Chrome")).split(" ")[0]).replace("/", "-");
-        } else if (UserAgent.contains("firefox")) {
+        } else if (useragent.contains("firefox")) {
             return (userAgent.substring(userAgent.indexOf("Firefox")).split(" ")[0]).replace("/", "-");
-        } else if (UserAgent.contains("360SE")) {
+        } else if (useragent.contains("360SE")) {
             return "360安全浏览器";
-        } else if (UserAgent.contains("QIHU 360EE")) {
+        } else if (useragent.contains("QIHU 360EE")) {
             return "360急速浏览器";
-        } else if (UserAgent.contains("Maxthon")) {
+        } else if (useragent.contains("Maxthon")) {
             return "傲游浏览器";
-        } else if (UserAgent.contains("rv")) {
-            String IEVersion = (userAgent.substring(userAgent.indexOf("rv")).split(" ")[0]).replace("rv:", "-");
-            return "IE" + IEVersion.substring(0, IEVersion.length() - 1);
+        } else if (useragent.contains("rv")) {
+            String ieversion = (userAgent.substring(userAgent.indexOf("rv")).split(" ")[0]).replace("rv:", "-");
+            return "IE" + ieversion.substring(0, ieversion.length() - 1);
         }
         return UNKNOWN;
 
@@ -325,7 +325,7 @@ public class WebUtils {
      */
     public static boolean isAjaxRequest(HttpServletRequest request) {
         String requestedWith = request.getHeader("x-requested-with");
-        return requestedWith != null && requestedWith.equalsIgnoreCase("XMLHttpRequest");
+        return requestedWith != null && "XMLHttpRequest".equalsIgnoreCase(requestedWith);
     }
 
 }

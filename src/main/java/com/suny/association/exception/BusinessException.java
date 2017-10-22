@@ -7,8 +7,8 @@ package com.suny.association.exception;
  */
 public class BusinessException extends RuntimeException{
 
-    public BusinessException(Object Obj) {
-        super(Obj.toString());
+    public BusinessException(Object obj) {
+        super(obj.toString());
     }
     
     

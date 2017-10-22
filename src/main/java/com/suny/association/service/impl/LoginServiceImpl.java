@@ -86,7 +86,7 @@ public class LoginServiceImpl implements ILoginService {
 
 
     private boolean validParam(String param) {
-        return !(param.equals("") || param.length() == 0);
+        return !("".equals(param) || param.length() == 0);
     }
 
     private void operateTicket(long accountId, OperateType operateType) {

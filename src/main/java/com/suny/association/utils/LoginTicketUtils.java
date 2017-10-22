@@ -33,7 +33,7 @@ public class LoginTicketUtils {
         String ticket = null;
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equals("ticket")) {
+                if ("ticket".equals(cookie.getName())) {
                     ticket = cookie.getValue();
                     break;
                 }

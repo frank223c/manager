@@ -47,12 +47,12 @@ public class GeneralLocationResult {
     public class ContentBean {
         /**
          * address : 南昌市
-         * address_detail : {"city":"南昌市","city_code":131,"district":"","province":"南昌市","street":"","street_number":""}
+         * address_detail : {"city":"南昌市","cityCode":131,"district":"","province":"南昌市","street":"","streetNumber":""}
          * point : {"x":"116.39564504","y":"39.92998578"}
          */
 
         private String address;
-        private AddressDetailBean address_detail;
+        private AddressDetailBean addressDetail;
         private PointBean point;
 
         public String getAddress() {
@@ -63,12 +63,12 @@ public class GeneralLocationResult {
             this.address = address;
         }
 
-        public AddressDetailBean getAddress_detail() {
-            return address_detail;
+        public AddressDetailBean getAddressDetail() {
+            return addressDetail;
         }
 
-        public void setAddress_detail(AddressDetailBean address_detail) {
-            this.address_detail = address_detail;
+        public void setAddressDetail(AddressDetailBean addressDetail) {
+            this.addressDetail = addressDetail;
         }
 
         public PointBean getPoint() {
@@ -83,7 +83,7 @@ public class GeneralLocationResult {
             /*  城市 */
             private String city;
             /* 城市代码*/
-            private int city_code;
+            private int cityCode;
             /* 区县 */
             private String district;
             /*  省份   */
@@ -91,7 +91,7 @@ public class GeneralLocationResult {
             /*  街道 */
             private String street;
             /* 门址  */
-            private String street_number;
+            private String streetNumber;
 
             public String getCity() {
                 return city;
@@ -101,12 +101,12 @@ public class GeneralLocationResult {
                 this.city = city;
             }
 
-            public int getCity_code() {
-                return city_code;
+            public int getCityCode() {
+                return cityCode;
             }
 
-            public void setCity_code(int city_code) {
-                this.city_code = city_code;
+            public void setCityCode(int cityCode) {
+                this.cityCode = cityCode;
             }
 
             public String getDistrict() {
@@ -133,12 +133,12 @@ public class GeneralLocationResult {
                 this.street = street;
             }
 
-            public String getStreet_number() {
-                return street_number;
+            public String getStreetNumber() {
+                return streetNumber;
             }
 
-            public void setStreet_number(String street_number) {
-                this.street_number = street_number;
+            public void setStreetNumber(String streetNumber) {
+                this.streetNumber = streetNumber;
             }
         }
 

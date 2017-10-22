@@ -67,9 +67,9 @@ public class EncryptUtil {
      * @return
      */
     public String getKey(String algorithm,String src){
-        if(algorithm.equals("AES")){
+        if("AES".equals(algorithm)){
             return src.substring(0, 16);
-        }else if(algorithm.equals("DES")){
+        }else if("DES".equals(algorithm)){
             return src.substring(0, 8);
         }else{
             return null;
@@ -132,17 +132,17 @@ public class EncryptUtil {
 
     /**
      * 根据相应的加密算法、密钥、源文件进行加密，返回加密后的文件
-     * @param Algorithm 加密算法:DES,AES
+     * @param algorithm 加密算法:DES,AES
      * @param key
      * @param info
      * @return
      */
-    public String encrypt(String Algorithm, SecretKey key, String info) {
+    public String encrypt(String algorithm, SecretKey key, String info) {
         // 定义要生成的密文
         byte[] cipherByte = null;
         try {
             // 得到加密/解密器
-            Cipher c1 = Cipher.getInstance(Algorithm);
+            Cipher c1 = Cipher.getInstance(algorithm);
             // 用指定的密钥和模式初始化Cipher对象
             // 参数:(ENCRYPT_MODE, DECRYPT_MODE, WRAP_MODE,UNWRAP_MODE)
             c1.init(Cipher.ENCRYPT_MODE, key);
@@ -157,16 +157,16 @@ public class EncryptUtil {
 
     /**
      * 根据相应的解密算法、密钥和需要解密的文本进行解密，返回解密后的文本内容
-     * @param Algorithm
+     * @param algorithm
      * @param key
      * @param sInfo
      * @return
      */
-    public String decrypt(String Algorithm, SecretKey key, String sInfo) {
+    public String decrypt(String algorithm, SecretKey key, String sInfo) {
         byte[] cipherByte = null;
         try {
             // 得到加密/解密器
-            Cipher c1 = Cipher.getInstance(Algorithm);
+            Cipher c1 = Cipher.getInstance(algorithm);
             // 用指定的密钥和模式初始化Cipher对象
             c1.init(Cipher.DECRYPT_MODE, key);
             // 对要解密的内容进行编码处理
@@ -179,27 +179,27 @@ public class EncryptUtil {
 
     /**
      * 根据相应的解密算法、指定的密钥和需要解密的文本进行解密，返回解密后的文本内容
-     * @param Algorithm 加密算法:DES,AES
+     * @param algorithm 加密算法:DES,AES
      * @param sKey 这个key可以由用户自己指定 注意AES的长度为16位,DES的长度为8位
      * @return
      */
-    public static String decrypt(String Algorithm, String sSrc, String sKey) throws Exception {
+    public static String decrypt(String algorithm, String sSrc, String sKey) throws Exception {
         try {
             // 判断Key是否正确
             if (sKey == null) {
                 throw new Exception("Key为空null");
             }
             // 判断采用AES加解密方式的Key是否为16位
-            if (Algorithm.equals("AES") && sKey.length() != 16) {
+            if ("AES".equals(algorithm) && sKey.length() != 16) {
                 throw new Exception("Key长度不是16位");
             }
             // 判断采用DES加解密方式的Key是否为8位
-            if (Algorithm.equals("DES") && sKey.length() != 8) {
+            if ("DES".equals(algorithm) && sKey.length() != 8) {
                 throw new Exception("Key长度不是8位");
             }
             byte[] raw = sKey.getBytes("ASCII");
-            SecretKeySpec skeySpec = new SecretKeySpec(raw, Algorithm);
-            Cipher cipher = Cipher.getInstance(Algorithm);
+            SecretKeySpec skeySpec = new SecretKeySpec(raw, algorithm);
+            Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.DECRYPT_MODE, skeySpec);
             byte[] encrypted1 = hex2byte(sSrc);
             try {
@@ -216,27 +216,27 @@ public class EncryptUtil {
 
     /**
      * 根据相应的加密算法、指定的密钥、源文件进行加密，返回加密后的文件
-     * @param Algorithm 加密算法:DES,AES
+     * @param algorithm 加密算法:DES,AES
      * @param sKey 这个key可以由用户自己指定 注意AES的长度为16位,DES的长度为8位
      * @param
      * @return
      */
-    public static String encrypt(String Algorithm, String sSrc, String sKey) throws Exception {
+    public static String encrypt(String algorithm, String sSrc, String sKey) throws Exception {
         // 判断Key是否正确
         if (sKey == null) {
             throw new Exception("Key为空null");
         }
         // 判断采用AES加解密方式的Key是否为16位
-        if (Algorithm.equals("AES") && sKey.length() != 16) {
+        if ("AES".equals(algorithm) && sKey.length() != 16) {
             throw new Exception("Key长度不是16位");
         }
         // 判断采用DES加解密方式的Key是否为8位
-        if (Algorithm.equals("DES") && sKey.length() != 8) {
+        if ("DES".equals(algorithm) && sKey.length() != 8) {
             throw new Exception("Key长度不是8位");
         }
         byte[] raw = sKey.getBytes("ASCII");
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, Algorithm);
-        Cipher cipher = Cipher.getInstance(Algorithm);
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, algorithm);
+        Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
         byte[] encrypted = cipher.doFinal(sSrc.getBytes());
         return byte2hex(encrypted);
@@ -391,21 +391,21 @@ public class EncryptUtil {
         System.out.println("AES解密后为：" + strb);
         System.out.println("========指定Key进行加解密==============");
         try {
-            String AESKey = encryptUtils.getAESKey(encryptUtils.encryptToSHA(source));
-            String DESKey = encryptUtils.getDESKey(encryptUtils.encryptToSHA(source));
-            System.out.println(AESKey);
-            System.out.println(DESKey);
-            String str11 = encryptUtils.encryptToDES(DESKey, source);
+            String aeskey = encryptUtils.getAESKey(encryptUtils.encryptToSHA(source));
+            String deskey = encryptUtils.getDESKey(encryptUtils.encryptToSHA(source));
+            System.out.println(aeskey);
+            System.out.println(deskey);
+            String str11 = encryptUtils.encryptToDES(deskey, source);
             System.out.println("DES加密后为:" + str11);
             // 使用这个密匙解密
-            String str12 = encryptUtils.decryptByDES(DESKey, str11);
+            String str12 = encryptUtils.decryptByDES(deskey, str11);
             System.out.println("DES解密后为：" + str12);
 
             // 生成一个AES算法的密匙
-            String strc = encryptUtils.encryptToAES(AESKey, source);
+            String strc = encryptUtils.encryptToAES(aeskey, source);
             System.out.println("AES加密后为:" + strc);
             // 使用这个密匙解密
-            String strd = encryptUtils.decryptByAES(AESKey, strc);
+            String strd = encryptUtils.decryptByAES(aeskey, strc);
             System.out.println("AES解密后为：" + strd);
         } catch (Exception e) {
             e.printStackTrace();

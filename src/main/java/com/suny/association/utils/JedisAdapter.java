@@ -94,7 +94,7 @@ public class JedisAdapter implements InitializingBean {
     public Boolean set(String key, String value) {
         try (Jedis jedis = jedisPool.getResource()) {
             String s = jedis.set(key, value);
-            return s.equals("OK");
+            return "OK".equals(s);
         } catch (Exception e) {
             logger.error("加入元素发生了异常" + e.getMessage());
         }
@@ -111,7 +111,7 @@ public class JedisAdapter implements InitializingBean {
     public Boolean set(byte[] key, byte[] value) {
         try (Jedis jedis = jedisPool.getResource()) {
             String s = jedis.set(key, value);
-            return s.equals("OK");
+            return "OK".equals(s);
         } catch (Exception e) {
             logger.error("加入元素发生了异常" + e.getMessage());
         }

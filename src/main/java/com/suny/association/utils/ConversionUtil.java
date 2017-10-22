@@ -93,7 +93,7 @@ public class ConversionUtil {
             if (methods[i].getName().equals(queryAllMethodName)) {
                 Method method = methods[i];
                 Class<?>[] parameterTypes = method.getParameterTypes();
-                if (className.equals("AccountController")) {
+                if ("AccountController".equals(className)) {
                     logger.info("传过来的是" + className);
                     logger.info("是否匹配" + matchParameterType(parameterTypes, threeArrayParam));
                 }

@@ -6,7 +6,13 @@ package com.suny.association.enums;
  */
 public enum ViewType {
 
+    /**
+     * 前台工程
+     */
     PORTAL(0),
+    /**
+     * 后台工程
+     */
     BACKEND(1);
 
     private int value;

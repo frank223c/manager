@@ -22,10 +22,10 @@ public class TokenProcessor {
     private TokenProcessor() {
     }
 
-    private static final TokenProcessor instance = new TokenProcessor();
+    private static final TokenProcessor INSTANCE = new TokenProcessor();
 
     public static TokenProcessor getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     public String makeToken() {

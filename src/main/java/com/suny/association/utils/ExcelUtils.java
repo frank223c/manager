@@ -194,10 +194,10 @@ public class ExcelUtils {
      * @return 如果是Excel表格则返回true，否则就返回false
      */
     public static boolean parseExcelFileType(String fileType, String fileExtension) {
-        if (fileType.equals("application/vnd.ms-excel") && fileExtension.equals("xls")) {
+        if ("application/vnd.ms-excel".equals(fileType) && "xls".equals(fileExtension)) {
             logger.info("Windows 2003版以前的EXCEL表格");
             return true;
-        } else if (fileType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") && fileExtension.equals("xlsx")) {
+        } else if ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(fileType) && "xlsx".equals(fileExtension)) {
             logger.info("Windows 2007版后的Excel表格");
             return true;
         }

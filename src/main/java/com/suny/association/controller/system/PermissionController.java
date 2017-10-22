@@ -45,7 +45,7 @@ public class PermissionController extends BaseController {
     @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult insert(@RequestBody Permission permission) {
-        if (permission.getpermissionName().equals("") || permission.getpermissionName() == null) {
+        if ("".equals(permission.getpermissionName()) || permission.getpermissionName() == null) {
             return JsonResult.failResult(BaseEnum.FIELD_NULL);
         } else if (permissionService.selectByName(permission.getpermissionName()) != null) {
             return JsonResult.failResult(BaseEnum.REPEAT_ADD);

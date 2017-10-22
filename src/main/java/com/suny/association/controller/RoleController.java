@@ -65,8 +65,8 @@ public class RoleController extends BaseController {
             , ModelAndView modelAndView) {
         Roles role = rolesService.selectById(roleId);
         if (role == null) {
-            int DEFAULT_ID = 0;
-            role = rolesService.selectById(DEFAULT_ID);
+            int defaultId = 0;
+            role = rolesService.selectById(defaultId);
             modelAndView.addObject("role", role);
             return modelAndView;
         }
