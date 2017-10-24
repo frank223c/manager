@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Comments:   考勤记录逻辑
@@ -130,7 +129,7 @@ public class PunchRecordServiceImpl extends AbstractBaseServiceImpl<PunchRecord>
             punchType = punchTypeMapper.selectByName("缺勤");
         }
         // 查询需要签到的成员信息
-        List<Member> memberList = memberMapper.queryLimitMemberRole(roleId, getPunchMemberGrade());
+        List<Member> memberList = memberMapper.selectLimitMemberRole(roleId, getPunchMemberGrade());
         for (Member member : memberList) {
             PunchRecord punchRecord = new PunchRecord();
             punchRecord.setPunchIsCome(false);

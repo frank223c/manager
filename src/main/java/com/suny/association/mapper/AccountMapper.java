@@ -2,6 +2,7 @@ package com.suny.association.mapper;
 
 import com.suny.association.mapper.interfaces.IMapper;
 import com.suny.association.pojo.po.Account;
+import com.suny.association.pojo.po.Member;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -10,6 +11,9 @@ import org.apache.ibatis.annotations.Param;
  * Create Date: 2017/03/05 23:05
  */
 public interface AccountMapper extends IMapper<Account> {
+
+    Account selectMemberReference(int memberId);
+
     Account queryByPhone(Long phoneNumber);
 
     Account queryByMail(String email);

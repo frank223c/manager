@@ -94,7 +94,7 @@ public class MemberController extends BaseController {
     @SystemControllerLog(description = "新增成员页面")
     @RequestMapping(value = "/insert.html", method = RequestMethod.GET)
     public ModelAndView insertPage(ModelAndView modelAndView) {
-        List<Member> managerList = memberService.queryNormalManager();
+        List<Member> managerList = memberService.selectNormalManager();
         List<Department> departmentList = departmentService.selectAll();
         List<MemberRoles> memberRolesList = memberRolesService.selectAll();
         modelAndView.addObject("departmentList", departmentList);
@@ -129,7 +129,7 @@ public class MemberController extends BaseController {
             return JsonResult.failResult(BaseEnum.FILE_EXTENSION_WARN);
         }
         /* 查看成功插入的行数  */
-        AtomicReference<List<Member>> listAtomicReference = memberService.batchInsertFromExcel(file, fileExtension);
+        AtomicReference<List<Member>> listAtomicReference = memberService.insertBatchFormFile(file, fileExtension);
         int size = listAtomicReference.get().size();
         if (size == 0) {
             return successResult(BaseEnum.ADD_SUCCESS_ALL);
@@ -199,7 +199,7 @@ public class MemberController extends BaseController {
     @RequestMapping(value = "/update.html/{id}", method = RequestMethod.GET)
     public ModelAndView update(@PathVariable("id") Integer id, ModelAndView modelAndView) {
         Member member = memberService.selectById(id);
-        List<Member> managerList = memberService.queryNormalManager();
+        List<Member> managerList = memberService.selectNormalManager();
         List<Department> departmentList = departmentService.selectAll();
         List<MemberRoles> memberRolesList = memberRolesService.selectAll();
         modelAndView.addObject("member", member);
@@ -214,7 +214,7 @@ public class MemberController extends BaseController {
     @RequestMapping(value = "/selectFreeze.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult selectFreeze() {
-        List<Member> memberList = memberService.queryNormalMember();
+        List<Member> memberList = memberService.selectNormalMember();
         if (memberList != null) {
             return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, memberList);
         }
@@ -225,7 +225,7 @@ public class MemberController extends BaseController {
     @RequestMapping(value = "/selectNormal.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult selectNormal() {
-        List<Member> memberList = memberService.queryNormalMember();
+        List<Member> memberList = memberService.selectNormalMember();
         if (memberList != null) {
             return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, memberList);
         }

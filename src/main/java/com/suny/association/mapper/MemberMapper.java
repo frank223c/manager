@@ -9,25 +9,55 @@ import java.util.List;
 
 /**
  * Comments:   成员表mapper映射
+ *
  * @author :   孙建荣
- * Create Date: 2017/03/05 23:05
+ *         Create Date: 2017/03/05 23:05
  */
 
 public interface MemberMapper extends IMapper<Member> {
 
-    Member queryQuote(int memberId);
+    /**
+     * 查询冻结的协会管理员信息
+     *
+     * @return 协会成员信息
+     */
+    List<Member> selectFreezeManager();
 
-    List<Member> queryFreezeManager();
+    /**
+     * 查询正常的协会管理员信息
+     *
+     * @return 协会成员信息
+     */
+    List<Member> selectNormalManager();
 
-    List<Member> queryNormalManager();
+    /**
+     * 查询冻结的普通成员信息
+     *
+     * @return 协会成员信息
+     */
+    List<Member> selectFreezeMember();
 
-    List<Member> queryFreezeMember();
+    /**
+     * 查询冻结的协会管理员信息
+     *
+     * @return 协会成员信息
+     */
+    List<Member> selectNormalMember();
 
-    List<Member> queryNormalMember();
+    /**
+     * 通过协会角色ID查询拥有次角色的协会成员
+     *
+     * @param memberRoleId 协会成员角色
+     * @return 批量协会成员信息
+     */
+    List<Member> selectByMemberRoleId(@Param("memberRoleId") Integer memberRoleId);
 
-    List<Member> quoteByMemberRoleId(Integer memberRoleId);
-
-    List<Member> queryLimitMemberRole(@Param("memberRoleId") Integer memberRoleId, @Param("memberGrade") Integer memberGrade);
+    /**
+     * 查询冻结的管理员信息
+     *
+     * @return 协会成员信息
+     */
+    List<Member> selectLimitMemberRole(@Param("memberRoleId") Integer memberRoleId, @Param("memberGrade") Integer memberGrade);
 
 
 }

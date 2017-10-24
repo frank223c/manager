@@ -59,15 +59,7 @@
     <!--查询管理员信息-->
     <select id="getMemberManage" resultMap="memberManagerResult">
         SELECT
-            member_id,
-            member_name,
-            member_class_name,
-            member_sex,
-            member_grade_number,
-            member_manager_id,
-            member_department_id,
-            member_status,
-            member_role_id
+        <include refid="selectFields"/>
         FROM member
         WHERE member_manager_id = #{ memberManager }
     </select>
@@ -95,33 +87,19 @@
             keyProperty="memberId">
         INSERT INTO member
         <trim prefix="set" suffixOverrides=",">
-            <if test="memberId != null">
-                member_id = #{memberId,jdbcType=BIGINT} ,
+            <if test="memberId != null">member_id = #{memberId,jdbcType=BIGINT} ,</if>
+            <if test="memberName != null">member_name =#{memberName,jdbcType=VARCHAR},</if>
+            <if test="memberClassName != null">member_class_name =#{memberClassName,jdbcType=VARCHAR},</if>
+            <if test="memberSex != null">member_sex =#{memberSex,jdbcType=BOOLEAN},</if>
+            <if test="memberGradeNumber != null">member_grade_number =#{memberGradeNumber,jdbcType=INTEGER},
             </if>
-            <if test="memberName != null">
-                member_name =#{memberName,jdbcType=VARCHAR},
+            <if test="memberManager != null">member_manager_id =#{memberManager,jdbcType=BIGINT},
             </if>
-            <if test="memberClassName != null">
-                member_class_name =#{memberClassName,jdbcType=VARCHAR},
+            <if test="memberDepartment != null">member_department_id
+                =#{memberDepartment.departmentId,jdbcType=INTEGER}
             </if>
-            <if test="memberSex != null">
-                member_sex =#{memberSex,jdbcType=BOOLEAN},
-            </if>
-            <if test="memberGradeNumber != null">
-                member_grade_number =#{memberGradeNumber,jdbcType=INTEGER},
-            </if>
-            <if test="memberManager != null">
-                member_manager_id =#{memberManager,jdbcType=BIGINT},
-            </if>
-            <if test="memberDepartment != null">
-                member_department_id =#{memberDepartment.departmentId,jdbcType=INTEGER},
-            </if>
-            <if test="memberStatus != null">
-                member_status =#{memberStatus,jdbcType=BOOLEAN},
-            </if>
-            <if test="memberRoles != null">
-                member_role_id =#{memberRoles.memberRoleId,jdbcType=INTEGER}
-            </if>
+            <if test="memberStatus != null">member_status =#{memberStatus,jdbcType=BOOLEAN},</if>
+            <if test="memberRoles != null">member_role_id =#{memberRoles.memberRoleId,jdbcType=INTEGER}</if>
         </trim>
 
 
@@ -131,33 +109,17 @@
             keyProperty="memberId">
         INSERT INTO member
         <trim prefix="set" suffixOverrides=",">
-            <if test="memberId != null">
-                member_id = #{memberId,jdbcType=BIGINT} ,
-            </if>
-            <if test="memberName != null">
-                member_name =#{memberName,jdbcType=VARCHAR},
-            </if>
-            <if test="memberClassName != null">
-                member_class_name =#{memberClassName,jdbcType=VARCHAR},
-            </if>
-            <if test="memberSex != null">
-                member_sex =#{memberSex,jdbcType=BOOLEAN},
-            </if>
-            <if test="memberGradeNumber != null">
-                member_grade_number =#{memberGradeNumber,jdbcType=INTEGER},
-            </if>
-            <if test="memberManager != null">
-                member_manager_id =#{memberManager,jdbcType=BIGINT},
-            </if>
+            <if test="memberId != null">member_id = #{memberId,jdbcType=BIGINT} ,</if>
+            <if test="memberName != null">member_name =#{memberName,jdbcType=VARCHAR},</if>
+            <if test="memberClassName != null">member_class_name =#{memberClassName,jdbcType=VARCHAR},</if>
+            <if test="memberSex != null">member_sex =#{memberSex,jdbcType=BOOLEAN},</if>
+            <if test="memberGradeNumber != null">member_grade_number =#{memberGradeNumber,jdbcType=INTEGER},</if>
+            <if test="memberManager != null">member_manager_id =#{memberManager,jdbcType=BIGINT},</if>
             <if test="memberDepartment != null">
-                member_department_id =#{memberDepartment.departmentId,jdbcType=INTEGER},
+                member_department_id=#{memberDepartment.departmentId,jdbcType=INTEGER},
             </if>
-            <if test="memberStatus != null">
-                member_status =#{memberStatus,jdbcType=BOOLEAN},
-            </if>
-            <if test="memberRoles != null">
-                member_role_id =#{memberRoles.memberRoleId,jdbcType=INTEGER}
-            </if>
+            <if test="memberStatus != null">member_status =#{memberStatus,jdbcType=BOOLEAN},</if>
+            <if test="memberRoles != null">member_role_id =#{memberRoles.memberRoleId,jdbcType=INTEGER}</if>
         </trim>
     </insert>
 
@@ -174,143 +136,70 @@
     <update id="update" parameterType="com.suny.association.pojo.po.Member">
         UPDATE member
         <trim prefix="set" suffixOverrides=",">
-            <if test="memberId != null">
-                member_id = #{memberId,jdbcType=BIGINT} ,
+            <if test="memberId != null">member_id = #{memberId,jdbcType=BIGINT} ,</if>
+            <if test="memberName != null">member_name =#{memberName,jdbcType=VARCHAR},</if>
+            <if test="memberClassName != null">member_class_name =#{memberClassName,jdbcType=VARCHAR},</if>
+            <if test="memberSex != null">member_sex =#{memberSex,jdbcType=BOOLEAN},</if>
+            <if test="memberGradeNumber != null">member_grade_number =#{memberGradeNumber,jdbcType=INTEGER},</if>
+            <if test="memberManager != null">member_manager_id =#{memberManager,jdbcType=BIGINT},</if>
+            <if test="memberDepartment != null">member_department_id
+                =#{memberDepartment.departmentId,jdbcType=INTEGER},
             </if>
-            <if test="memberName != null">
-                member_name =#{memberName,jdbcType=VARCHAR},
-            </if>
-            <if test="memberClassName != null">
-                member_class_name =#{memberClassName,jdbcType=VARCHAR},
-            </if>
-            <if test="memberSex != null">
-                member_sex =#{memberSex,jdbcType=BOOLEAN},
-            </if>
-            <if test="memberGradeNumber != null">
-                member_grade_number =#{memberGradeNumber,jdbcType=INTEGER},
-            </if>
-            <if test="memberManager != null">
-                member_manager_id =#{memberManager,jdbcType=BIGINT},
-            </if>
-            <if test="memberDepartment != null">
-                member_department_id =#{memberDepartment.departmentId,jdbcType=INTEGER},
-            </if>
-            <if test="memberStatus != null">
-                member_status =#{memberStatus,jdbcType=BOOLEAN},
-            </if>
-            <if test="memberRoles != null">
-                member_role_id =#{memberRoles.memberRoleId,jdbcType=INTEGER}
-            </if>
+            <if test="memberStatus != null">member_status =#{memberStatus,jdbcType=BOOLEAN},</if>
+            <if test="memberRoles != null">member_role_id =#{memberRoles.memberRoleId,jdbcType=INTEGER}</if>
         </trim>
         where member_id=#{memberId}
-
     </update>
 
 
-    <select id="queryFreezeManager" resultMap="BaseResultMap">
+    <select id="selectFreezeManager" resultMap="BaseResultMap">
         SELECT
-            member_id,
-            member_name,
-            member_class_name,
-            member_sex,
-            member_grade_number,
-            member_manager_id,
-            member_department_id,
-            member_status,
-            member_role_id
+        <include refid="selectFields"/>
         FROM member
         WHERE member_role_id > 3
-              AND
-              member_status = 0
+        AND
+        member_status = 0
     </select>
-    <select id="queryNormalManager" resultMap="BaseResultMap">
+    <select id="selectNormalManager" resultMap="BaseResultMap">
         SELECT
-            member_id,
-            member_name,
-            member_class_name,
-            member_sex,
-            member_grade_number,
-            member_manager_id,
-            member_department_id,
-            member_status,
-            member_role_id
+        <include refid="selectFields"/>
         FROM member
         WHERE member_role_id > 2
-              AND
-              member_status = 1
+        AND
+        member_status = 1
     </select>
 
-    <select id="queryFreezeMember" resultMap="BaseResultMap">
+    <select id="selectFreezeMember" resultMap="BaseResultMap">
         SELECT
-            member_id,
-            member_name,
-            member_class_name,
-            member_sex,
-            member_grade_number,
-            member_manager_id,
-            member_department_id,
-            member_status,
-            member_role_id
+        <include refid="selectFields"/>
         FROM member
         WHERE member_status = 0
     </select>
 
-    <select id="queryNormalMember" resultMap="BaseResultMap">
+    <select id="selectNormalMember" resultMap="BaseResultMap">
         SELECT
-            member_id,
-            member_name,
-            member_class_name,
-            member_sex,
-            member_grade_number,
-            member_manager_id,
-            member_department_id,
-            member_status,
-            member_role_id
+        <include refid="selectFields"/>
         FROM member
         WHERE member_status = 1
     </select>
 
     <select id="selectById" parameterType="Integer" resultMap="BaseResultMap">
         SELECT
-            member_id,
-            member_name,
-            member_class_name,
-            member_sex,
-            member_grade_number,
-            member_manager_id,
-            member_department_id,
-            member_status,
-            member_role_id
+        <include refid="selectFields"/>
         FROM member
         WHERE member_id = #{id}
     </select>
 
     <select id="queryByLongId" parameterType="Long" resultMap="BaseResultMap">
         SELECT
-            member_id,
-            member_name,
-            member_class_name,
-            member_sex,
-            member_grade_number,
-            member_manager_id,
-            member_department_id,
-            member_status,
-            member_role_id
+        <include refid="selectFields"/>
         FROM member
         WHERE member_id = #{id}
     </select>
 
     <select id="selectAllByConditions" resultMap="BaseResultMap">
         SELECT
-        member_id,
-        member_name,
-        member_class_name,
-        member_sex,
-        member_grade_number,
-        member_manager_id,
-        member_department_id,
-        member_status,
-        member_role_id
+        <include refid="selectFields"/>
         FROM member
         WHERE member_department_id =
         ( SELECT department_id
@@ -326,29 +215,13 @@
     </select>
     <select id="selectAll" resultMap="BaseResultMap">
         SELECT
-            member_id,
-            member_name,
-            member_class_name,
-            member_sex,
-            member_grade_number,
-            member_manager_id,
-            member_department_id,
-            member_status,
-            member_role_id
+        <include refid="selectFields"/>
         FROM member
     </select>
 
     <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
-        m.member_id,
-        m.member_name,
-        m.member_class_name,
-        m.member_sex,
-        m.member_grade_number,
-        m.member_manager_id,
-        m.member_department_id,
-        m.member_status,
-        m.member_role_id
+        <include refid="selectFields"/>
         FROM member as m
         <where>
             1=1
@@ -368,7 +241,7 @@
         FROM member;
     </select>
 
-    <select id="quoteByMemberRoleId" parameterType="int" resultType="com.suny.association.pojo.po.Member">
+    <select id="selectByMemberRoleId" parameterType="int" resultType="com.suny.association.pojo.po.Member">
         SELECT
             m.member_id,
             m.member_id
@@ -378,19 +251,11 @@
 
     <select id="selectByName" resultMap="BaseResultMap" parameterType="string">
         SELECT
-            m.member_id,
-            m.member_name,
-            m.member_class_name,
-            m.member_sex,
-            m.member_grade_number,
-            m.member_manager_id,
-            m.member_department_id,
-            m.member_status,
-            m.member_role_id
-        FROM member AS m
-        WHERE m.member_name = #{name}
+        <include refid="selectFields"/>
+        FROM member
+        WHERE member_name = #{name}
     </select>
-    <select id="queryLimitMemberRole" resultMap="BaseResultMap">
+    <select id="selectLimitMemberRole" resultMap="BaseResultMap">
         SELECT
             m.member_id,
             m.member_role_id,
@@ -400,6 +265,12 @@
         <=
         ]]> #{memberRoleId} AND m.member_grade_number = #{memberGrade}
     </select>
+
+
+    <sql id="selectFields">
+        member_id, member_name, member_class_name, member_sex, member_grade_number, member_manager_id, member_department_id,
+        member_status, member_role_id
+    </sql>
 
 
 </mapper>

@@ -18,20 +18,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Comments:  成员逻辑层类
+ *
  * @author :   孙建荣
- * Create Date: 2017/03/07 22:35
+ *         Create Date: 2017/03/07 22:35
  */
 @Service
 public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implements IMemberService {
@@ -59,7 +58,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
         memberMapper.insertAndReturnId(member);
         Integer memberId = member.getMemberId();
         if (memberId != null) {
-            createAccount(memberId);
+            insertAccount(memberId);
         }
     }
 
@@ -68,10 +67,9 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
      *
      * @param memberId 成员id
      */
-    @SuppressWarnings("WeakerAccess")
     @SystemServiceLog(description = "自动创建一条账号信息失败")
     @Transactional(rollbackFor = {Exception.class})
-    public void createAccount(Integer memberId) {
+    public void insertAccount(Integer memberId) {
         Account autoAccount = new Account();
         Member member = new Member();
         member.setMemberId(memberId);
@@ -85,10 +83,11 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
 
     }
 
-    /*  通过成员id查询是否存在引用    */
+    /*  通过社团成员id查询是否被用户账号存在引用    */
     @Override
-    public Member queryQuote(int memberId) {
-        return memberMapper.queryQuote(memberId);
+    public Member selectMemberReference(int memberId) {
+        Account account = accountMapper.selectMemberReference(memberId);
+        return memberMapper.selectById(account.getAccountMember().getMemberId());
     }
 
     /*  查询成员表里面的总记录数    */
@@ -114,8 +113,6 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     }
 
 
-
-
     /*  更新一条成员信息    */
     @SystemServiceLog(description = "更新成员信息失败")
     @Transactional(rollbackFor = {Exception.class})
@@ -126,32 +123,32 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
 
     /*   查询冻结的管理员信息   */
     @Override
-    public List<Member> queryFreezeManager() {
-        return memberMapper.queryFreezeManager();
+    public List<Member> selectFreezeManager() {
+        return memberMapper.selectFreezeManager();
     }
 
     /*   查询正常的管理员信息   */
     @Override
-    public List<Member> queryNormalManager() {
-        return memberMapper.queryNormalManager();
+    public List<Member> selectNormalManager() {
+        return memberMapper.selectNormalManager();
     }
 
     /*  查询冻结的成员信息    */
     @Override
-    public List<Member> queryFreezeMember() {
-        return memberMapper.queryFreezeMember();
+    public List<Member> selectFreezeMember() {
+        return memberMapper.selectFreezeMember();
     }
 
     /*   通过成员角色id查询有哪些成员引用着这个角色   */
     @Override
-    public List<Member> quoteByMemberRoleId(Integer memberRoleId) {
-        return memberMapper.quoteByMemberRoleId(memberRoleId);
+    public List<Member> selectByMemberRoleId(Integer memberRoleId) {
+        return memberMapper.selectByMemberRoleId(memberRoleId);
     }
 
     @SystemControllerLog(description = "批量插入成员信息失败")
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public AtomicReference<List<Member>> batchInsertFromExcel(File file, String fileExtension) {
+    public AtomicReference<List<Member>> insertBatchFormFile(File file, String fileExtension) {
         // 定义一个插入失败的列表，返回给前端
         AtomicReference<List<Member>> failList = new AtomicReference<>(new ArrayList<>());
         //   Member member;   // 定义一个成员实体变量
@@ -163,8 +160,8 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
                 /* 按照模板约定，必须是6组数据，分别是名字，班级，性别，电话号码，入学年份，部门，如果不满足直接拒绝写入*/
                 if (memberArray.length >= 6) {
                     /* 把数据传过去组成一个Member信息跟Account信息   */
-                    Member member = parseMemberInfo(memberArray);
-                    Account account = parseAccountInfo(memberArray);
+                    Member member = parseMemberInformation(memberArray);
+                    Account account = parseAccountInformation(memberArray);
                     //  首先通过成员的名字跟年级去判断是否是同一个成员，一般情况下同一个年级同一个名字的人概率比较的低    //
                     Member queryMember = memberMapper.selectByName(member.getMemberName());
                     if (queryMember != null && Objects.equals(queryMember.getMemberGradeNumber(), member.getMemberGradeNumber())) {
@@ -172,13 +169,13 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
                         failList.get().add(member);
                     } else {
                         //   获取插入后返回的Member信息   //
-                        Member insertMember = batchInsertMember(member);
+                        Member insertMember = insertBatch(member);
                         //   首先判断插入成员是否成功，成功的话会返回一个带自增主键的Member实体类,判断Id是否为空就可以知道是否插入成功了
                         if (insertMember != null && insertMember.getMemberId() != null) {
                             //   给当前的账号信息设置一个对应的成员信息    //
                             account.setAccountMember(insertMember);
                             //    开始插入账号信息      //
-                            boolean successStatus = batchInsertAccount(account);
+                            boolean successStatus = insertBatch(account);
                             if (successStatus) {
                                 logger.info("成功插入信息{}", member.toString());
                                 successNum++;
@@ -207,7 +204,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
      * @param memberArray 数组数据
      * @return 组合成的Account数据
      */
-    private Account parseAccountInfo(String[] memberArray) {
+    private Account parseAccountInformation(String[] memberArray) {
         Account account = new Account();
         //   因为要自动产生一个账号，所以默认拉取电话号码作为登录账号   //
         Long phoneNumber = Long.valueOf(memberArray[3]);
@@ -223,7 +220,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
      * @param memberArray 数组数据
      * @return 组合成的Member数据
      */
-    private Member parseMemberInfo(String[] memberArray) {
+    private Member parseMemberInformation(String[] memberArray) {
         Member member = new Member();
         Department department = new Department();
         //  创建一个List来存放读取的每一行数据     //
@@ -273,7 +270,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
      */
     @SystemControllerLog(description = "批量插入成员信息失败")
     @Transactional(rollbackFor = Exception.class)
-    private Member batchInsertMember(Member member) {
+    private Member insertBatch(Member member) {
         try {
             memberMapper.insertAndReturnId(member);
             return member;
@@ -292,7 +289,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
      */
     @SystemControllerLog(description = "批量自动产生账号信息失败")
     @Transactional(rollbackFor = Exception.class)
-    private boolean batchInsertAccount(Account account) {
+    private boolean insertBatch(Account account) {
         try {
             /* 获取插入成功的行数  */
             int successRow = accountMapper.insertAndReturnId(account);
@@ -308,8 +305,8 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
 
     /*   查询正常的成员信息    */
     @Override
-    public List<Member> queryNormalMember() {
-        return memberMapper.queryNormalMember();
+    public List<Member> selectNormalMember() {
+        return memberMapper.selectNormalMember();
     }
 
     /*  通过id查询一条成员信息    */
@@ -323,7 +320,6 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     public Member selectByName(String name) {
         return memberMapper.selectByName(name);
     }
-
 
 
     /*   查询所有的成员记录   */

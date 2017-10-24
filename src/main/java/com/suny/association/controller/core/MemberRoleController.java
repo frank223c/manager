@@ -42,7 +42,7 @@ public class MemberRoleController extends BaseController {
     @RequestMapping(value = "/delete.action/{memberRoleId}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResult delete(@PathVariable("memberRoleId") Integer memberRoleId) {
-        if (memberService.quoteByMemberRoleId(memberRoleId).size() >= 1) {
+        if (memberService.selectByMemberRoleId(memberRoleId).size() >= 1) {
             return failResult(BaseEnum.HAVE_QUOTE);
         } else if (memberRolesService.selectById(memberRoleId) == null) {
             return failResult(BaseEnum.DELETE_FAILURE);

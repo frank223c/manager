@@ -217,6 +217,11 @@
         SELECT count(*)
         FROM account;
     </select>
+    <select id="selectMemberReference" resultType="com.suny.association.pojo.po.Account">
+        SELECT *
+        FROM account
+        WHERE account_member_id = #{memberId}
+    </select>
 
 </mapper>
 

@@ -9,26 +9,73 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Comments:   成员表业务逻辑接口
+ *
  * @author :   孙建荣
- * Create Date: 2017/03/07 22:12
+ *         Create Date: 2017/03/07 22:12
  */
 public interface IMemberService extends IBaseService<Member> {
 
-    Member queryQuote(int memberId);
+    /**
+     * 通过协会成员ID查询在用户账号信息中引用了此成员的信息
+     *
+     * @param memberId 协会成员ID
+     * @return 协会成员信息
+     */
+    Member selectMemberReference(int memberId);
 
+    /**
+     * 插入一条信息并返回自动产生的主键ID
+     *
+     * @param member 协会成员信息
+     * @return 自动产生的主键ID
+     */
     int insertReturnCount(Member member);
 
-    List<Member> queryFreezeManager();
+    /**
+     * 查询冻结的协会管理员信息
+     *
+     * @return 协会成员信息
+     */
+    List<Member> selectFreezeManager();
 
-    List<Member> queryNormalManager();
+    /**
+     * 查询正常的协会管理员信息
+     *
+     * @return 协会成员信息
+     */
+    List<Member> selectNormalManager();
 
-    List<Member> queryNormalMember();
+    /**
+     * 查询冻结的普通成员信息
+     *
+     * @return 协会成员信息
+     */
+    List<Member> selectFreezeMember();
 
-    List<Member> queryFreezeMember();
+    /**
+     * 查询冻结的协会管理员信息
+     *
+     * @return 协会成员信息
+     */
+    List<Member> selectNormalMember();
 
-    List<Member> quoteByMemberRoleId(Integer memberRoleId);
+    /**
+     * 通过协会角色ID查询拥有次角色的协会成员
+     *
+     * @param memberRoleId 协会成员角色
+     * @return 批量协会成员信息
+     */
+    List<Member> selectByMemberRoleId(Integer memberRoleId);
 
-    AtomicReference<List<Member>> batchInsertFromExcel(File file, String fileExtension);
+
+    /**
+     * 读取Excel里面的数据,批量插入到数据库中
+     *
+     * @param file          Excel文件
+     * @param fileExtension 文件扩展名
+     * @return 读取出来的协会成员信息
+     */
+    AtomicReference<List<Member>> insertBatchFormFile(File file, String fileExtension);
 
 
 }
