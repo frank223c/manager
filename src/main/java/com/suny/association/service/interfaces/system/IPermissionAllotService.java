@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Comments:    权限分配业务逻辑接口
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/05/02 13:07
  */
 public interface IPermissionAllotService extends IBaseService<PermissionAllot> {

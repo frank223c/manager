@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * 事件模型
- * Created by 孙建荣 on 17-9-28.下午4:54
+ * @author  孙建荣 on 17-9-28.下午4:54
  */
 public class EventModel {
 

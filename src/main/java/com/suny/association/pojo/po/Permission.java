@@ -5,18 +5,33 @@ import java.time.LocalDateTime;
 
 /**
  * Comments:  权限实体类
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/05/02 12:46
  */
 public class Permission implements Serializable {
 
 
     private static final long serialVersionUID = -8178626404327345498L;
-    private Integer permissionId;   /*  主键id  */
-    private String permissionName;  /*   权限名字，后端使用 */
-    private String description;   /*  权限解释，前端使用  */
-    private LocalDateTime createTime;     /*   权限创建的时间 */
-    private boolean permissionStatus;   /* 权限的状态，1为可用，0为不可用   */
+    /**
+     *主键id
+     */
+    private Integer permissionId;
+    /**
+     *权限名字，后端使用
+     */
+    private String permissionName;
+    /**
+     *权限解释，前端使用
+     */
+    private String description;
+    /**
+     *权限创建的时间
+     */
+    private LocalDateTime createTime;
+    /**
+     * 权限的状态，1为可用，0为不可用
+     */
+    private boolean permissionStatus;
 
 
     public Permission() {

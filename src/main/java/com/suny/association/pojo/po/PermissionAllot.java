@@ -6,15 +6,25 @@ import java.util.List;
 
 /**
  * Comments:    角色权限角色中间表，给角色分配权限
- * Author:   孙建荣
- * Create Date: 2017/05/02 12:44
+ *
+ * @author :   孙建荣
+ *         Create Date: 2017/05/02 12:44
  */
 public class PermissionAllot implements Serializable {
 
     private static final long serialVersionUID = -2433044880242889682L;
-    private Integer id;   /* 主键id */
-    private Roles roleId;   /* 角色id */
-    private List<Permission> permissionArrayList = new ArrayList<>();   /* 权限id */
+    /**
+     * 主键id
+     */
+    private Integer id;
+    /**
+     * 角色id
+     */
+    private Roles roleId;
+    /**
+     * 权限id
+     */
+    private List<Permission> permissionArrayList = new ArrayList<>();
 
     public PermissionAllot() {
     }

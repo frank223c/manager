@@ -8,6 +8,7 @@ import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.ILoginService;
 import com.suny.association.utils.JsonResult;
 import com.suny.association.utils.TokenProcessor;
+import com.suny.association.utils.ValidActionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Comments:   基础公共Controller
+ *
  * @author :   孙建荣
  * Create Date: 2017/03/05 11:05
  */
@@ -50,11 +52,10 @@ public class BackedLoginController {
     }
 
 
-
     /**
      * 登录页面
      */
-    @RequestMapping(value = {"/","/index.html"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/", "/index.html"}, method = RequestMethod.GET)
     public String backendLogin(HttpServletRequest request) {
         String token = TokenProcessor.getInstance().makeToken();
         request.getSession().setAttribute(TOKEN, token);
@@ -95,11 +96,11 @@ public class BackedLoginController {
             //   1.1   把session里面的token标记先移除
             request.getSession().removeAttribute(TOKEN);
             //   1.2    获取session中保存的本次服务器下发的验证码
-//            String sessionCode = (String) request.getSession().getAttribute("code");
+            String sessionCode = (String) request.getSession().getAttribute("code");
             //   1.3    匹配session里面的验证码跟表单上的验证码是否相等，这里为了开发方便就先关闭
-//            if (!ValidActionUtil.matchCode(formCode, sessionCode)) {
-//                return JsonResult.failResult(BaseEnum.VALIDATE_CODE_ERROR);
-//            }
+            if (!ValidActionUtil.matchCode(formCode, sessionCode)) {
+                return JsonResult.failResult(BaseEnum.VALIDATE_CODE_ERROR);
+            }
             //   1.4   获取登录的结果,也就是带有ticket则表示登录成功了
             AtomicReference<Map<String, Object>> loginResult = loginService.login(username, password);
             if (loginResult.get().containsKey(TICKET)) {
@@ -110,9 +111,11 @@ public class BackedLoginController {
                 if (rememberMe) {
                     cookie.setMaxAge(3600 * 24 * 5);
                 }
+                // cookie的secure值为true时，在http中是无效的；在https中才有效。
+                cookie.setSecure(true);
                 response.addCookie(cookie);
                 //    1.4.4   把一些进入主页面需要的数据先放进去
-                saveUser(request,response, username);
+                saveUser(request, response, username);
                 logger.warn("登录成功了,给前端发送通知");
                 return JsonResult.successResult(BaseEnum.LOGIN_SYSTEM);
             }
@@ -148,14 +151,16 @@ public class BackedLoginController {
     /**
      * 验证成功后报存用户的登录信息
      *
-     * @param response  response请求
+     * @param response response请求
      * @param username 登录的用户名
      */
-    private void saveUser(HttpServletRequest request,HttpServletResponse response, String username) {
+    private void saveUser(HttpServletRequest request, HttpServletResponse response, String username) {
         Member member = accountService.selectByName(username).getAccountMember();
         Account account = accountService.selectByName(username);
         Cookie nameCookie = new Cookie("account", account.getAccountName());
+        nameCookie.setSecure(true);
         Cookie accountCookie = new Cookie("member", member.getMemberName());
+        accountCookie.setSecure(true);
         response.addCookie(nameCookie);
         response.addCookie(accountCookie);
         request.getSession().setAttribute("account", account);
@@ -192,7 +197,6 @@ public class BackedLoginController {
         request.getSession().removeAttribute("ticket");
         return JsonResult.failResult(BaseEnum.LOGOUT_FAIL);
     }
-
 
 
 }

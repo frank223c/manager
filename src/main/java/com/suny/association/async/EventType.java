@@ -2,7 +2,7 @@ package com.suny.association.async;
 
 /**
  * 事件类型枚举类
- * Created by 孙建荣 on 17-9-28.下午4:52
+ * @author  孙建荣 on 17-9-28.下午4:52
  */
 public enum EventType {
 

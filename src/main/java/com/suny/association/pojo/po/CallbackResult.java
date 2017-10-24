@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 /**
  *   申请结果实体类
+ * @author sunjianrong
  */
 public class CallbackResult implements Serializable {
 

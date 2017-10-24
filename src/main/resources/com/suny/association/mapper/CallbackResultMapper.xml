@@ -229,7 +229,7 @@
         WHERE cr.application_message_id = #{applicationMessageId}
     </select>
 
-    <select id="list" parameterType="hashmap" resultMap="BaseResultMap">
+    <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
             cr.callback_id,
             cr.application_message_id,

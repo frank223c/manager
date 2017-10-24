@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 /**
  * 判断是否为空封装工具类
  * Comments:
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/30 17:44
  */
 public class ValidActionUtil {

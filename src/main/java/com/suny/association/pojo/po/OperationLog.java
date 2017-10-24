@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 /**
  * 操作日志实体类
  *
- * @author 孙建荣
+ * @@author  孙建荣
  */
 public class OperationLog implements Serializable {
 

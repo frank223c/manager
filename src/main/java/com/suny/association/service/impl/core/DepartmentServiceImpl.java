@@ -2,19 +2,19 @@ package com.suny.association.service.impl.core;
 
 import com.suny.association.mapper.DepartmentMapper;
 import com.suny.association.pojo.po.Department;
+import com.suny.association.pojo.po.LoginTicket;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.core.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
 /**
  * Comments:   部门表业务逻辑
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/17 22:34
  */
 @Service
@@ -30,21 +30,18 @@ public class DepartmentServiceImpl extends AbstractBaseServiceImpl<Department> i
     }
 
     /* 通过部门名字查询部门记录  */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public Department selectByName(String name) {
         return departmentMapper.selectByName(name);
     }
 
     /* 查询部门表总记录数  */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public int selectCount() {
         return departmentMapper.selectCount();
     }
 
     /* 查询部门表所有的记录  */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public List<Department> selectAll() {
         return departmentMapper.selectAll();
@@ -53,13 +50,12 @@ public class DepartmentServiceImpl extends AbstractBaseServiceImpl<Department> i
     /**
      * 通过查询条件查询部门表记录
      *
-     * @param criteriaMap 自己封装的查询条件
+     * @param conditionMap 自己封装的查询条件
      * @return 带查询条件的部门表记录
      */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<Department> list(Map<Object, Object> criteriaMap) {
-        return departmentMapper.list(criteriaMap);
+    public List<Department> selectByParam(ConditionMap<Department> conditionMap) {
+        return departmentMapper.selectByParam(conditionMap);
     }
 
 

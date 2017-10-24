@@ -19,7 +19,8 @@ import java.util.Map;
 
 /**
  * 事件消费者
- * Created by 孙建荣 on 17-9-28.下午5:47
+ * @author 孙建荣
+ * on 17-9-28.下午5:47
  */
 public class EventConsumer implements InitializingBean, ApplicationContextAware {
 

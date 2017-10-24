@@ -70,15 +70,15 @@
 
     <select id="queryPunchTypeInfo" resultMap="punchTypeInfo" parameterType="int">
         SELECT
-            t.punch_type_id,
-            t.punch_type_name
-        FROM punchtype AS t
+            entity.punch_type_id,
+            entity.punch_type_name
+        FROM punchtype AS entity
         WHERE
-            t.punch_type_id = #{ punchTypeId }
+            entity.punch_type_id = #{ punchTypeId }
     </select>
 
 
-    <select id="list" parameterType="hashmap" resultMap="BaseResultMap">
+    <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
             r.punch_record_id,
             r.punch_today_date,

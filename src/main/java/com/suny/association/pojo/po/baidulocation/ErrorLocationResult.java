@@ -1,8 +1,8 @@
-package com.suny.association.pojo.po.baiduLocation;
+package com.suny.association.pojo.po.baidulocation;
 
 /**
  * Comments:  百度定位返回的错误码
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/04/22 10:33
  */
 public class ErrorLocationResult {

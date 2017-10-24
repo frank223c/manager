@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * 操作Redis工具类
- * Created by 孙建荣 on 17-9-24.上午8:54
+ * @author  孙建荣 on 17-9-24.上午8:54
  */
 @Service
 public class JedisAdapter implements InitializingBean {

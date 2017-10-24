@@ -15,7 +15,9 @@ import java.time.LocalDateTime;
 
 /**
  * 本项目中专门使用的ticket工具
- * Created by 孙建荣 on 17-9-22.上午11:19
+ *
+ * @author 孙建荣
+ * @date 17-9-22
  */
 public class LoginTicketUtils {
     private static Logger logger = LoggerFactory.getLogger(LoginTicketUtils.class);

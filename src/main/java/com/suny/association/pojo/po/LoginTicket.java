@@ -7,20 +7,30 @@ import java.util.Date;
 
 /**
  * 登录后带有的标记
- * Created by 孙建荣 on 17-9-20.上午8:37
+ *
+ * @author 孙建荣
+ * @date 17-9-20
  */
 public class LoginTicket implements Serializable {
 
 
     private static final long serialVersionUID = -1460593651742189724L;
     private int id;
-    // 账号ID
+    /**
+     *账号ID
+     */
     private long accountId;
-    // 标记过期的时间
+    /**
+     *标记过期的时间
+     */
     private LocalDateTime expired;
-    // 标记当前的状态,是否过期 0为有效,1为过期
+    /**
+     * 标记当前的状态,是否过期 0为有效,1为过期
+     */
     private int status;
-    // 标记字符
+    /**
+     *标记字符
+     */
     private String ticket;
 
     public LoginTicket() {

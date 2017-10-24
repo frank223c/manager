@@ -2,6 +2,7 @@ package com.suny.association.pojo.po;
 
 /**
  * 部门实体类
+ * @author sunjianrong
  */
 public class Department {
     private Integer departmentId;

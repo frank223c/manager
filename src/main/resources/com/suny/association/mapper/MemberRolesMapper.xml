@@ -48,7 +48,7 @@
         WHERE mr.member_role_name LIKE CONCAT(CONCAT('%', #{memberRoleName}), '%')
     </select>
 
-    <select id="list" parameterType="hashmap" resultMap="BaseResultMap">
+    <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
         mr.member_role_id,
         mr.member_role_name

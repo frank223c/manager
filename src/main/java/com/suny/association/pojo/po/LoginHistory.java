@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 /**
  * 登录历史实体类
+ * @author sunjianrong
  */
 public class LoginHistory implements Serializable {
 

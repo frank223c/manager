@@ -186,7 +186,7 @@
         WHERE cr.application_message_id = #{applicationResult.applicationMessageId.applicationId,jdbcType=INTEGER}
     </select>
 
-    <select id="list" parameterType="hashmap" resultMap="BaseResultMap">
+    <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
             a.application_id,
             a.punch_type_id,

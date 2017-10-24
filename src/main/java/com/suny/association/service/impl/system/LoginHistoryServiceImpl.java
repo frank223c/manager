@@ -4,7 +4,8 @@ import com.suny.association.annotation.SystemServiceLog;
 import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.LoginHistoryMapper;
 import com.suny.association.pojo.po.LoginHistory;
-import com.suny.association.pojo.po.baiduLocation.GeneralLocationResult;
+import com.suny.association.pojo.po.baidulocation.GeneralLocationResult;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
 import com.suny.association.utils.WebUtils;
@@ -12,19 +13,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import static com.suny.association.utils.WebUtils.getClientIpAdder;
 import static com.suny.association.utils.WebUtils.getOSVersion;
 
 /**
  * Comments:  登录历史记录业务逻辑
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/07 22:34
  */
 @Service
@@ -48,24 +47,21 @@ public class LoginHistoryServiceImpl extends AbstractBaseServiceImpl<LoginHistor
     /**
      * 通过查询条件查询账号登录记录
      *
-     * @param criteriaMap 自己封装的查询条件
+     * @param conditionMap 自己封装的查询条件
      * @return 带查询条件的登录记录
      */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<LoginHistory> list(Map<Object, Object> criteriaMap) {
-        return loginHistoryMapper.list(criteriaMap);
+    public List<LoginHistory> selectByParam(ConditionMap<LoginHistory> conditionMap) {
+        return loginHistoryMapper.selectByParam(conditionMap);
     }
 
     /*  通过登录用户名查询登录记录 */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public LoginHistory selectByName(String name) {
         return loginHistoryMapper.selectByName(name);
     }
 
     /* 查询数据库里面的登录记录条数  */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public int selectCount() {
         return loginHistoryMapper.selectCount();

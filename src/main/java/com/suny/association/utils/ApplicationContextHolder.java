@@ -5,7 +5,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by 孙建荣 on 17-9-23.下午9:40
+ * @author 孙建荣
+ * on 17-9-23.下午9:40
  */
 @Component
 public class ApplicationContextHolder {

@@ -4,16 +4,18 @@ import java.io.Serializable;
 
 /**
  * Comments:   访问uri地址需要具备的权限
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/05/12 22:06
  */
 public class AccessPermission implements Serializable {
 
     private static final long serialVersionUID = 4330338228715931808L;
-    /* 请求路径 */
+    /**
+     *  请求路径 */
     private String accessUrl;
 
-    /* 请求所需要的权限*/
+    /**
+     *  请求所需要的权限*/
     private String accessPermission;
 
     public AccessPermission() {

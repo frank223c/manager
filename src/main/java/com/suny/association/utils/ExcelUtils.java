@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
@@ -18,12 +17,32 @@ import java.util.List;
 
 /**
  * Comments:   对Excel的相关操作工具类
- * Author:   孙建荣
- * Create Date: 2017/05/15 18:09
+ *
+ * @author :   孙建荣
+ *         Create Date: 2017/05/15 18:09
  */
 public class ExcelUtils {
-
     private static final Logger logger = LoggerFactory.getLogger(ExcelUtils.class);
+    /**
+     * Excel表格2003版本之前的文件的后缀名
+     */
+    private static final String EXCEL_FILE_BEFORE_2003_EXTENSION ="xls";
+    /**
+     * Excel表格2007版本之后的文件的后缀名
+     */
+    private static final String EXCEL_FILE_AFTER_2007_EXTENSION ="xlsx";
+    /**
+     * 文件魔数,Excel表格2003版本以前的魔术值
+     */
+    private static final String EXCEL_FILE_BEFORE_2003_MAGIC = "application/vnd.ms-excel";
+    /**
+     * 文件魔数,Excel表格2007版本以后的魔术值
+     */
+    private static final String EXCEL_FILE_AFTER_2007_MAGIC = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    /**
+     * 定义在Excel表格中超过多少位的值,在Java中就不能使用Integer类型进行运行了
+     */
+    private static final Integer LONG_NUMBER_LENGTH=11;
 
     /**
      * 根据传入的Excel文件解析出数据,然后返回一个有序的List对象，根据POI的解析规则,一步步把解析出来的数据放到数组里去.
@@ -36,22 +55,31 @@ public class ExcelUtils {
      */
     public static List<String[]> parseExcel(File file, String fileExtension, int startSheet, int startRow) {
         List<String[]> dataList = new LinkedList<>();
-        Workbook workbook;
-        workbook = getWorkbook(file, fileExtension);          /*   首选获取一个工作簿   */
+          /*   首选获取一个工作簿   */
+        Workbook workbook = getWorkbook(file, fileExtension);
         if (isOverFlowSheet(workbook, startRow)) {
             logger.error("读取Excel表格时读取的工作表下标溢出，不存在这个工作表");
             throw new BusinessException(BaseEnum.SHEET_NUM_OVERFLOW);
         }
-        Sheet sheet = workbook.getSheetAt(startSheet);       /*   这里传入一个起始工作表的序号，读取这个工作表      */
-        for (int i = 1; i < sheet.getLastRowNum() + 1; i++) {      /*  遍历单元表的每一行的数据    */
-            Row row = sheet.getRow(i);      /*  Excel的每一行数据  */
-            int firstCellNum = row.getFirstCellNum();     /*    起始行的行数        */
-            int numberOfCells = row.getPhysicalNumberOfCells();    /*  获取当前行的列数 */
-            if (numberOfCells > 0) {          /* 首先要判断下文件中是否有大于单元格，否则就是空的了，肯定不读取   */
-                String[] dataArray = new String[numberOfCells];    /* 有多少列就创建一个多大的数组  */
+          /*   这里传入一个起始工作表的序号，读取这个工作表      */
+        Sheet sheet = workbook.getSheetAt(startSheet);
+         /*  遍历单元表的每一行的数据    */
+        for (int i = 1; i < sheet.getLastRowNum() + 1; i++) {
+             /*  Excel的每一行数据  */
+            Row row = sheet.getRow(i);
+             /*    起始行的行数        */
+            int firstCellNum = row.getFirstCellNum();
+             /*  获取当前行的列数 */
+            int numberOfCells = row.getPhysicalNumberOfCells();
+             /* 首先要判断下文件中是否有大于单元格，否则就是空的了，肯定不读取   */
+            if (numberOfCells > 0) {
+                 /* 有多少列就创建一个多大的数组  */
+                String[] dataArray = new String[numberOfCells];
                 for (int startNum = firstCellNum; startNum < numberOfCells; startNum++) {
-                    Cell cell = row.getCell(startNum);        /*  Excel一行数据中的每一个单元格的数据  */
-                    dataArray[startNum] = getCellValue(cell);   /* 把取到的值放到数组中中去 */
+                    /*  Excel一行数据中的每一个单元格的数据  */
+                    Cell cell = row.getCell(startNum);
+                     /* 把取到的值放到数组中中去 */
+                    dataArray[startNum] = getCellValue(cell);
                 }
                 dataList.add(dataArray);
             } else {
@@ -95,13 +123,13 @@ public class ExcelUtils {
                 }
                 DecimalFormat df = new DecimalFormat("0");
                 String stringNumber = df.format(cell.getNumericCellValue());
-                /*  长度大于11位的就应该是Long类型的数字了，就转换成Long类型数字，否则默认就是转换成Integer类型  */
-                if (stringNumber.length() >= 11) {
+                /*  长度大于十一位的就应该是Long类型的数字了，就转换成Long类型数字，否则默认就是转换成Integer类型  */
+                if (stringNumber.length() >= LONG_NUMBER_LENGTH) {
                     return convertLong(stringNumber) + "";
                 }
                 return convertInteger(stringNumber) + "";
             case Cell.CELL_TYPE_BOOLEAN:
-                return cell.getBooleanCellValue() + "";
+                return String.valueOf(cell.getBooleanCellValue());
             case Cell.CELL_TYPE_FORMULA:
                 return cell.getCellFormula();
             case Cell.CELL_TYPE_BLANK:
@@ -159,17 +187,16 @@ public class ExcelUtils {
      * @return 根据不同的文件扩展名返回不同的工具方法
      */
     private static Workbook getWorkbook(File file, String fileExtension) {
-        try {
-            FileInputStream fs = new FileInputStream(file);
+        try (FileInputStream fs = new FileInputStream(file)) {
             switch (fileExtension) {
-                case "xls":
+                case EXCEL_FILE_BEFORE_2003_EXTENSION:
                     try {
                         return new HSSFWorkbook(fs);
                     } catch (IOException e) {
                         logger.warn("读取的文件格式不支持");
                         throw new BusinessException(BaseEnum.FILE_READ_FAIL);
                     }
-                case "xlsx":
+                case EXCEL_FILE_AFTER_2007_EXTENSION:
                     try {
                         return new XSSFWorkbook(fs);
                     } catch (IOException e) {
@@ -180,7 +207,7 @@ public class ExcelUtils {
                     logger.warn("读取的文件格式不支持");
                     throw new BusinessException(BaseEnum.FILE_NOT_SUPPORT);
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             logger.error("不存在这个文件，无法进行读取");
             throw new BusinessException(BaseEnum.FILE_NOT_EXIST);
         }
@@ -194,10 +221,11 @@ public class ExcelUtils {
      * @return 如果是Excel表格则返回true，否则就返回false
      */
     public static boolean parseExcelFileType(String fileType, String fileExtension) {
-        if ("application/vnd.ms-excel".equals(fileType) && "xls".equals(fileExtension)) {
+
+        if (EXCEL_FILE_BEFORE_2003_MAGIC.equals(fileType) && EXCEL_FILE_BEFORE_2003_EXTENSION.equals(fileExtension)) {
             logger.info("Windows 2003版以前的EXCEL表格");
             return true;
-        } else if ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(fileType) && "xlsx".equals(fileExtension)) {
+        } else if (EXCEL_FILE_AFTER_2007_MAGIC.equals(fileType) && EXCEL_FILE_AFTER_2007_EXTENSION.equals(fileExtension)) {
             logger.info("Windows 2007版后的Excel表格");
             return true;
         }

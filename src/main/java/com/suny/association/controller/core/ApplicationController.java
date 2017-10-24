@@ -5,6 +5,8 @@ import com.suny.association.controller.BaseController;
 import com.suny.association.enums.BaseEnum;
 import com.suny.association.pojo.po.ApplicationMessage;
 import com.suny.association.pojo.po.CallbackResult;
+import com.suny.association.pojo.po.MemberRoles;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.core.IApplicationMessageService;
 import com.suny.association.service.interfaces.core.ICallbackResultService;
 import com.suny.association.service.interfaces.core.IMemberService;
@@ -25,7 +27,7 @@ import static com.suny.association.utils.ConversionUtil.convertToCriteriaMap;
 
 /**
  * Comments:   异议考勤结果控制器
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/04/16 20:55
  */
 @Controller
@@ -65,7 +67,7 @@ public class ApplicationController extends BaseController {
         }
         // 这里判断是否有这个管理员，再判断这个管理员的角色是否大于一个可以操作考勤的角色
         if (memberService.selectById(memberId) == null && memberService.selectById(memberId).getMemberRoles().getMemberRoleId() < 3) {
-            return JsonResult.failResult(BaseEnum.LIMIT_MEMBER_Manager);
+            return JsonResult.failResult(BaseEnum.LIMIT_MEMBER_MANAGER);
         }
         // 检查是否有要审批的异议考勤记录，再判断这条异议考勤记录是否已经有了结果
         if (applicationMessageService.selectById(applicationId) == null || applicationMessageService.selectById(applicationId).getApplicationResult() != null) {
@@ -107,8 +109,9 @@ public class ApplicationController extends BaseController {
     @ResponseBody
     public Map query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit);
-        List<ApplicationMessage> punchRecordList = applicationMessageService.list(criteriaMap);
+        ConditionMap<ApplicationMessage> conditionMap=new ConditionMap<>(new ApplicationMessage(),0,10);
+//        Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit);
+        List<ApplicationMessage> punchRecordList = applicationMessageService.selectByParam(conditionMap);
         int total = applicationMessageService.selectCount();
         return ConversionUtil.convertToBootstrapTableResult(punchRecordList, total);
     }

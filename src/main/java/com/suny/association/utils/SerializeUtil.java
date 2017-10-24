@@ -7,7 +7,9 @@ import java.io.*;
 
 /**
  * 序列化与反序列化工具
- * Created by 孙建荣 on 17-9-24.下午1:22
+ *
+ * @author 孙建荣
+ * @date 17-9-24
  */
 public class SerializeUtil {
     private static Logger logger = LoggerFactory.getLogger(SerializeUtil.class);

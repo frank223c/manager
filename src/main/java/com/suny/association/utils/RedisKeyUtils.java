@@ -2,7 +2,9 @@ package com.suny.association.utils;
 
 /**
  * 生成RedisKey工具
- * Created by 孙建荣 on 17-9-24.上午8:45
+ *
+ * @author 孙建荣
+ * @date 17-9-24
  */
 public class RedisKeyUtils {
 

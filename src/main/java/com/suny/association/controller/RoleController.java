@@ -3,6 +3,7 @@ package com.suny.association.controller;
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.enums.BaseEnum;
 import com.suny.association.pojo.po.Roles;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.IRolesService;
 import com.suny.association.utils.ConversionUtil;
 import com.suny.association.utils.JsonResult;
@@ -19,7 +20,7 @@ import static com.suny.association.utils.JsonResult.successResult;
 
 /**
  * Comments:  账号角色控制器
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/04/11 18:15
  */
 @Controller
@@ -113,7 +114,8 @@ public class RoleController extends BaseController {
     @ResponseBody
     public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        List<Roles> rolesList = rolesService.list(ConversionUtil.convertToCriteriaMap(offset, limit));
+        ConditionMap<Roles> conditionMap=new ConditionMap<>(new Roles(),0,10);
+        List<Roles> rolesList = rolesService.selectByParam(conditionMap);
         int total = rolesService.selectCount();
         return ConversionUtil.convertToBootstrapTableResult(rolesList, total);
     }

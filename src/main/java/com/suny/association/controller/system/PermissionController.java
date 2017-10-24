@@ -4,6 +4,8 @@ import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
 import com.suny.association.enums.BaseEnum;
 import com.suny.association.pojo.po.Permission;
+import com.suny.association.pojo.po.Roles;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.system.IPermissionService;
 import com.suny.association.utils.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import static com.suny.association.utils.JsonResult.successResult;
 
 /**
  * Comments:   权限具体的管理，不含权限的分配
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/05/02 12:58
  */
 @RequestMapping("/system/permission")
@@ -138,9 +140,10 @@ public class PermissionController extends BaseController {
     public Map<Object, Object> queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
                                         @RequestParam(value = "status", required = false, defaultValue = "3") int status) {
+        ConditionMap<Permission> conditionMap=new ConditionMap<>(new Permission(),0,10);
         int totalCount = permissionService.selectCount();
-        Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit, status);
-        List<Permission> permissionList = permissionService.list(criteriaMap);
+//        Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit, status);
+        List<Permission> permissionList = permissionService.selectByParam(conditionMap);
         return convertToBootstrapTableResult(permissionList, totalCount);
     }
 

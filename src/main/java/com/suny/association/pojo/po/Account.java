@@ -2,6 +2,9 @@ package com.suny.association.pojo.po;
 
 import java.io.Serializable;
 
+/**
+ * @author sunjianrong
+ */
 public class Account implements Serializable {
 
 

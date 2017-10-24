@@ -4,7 +4,9 @@ import com.suny.association.mapper.interfaces.IMapper;
 import com.suny.association.pojo.po.LoginTicket;
 
 /**
- * Created by 孙建荣 on 17-9-20.上午8:55
+ *
+ * @author 孙建荣
+ * @date 17-9-20
  */
 public interface LoginTicketMapper extends IMapper<LoginTicket> {
 

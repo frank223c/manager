@@ -8,7 +8,7 @@ import java.util.Random;
 
 /**
  * Comments:   产生token，防止表单重复提交
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/05/13 21:35
  */
 public class TokenProcessor {
@@ -33,7 +33,7 @@ public class TokenProcessor {
         //  加密下
         try {
             MessageDigest md = MessageDigest.getInstance("md5");
-            byte md5[] = md.digest(token.getBytes());
+            byte[] md5 = md.digest(token.getBytes());
             // base64编码
             BASE64Encoder encoder = new BASE64Encoder();
             return encoder.encode(md5);

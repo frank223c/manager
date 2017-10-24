@@ -9,7 +9,7 @@ import java.util.UUID;
 
 /**
  * Comments:
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/20 13:41
  */
 public class MemberControllerTest extends TestCase {

@@ -2,7 +2,9 @@ package com.suny.association.enums;
 
 /**
  * 操作类型枚举
- * Created by 孙建荣 on 17-9-21.下午4:36
+ *
+ * @author 孙建荣
+ * @date 17-9-21
  */
 public enum OperateType {
     /**

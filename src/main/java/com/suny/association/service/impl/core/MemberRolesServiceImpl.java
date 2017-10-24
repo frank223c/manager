@@ -3,11 +3,11 @@ package com.suny.association.service.impl.core;
 import com.suny.association.annotation.SystemServiceLog;
 import com.suny.association.mapper.MemberRolesMapper;
 import com.suny.association.pojo.po.MemberRoles;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.core.IMemberRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * Comments:
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/07 22:36
  */
 @Service
@@ -40,21 +40,18 @@ public class MemberRolesServiceImpl extends AbstractBaseServiceImpl<MemberRoles>
     }
 
     /*  通过成员的名字查询成员角色    */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public MemberRoles selectByName(String name) {
         return memberRolesMapper.selectByName(name);
     }
 
     /*  查询数据库中成员角色表的总记录数    */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public int selectCount() {
         return memberRolesMapper.selectCount();
     }
 
     /*  通过成员角色id查询一个成员角色    */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public MemberRoles selectById(long id) {
         return memberRolesMapper.selectById(id);
@@ -65,7 +62,6 @@ public class MemberRolesServiceImpl extends AbstractBaseServiceImpl<MemberRoles>
      *
      * @return 所有的成员角色数据
      */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public List<MemberRoles> selectAll() {
         return memberRolesMapper.selectAll();
@@ -74,13 +70,12 @@ public class MemberRolesServiceImpl extends AbstractBaseServiceImpl<MemberRoles>
     /**
      * 根据查询条件查询成员角色
      *
-     * @param criteriaMap 封装的查询条件
+     * @param conditionMap 封装的查询条件
      * @return 成员角色
      */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<MemberRoles> list(Map criteriaMap) {
-        return memberRolesMapper.list(criteriaMap);
+    public List<MemberRoles> selectByParam(ConditionMap<MemberRoles> conditionMap) {
+        return memberRolesMapper.selectByParam(conditionMap);
     }
 
     /**
@@ -101,7 +96,6 @@ public class MemberRolesServiceImpl extends AbstractBaseServiceImpl<MemberRoles>
      * @param memberRoleId 成员角色id
      * @return 引用该角色的成员
      */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public List<MemberRoles> queryQuote(Integer memberRoleId) {
         return memberRolesMapper.queryQuote(memberRoleId);

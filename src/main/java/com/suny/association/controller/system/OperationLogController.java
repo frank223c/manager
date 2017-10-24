@@ -2,7 +2,9 @@ package com.suny.association.controller.system;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
+import com.suny.association.pojo.po.ApplicationMessage;
 import com.suny.association.pojo.po.OperationLog;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.system.IOperationLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +21,7 @@ import static com.suny.association.utils.ConversionUtil.convertToCriteriaMap;
 
 /**
  * Comments:   操作记录控制器
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/04/10 13:20
  */
 @Controller
@@ -44,7 +46,8 @@ public class OperationLogController extends BaseController {
     @ResponseBody
     public Map query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        List<OperationLog> operationLogList = operationLogService.list(convertToCriteriaMap(offset, limit));
+        ConditionMap<OperationLog> conditionMap=new ConditionMap<>(new OperationLog(),0,10);
+        List<OperationLog> operationLogList = operationLogService.selectByParam(conditionMap);
         int total = operationLogService.selectCount();
         return convertToBootstrapTableResult(operationLogList, total);
     }

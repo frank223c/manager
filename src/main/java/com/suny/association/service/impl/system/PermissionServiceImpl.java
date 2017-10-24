@@ -2,8 +2,10 @@ package com.suny.association.service.impl.system;
 
 import com.suny.association.annotation.SystemServiceLog;
 import com.suny.association.mapper.PermissionMapper;
+import com.suny.association.pojo.po.Department;
 import com.suny.association.pojo.po.Permission;
 import com.suny.association.pojo.po.PermissionAllot;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.system.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,7 @@ import java.util.Map;
 
 /**
  * Comments:   权限管理业务逻辑控制
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/05/02 13:04
  */
 @Service
@@ -55,7 +57,6 @@ public class PermissionServiceImpl extends AbstractBaseServiceImpl<Permission> i
         return permissionMapper.selectByName(name);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public int selectCount() {
         return permissionMapper.selectCount();
@@ -67,10 +68,9 @@ public class PermissionServiceImpl extends AbstractBaseServiceImpl<Permission> i
     }
 
 
-    @Transactional(readOnly = true)
     @Override
-    public List<Permission> list(Map<Object, Object> criteriaMap) {
-        return permissionMapper.list(criteriaMap);
+    public List<Permission> selectByParam(ConditionMap<Permission> conditionMap) {
+        return permissionMapper.selectByParam(conditionMap);
     }
 
     @Override

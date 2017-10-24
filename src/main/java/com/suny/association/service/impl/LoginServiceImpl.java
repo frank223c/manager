@@ -5,9 +5,9 @@ import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.LoginTicketMapper;
 import com.suny.association.pojo.po.Account;
 import com.suny.association.pojo.po.LoginTicket;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.ILoginService;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
-import com.suny.association.utils.JedisAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,9 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Created by 孙建荣 on 17-9-21.上午8:09
+ *
+ * @author 孙建荣
+ * @date 17-9-21
  */
 @Service
 public class LoginServiceImpl implements ILoginService {
@@ -42,7 +44,7 @@ public class LoginServiceImpl implements ILoginService {
     @Override
     public AtomicReference<Map<String, Object>> login(String username, String password) {
         //  1. 首先对参数进行各种非空判断,如果违规就直接返回给Controller
-        AtomicReference<Map<String, Object>> map = new AtomicReference<>(new HashMap<>());
+        AtomicReference<Map<String, Object>> map = new AtomicReference<>(new HashMap<>(16));
         if (!(validParam(username) || validParam(password))) {
             //   1.1 登录失败也保存登录日志,这样可与从数据库中获取短时间内登录次数非常多的账号
             loginHistoryService.saveLoginLog(username, false);
@@ -156,8 +158,8 @@ public class LoginServiceImpl implements ILoginService {
     }
 
     @Override
-    public List<LoginTicket> list(Map<Object, Object> criteriaMap) {
-        return null;
+    public List<LoginTicket> selectByParam(ConditionMap<LoginTicket> conditionMap) {
+        return loginTicketMapper.selectByParam(conditionMap);
     }
 
 

@@ -2,6 +2,8 @@ package com.suny.association.service.impl.system;
 
 import com.suny.association.mapper.AccessPermissionMapper;
 import com.suny.association.pojo.po.AccessPermission;
+import com.suny.association.pojo.po.Permission;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.system.IAccessPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,7 @@ import java.util.Map;
 
 /**
  * Comments:   访问url地址所需要的权限业务逻辑层
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/05/12 22:13
  */
 @Service
@@ -60,7 +62,7 @@ public class AccessPermissionServiceImpl implements IAccessPermissionService {
     }
 
     @Override
-    public List<AccessPermission> list(Map<Object, Object> criteriaMap) {
-        return null;
+    public List<AccessPermission> selectByParam(ConditionMap<AccessPermission> conditionMap) {
+        return accessPermissionMapper.selectByParam(conditionMap);
     }
 }

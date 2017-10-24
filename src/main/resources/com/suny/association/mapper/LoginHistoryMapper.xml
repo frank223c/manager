@@ -44,7 +44,7 @@
         login_history_id, login_name, login_ip, login_address, login_time, login_browser, login_os_version, login_user_agent, login_status
     </sql>
 
-    <select id="list" parameterType="hashmap" resultType="com.suny.association.pojo.po.LoginHistory">
+    <select id="selectByParam" parameterType="hashmap" resultType="com.suny.association.pojo.po.LoginHistory">
         SELECT
         <include refid="selectFields"/>
         FROM login_history

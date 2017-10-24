@@ -1,5 +1,8 @@
 package com.suny.association.pojo.po;
 
+/**
+ * @author sunjianrong
+ */
 public class MemberRoles {
     private Integer memberRoleId;
 

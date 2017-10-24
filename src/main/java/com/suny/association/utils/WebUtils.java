@@ -1,7 +1,7 @@
 package com.suny.association.utils;
 
 import com.google.gson.Gson;
-import com.suny.association.pojo.po.baiduLocation.GeneralLocationResult;
+import com.suny.association.pojo.po.baidulocation.GeneralLocationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -17,13 +17,25 @@ import java.util.Objects;
 
 /**
  * Comments:    获取登录用户的信息工具
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/04/20 19:57
  */
 public class WebUtils {
     private static final Logger logger = LoggerFactory.getLogger(WebUtils.class);
-
+    /**
+     * 未知值
+     */
     private static final String UNKNOWN = "unknown";
+    /**
+     * HTML页面的起始标签
+     */
+    private static final String HTML_ATTRIBUTE="<html>";
+
+
+    private static final String HTML_DOCTYPE_DECLARATION="<!DOCTYPE html>";
+
+    private static final String LOCALHOST_IP_IPV4="127.0.0.1";
+    private static final String LOCALHOST_IP_IPV6="0:0:0:0:0:0:0:1";
 
     /**
      * 获取当前请求的request请求实例
@@ -54,23 +66,26 @@ public class WebUtils {
      * @return 百度普通定位地址
      */
     public static GeneralLocationResult getGeneralLocation(String ip) {
-        String ipString = null;    // ip地址
-        String jsonData = null;    //服务器返回的json数据
+        // ip地址
+        String ipString = null;
+        //服务器返回的json数据
+        String jsonData = null;
         try {
             ipString = URLEncoder.encode(ip, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             logger.warn("不支持的编码异常{}", e.getMessage());
         }
-        String key = "8256e813b3dec54c5a6aac371c05e5eaa";   // 百度定位密匙
+        // 百度定位密匙
+        String key = "8256e813b3dec54c5a6aac371c05e5eaa";
         String url = String.format("http://api.map.baidu.com/location/ip?ak=%s&ip=%s&coor=bd09ll", key, ipString);
         URL myUrl;
         URLConnection urlConnection = null;
         try {
             myUrl = new URL(url);
-            urlConnection = myUrl.openConnection();   //　不使用代理进行访问
+            //　不使用代理进行访问
+            urlConnection = myUrl.openConnection();
         } catch (IOException e) {
-            logger.error("发生了输入输出流异常");
-            e.printStackTrace();
+            logger.error("发生了输入输出流异常",e.getMessage());
         }
         if (urlConnection != null) {
             try (InputStreamReader inputStreamReader = new InputStreamReader(urlConnection.getInputStream(), "UTF-8");
@@ -99,7 +114,7 @@ public class WebUtils {
     private static GeneralLocationResult parseJsonDate(String jsonData) {
         GeneralLocationResult generalLocationResult = new GeneralLocationResult();
         /*  如果包含HTML标签则说明访问到一个错误页面   */
-        if (jsonData.contains("<html>") || jsonData.substring(0, 20).contains("<!DOCTYPE html>")) {
+        if (jsonData.contains(HTML_ATTRIBUTE) || jsonData.substring(0, 20).contains(HTML_DOCTYPE_DECLARATION)) {
             logger.warn("访问到一个错误页面，无法进行解析");
             generalLocationResult.setStatus(200);
             return generalLocationResult;
@@ -162,7 +177,7 @@ public class WebUtils {
         if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        if ("127.0.0.1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)){
+        if (LOCALHOST_IP_IPV4.equals(ip) || LOCALHOST_IP_IPV6.equals(ip)){
             try {
                 ip = InetAddress.getLocalHost().getHostAddress();
             } catch (UnknownHostException ignored) {

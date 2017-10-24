@@ -3,6 +3,8 @@ package com.suny.association.controller;
 import com.suny.association.enums.BaseEnum;
 import com.suny.association.utils.JsonResult;
 import com.suny.association.utils.ValidActionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,12 +22,15 @@ import java.util.Random;
 
 /**
  * Comments:  对页面产生验证码
- * Author:   孙建荣
- * Create Date: 2017/03/14 17:02
+ *
+ * @author :   孙建荣
+ *         Create Date: 2017/03/14 17:02
  */
 @RequestMapping("/code")
 @Controller
 public class CodeController {
+    private static final int INTERFERING_LINE_COUNT = 40;
+    private static Logger logger = LoggerFactory.getLogger(CodeController.class);
     private char[] codeSequence = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
             'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
             'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
@@ -36,8 +41,10 @@ public class CodeController {
             throws IOException {
 
         // 定义图像buffer
-        int width = 90;   //验证码的宽度
-        int height = 20;   //验证码的高度
+        //验证码的宽度
+        int width = 90;
+        //验证码的高度
+        int height = 20;
         BufferedImage buffImg = new BufferedImage(width, height,
                 BufferedImage.TYPE_INT_RGB);
         Graphics gd = buffImg.getGraphics();
@@ -59,7 +66,7 @@ public class CodeController {
 
         // 随机产生40条干扰线，使图象中的认证码不易被其它程序探测到。
         gd.setColor(Color.BLACK);
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < INTERFERING_LINE_COUNT; i++) {
             int x = random.nextInt(width);
             int y = random.nextInt(height);
             int xl = random.nextInt(12);
@@ -68,8 +75,10 @@ public class CodeController {
         }
 
         // randomCode用于保存随机产生的验证码，以便用户登录后进行验证。
-        StringBuffer randomCode = new StringBuffer();
-        int red, green, blue;
+        StringBuilder randomCode = new StringBuilder();
+        int red;
+        int green;
+        int blue;
 
         // 随机产生codeCount数字的验证码。
         int codeCount = 4;
@@ -92,7 +101,7 @@ public class CodeController {
         }
         // 将四位数字的验证码保存到Session中。
         HttpSession session = req.getSession();
-        System.out.print(randomCode);
+        logger.warn("generation code is : {} ",randomCode);
         session.setAttribute("code", randomCode.toString());
 
         // 禁止图像缓存。

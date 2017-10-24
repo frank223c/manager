@@ -10,6 +10,7 @@ import com.suny.association.mapper.MemberMapper;
 import com.suny.association.pojo.po.Account;
 import com.suny.association.pojo.po.Department;
 import com.suny.association.pojo.po.Member;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.core.IMemberService;
 import com.suny.association.utils.ExcelUtils;
@@ -29,7 +30,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Comments:  成员逻辑层类
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/07 22:35
  */
 @Service
@@ -55,7 +56,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void insert(Member member) {
-        memberMapper.insertAndGetId(member);
+        memberMapper.insertAndReturnId(member);
         Integer memberId = member.getMemberId();
         if (memberId != null) {
             createAccount(memberId);
@@ -75,22 +76,22 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
         Member member = new Member();
         member.setMemberId(memberId);
         String memberIdString = String.valueOf(memberId);
-        autoAccount.setAccountName(memberIdString);      //设置账号名字
-        autoAccount.setAccountMember(member);            //设置对应的管理员账号
+        //设置账号名字
+        autoAccount.setAccountName(memberIdString);
+        //设置对应的管理员账号
+        autoAccount.setAccountMember(member);
         accountMapper.insert(autoAccount);
         System.out.println(autoAccount.getAccountMember().getMemberId());
 
     }
 
     /*  通过成员id查询是否存在引用    */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public Member queryQuote(int memberId) {
         return memberMapper.queryQuote(memberId);
     }
 
     /*  查询成员表里面的总记录数    */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public int selectCount() {
         return memberMapper.selectCount();
@@ -101,7 +102,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     @SystemServiceLog(description = "插入成员信息失败")
     @Transactional(rollbackFor = {Exception.class})
     public int insertReturnCount(Member member) {
-        return memberMapper.insertAndGetId(member);
+        return memberMapper.insertAndReturnId(member);
     }
 
     /*  通过int类型的id删除一条成员信息    */
@@ -124,28 +125,24 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     }
 
     /*   查询冻结的管理员信息   */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public List<Member> queryFreezeManager() {
         return memberMapper.queryFreezeManager();
     }
 
     /*   查询正常的管理员信息   */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public List<Member> queryNormalManager() {
         return memberMapper.queryNormalManager();
     }
 
     /*  查询冻结的成员信息    */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public List<Member> queryFreezeMember() {
         return memberMapper.queryFreezeMember();
     }
 
     /*   通过成员角色id查询有哪些成员引用着这个角色   */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public List<Member> quoteByMemberRoleId(Integer memberRoleId) {
         return memberMapper.quoteByMemberRoleId(memberRoleId);
@@ -278,7 +275,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     @Transactional(rollbackFor = Exception.class)
     private Member batchInsertMember(Member member) {
         try {
-            memberMapper.insertAndGetId(member);
+            memberMapper.insertAndReturnId(member);
             return member;
         } catch (Exception e) {
             logger.error("插入成员信息发生了异常，信息为{}", member);
@@ -298,7 +295,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     private boolean batchInsertAccount(Account account) {
         try {
             /* 获取插入成功的行数  */
-            int successRow = accountMapper.insertAndGetId(account);
+            int successRow = accountMapper.insertAndReturnId(account);
             if (successRow != 0) {
                 logger.info("成功插入一条账号信息,信息为{}", account);
                 return true;
@@ -310,21 +307,18 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     }
 
     /*   查询正常的成员信息    */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public List<Member> queryNormalMember() {
         return memberMapper.queryNormalMember();
     }
 
     /*  通过id查询一条成员信息    */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public Member selectById(long id) {
         return memberMapper.selectById(id);
     }
 
     /*  通过成员名字查询一条成员信息    */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public Member selectByName(String name) {
         return memberMapper.selectByName(name);
@@ -333,17 +327,15 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
 
 
     /*   查询所有的成员记录   */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public List<Member> selectAll() {
         return memberMapper.selectAll();
     }
 
     /*   通过查询条件查询成员记录   */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<Member> list(Map<Object, Object> criteriaMap) {
-        return memberMapper.list(criteriaMap);
+    public List<Member> selectByParam(ConditionMap<Member> conditionMap) {
+        return memberMapper.selectByParam(conditionMap);
     }
 
 

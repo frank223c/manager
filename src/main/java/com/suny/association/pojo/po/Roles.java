@@ -4,18 +4,20 @@ import java.time.LocalDateTime;
 
 /**
  *   账号角色实体
+ * @author sunjianrong
  */
 public class Roles {
-    /*账号主键id*/
+    /**
+     * 账号主键id*/
     private Integer roleId;
 
-    /* 账号的中文解释*/
+    /** 账号的中文解释*/
     private String description;
 
-    /* 账号的角色名字 */
+    /** 账号的角色名字 */
     private String roleName;
 
-    /*账号创建的时间*/
+    /** 账号创建的时间 */
     private LocalDateTime createTime;
 
     public Roles() {

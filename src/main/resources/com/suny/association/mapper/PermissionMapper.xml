@@ -92,7 +92,7 @@
             pr.permiss_id = #{ permissionId}
     </select>
 
-    <select id="list" parameterType="hashmap" resultMap="BaseResultMap">
+    <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
         p.permission_id,
         p.permission_name,

@@ -3,22 +3,49 @@ package com.suny.association.pojo.po;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 异议考勤申请实体类
+ * @author 孙建荣
+ *
+ */
 public class ApplicationMessage implements Serializable {
 
     private static final long serialVersionUID = 8887542705964935531L;
-    private Integer applicationId;    //主键id
 
-    private PunchRecord punchRecordId;   //成员有异议的考勤记录id
+    /**
+     *主键id
+     */
+    private Integer applicationId;
 
-    private PunchType punchTypeId;       //有异议的考勤类型
+    /**
+     *成员有异议的考勤记录id
+     */
+    private PunchRecord punchRecordId;
 
-    private String applicationReason;    //有异议的理由
+    /**
+     *有异议的考勤类型
+     */
+    private PunchType punchTypeId;
 
-    private CallbackResult applicationResult;    //审批的结果
+    /**
+     *有异议的理由
+     */
+    private String applicationReason;
 
-    private PunchType changePunchType;    //希望更改为什么类型的考勤
+    /**
+     *审批的结果
+     */
+    private CallbackResult applicationResult;
 
-    private LocalDateTime applyForTime;       //提出申请的时间
+    /**
+     *希望更改为什么类型的考勤
+     */
+    private PunchType changePunchType;
+
+    /**
+     *提出申请的时间
+     */
+    private LocalDateTime applyForTime;
 
     public ApplicationMessage() {
     }

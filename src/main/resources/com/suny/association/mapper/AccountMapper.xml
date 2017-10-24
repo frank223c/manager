@@ -75,7 +75,7 @@
         </trim>
     </insert>
 
-    <insert id="insertAndGetId" parameterType="com.suny.association.pojo.po.Account" useGeneratedKeys="true"
+    <insert id="insertAndReturnId" parameterType="com.suny.association.pojo.po.Account" useGeneratedKeys="true"
             keyProperty="accountId">
         INSERT INTO account
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -200,7 +200,7 @@
         <include refid="BaseSelectFields"/>
         FROM account
     </select>
-    <select id="list" parameterType="hashmap" resultMap="BaseResultMap">
+    <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
         <include refid="BaseSelectFields"/>
         FROM account

@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Comments:   权限的具体分配，可用对角色进行分配指定权限
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/05/02 13:02
  */
 @RequestMapping("/system/permission/allot")

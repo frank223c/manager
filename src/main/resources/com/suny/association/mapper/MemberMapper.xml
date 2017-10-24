@@ -91,7 +91,7 @@
     </select>
 
 
-    <insert id="insertAndGetId" parameterType="com.suny.association.pojo.po.Member" useGeneratedKeys="true"
+    <insert id="insertAndReturnId" parameterType="com.suny.association.pojo.po.Member" useGeneratedKeys="true"
             keyProperty="memberId">
         INSERT INTO member
         <trim prefix="set" suffixOverrides=",">
@@ -338,7 +338,7 @@
         FROM member
     </select>
 
-    <select id="list" parameterType="hashmap" resultMap="BaseResultMap">
+    <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
         m.member_id,
         m.member_name,

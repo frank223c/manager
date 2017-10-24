@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * @author sunjianrong
+ */
 public class PunchRecord implements Serializable {
 
     private static final long serialVersionUID = 4274980896614790015L;

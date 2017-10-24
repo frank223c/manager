@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Comments:   通用方法实现类
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/07 21:59
  */
 public abstract class AbstractBaseServiceImpl<T> implements IBaseService<T> {

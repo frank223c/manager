@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Comments:  登陆历史mapper接口映射
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/05 23:05
  */
 

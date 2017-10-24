@@ -5,6 +5,7 @@ import com.suny.association.controller.BaseController;
 import com.suny.association.enums.BaseEnum;
 import com.suny.association.pojo.po.Member;
 import com.suny.association.pojo.po.PunchRecord;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.core.IMemberService;
 import com.suny.association.service.interfaces.core.IPunchRecordService;
 import com.suny.association.utils.ConversionUtil;
@@ -25,8 +26,9 @@ import java.util.Objects;
 
 /**
  * Comments:  考勤记录控制器
- * Author:   孙建荣
- * Create Date: 2017/04/11 13:16
+ *
+ * @author :   孙建荣
+ *         Create Date: 2017/04/11 13:16
  */
 @RequestMapping("/punchLog")
 @Controller
@@ -113,7 +115,7 @@ public class PunchRecordController extends BaseController {
                 return JsonResult.failResult(BaseEnum.MALICIOUS_OPERATION);
             } else if (dataBaseMember.getMemberRoles().getMemberRoleId() <= 2) {
                 logger.warn("206,部门角色太低,没有权限进行开启签到功能");
-                return JsonResult.failResult(BaseEnum.LIMIT_MEMBER_Manager);
+                return JsonResult.failResult(BaseEnum.LIMIT_MEMBER_MANAGER);
             } else if (punchRecordService.queryByPunchDate().size() > 0) {
                 logger.warn("212,重复签到，今天已经开启签到过了");
                 return JsonResult.failResult(BaseEnum.REPEAT_PUNCH);
@@ -133,7 +135,8 @@ public class PunchRecordController extends BaseController {
     @ResponseBody
     public Map query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        List<PunchRecord> punchRecordList = punchRecordService.list(ConversionUtil.convertToCriteriaMap(offset, limit));
+        ConditionMap<PunchRecord> conditionMap = new ConditionMap<>(new PunchRecord(), 0, 10);
+        List<PunchRecord> punchRecordList = punchRecordService.selectByParam(conditionMap);
         int total = punchRecordService.selectCount();
         return ConversionUtil.convertToBootstrapTableResult(punchRecordList, total);
     }

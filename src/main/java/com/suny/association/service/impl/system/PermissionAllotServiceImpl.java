@@ -3,6 +3,7 @@ package com.suny.association.service.impl.system;
 import com.suny.association.annotation.SystemServiceLog;
 import com.suny.association.mapper.PermissionAllotMapper;
 import com.suny.association.pojo.po.PermissionAllot;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.system.IPermissionAllotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,8 @@ import java.util.Map;
 
 /**
  * Comments:   权限分配业务逻辑实现类
- * Author:   孙建荣
+ *
+ * @@author :   孙建荣
  * Create Date: 2017/05/02 13:10
  */
 @Service
@@ -52,8 +54,8 @@ public class PermissionAllotServiceImpl extends AbstractBaseServiceImpl<Permissi
     }
 
     @Override
-    public List<PermissionAllot> list(Map<Object, Object> criteriaMap) {
-        return null;
+    public List<PermissionAllot> selectByParam(ConditionMap<PermissionAllot> conditionMap) {
+        return permissionAllotMapper.selectByParam(conditionMap);
     }
 
     @Override

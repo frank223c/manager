@@ -6,6 +6,8 @@ import com.suny.association.mapper.MemberMapper;
 import com.suny.association.pojo.po.ApplicationMessage;
 import com.suny.association.pojo.po.CallbackResult;
 import com.suny.association.pojo.po.Member;
+import com.suny.association.pojo.po.PermissionAllot;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.core.ICallbackResultService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ import java.util.Map;
 
 /**
  * Comments:   审批结果逻辑控制
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/07 22:33
  */
 @Service
@@ -93,13 +95,12 @@ public class CallbackResultServiceImpl extends AbstractBaseServiceImpl<CallbackR
     /**
      * 条件查询审批记录
      *
-     * @param criteriaMap 封装的查询条件
+     * @param conditionMap 封装的查询条件
      * @return 审批记录
      */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<CallbackResult> list(Map criteriaMap) {
+    public List<CallbackResult> selectByParam(ConditionMap<CallbackResult> conditionMap) {
         //noinspection unchecked
-        return callbackResultMapper.list(criteriaMap);
+        return callbackResultMapper.selectByParam(conditionMap);
     }
 }

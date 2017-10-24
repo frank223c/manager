@@ -2,7 +2,7 @@ package com.suny.association.enums;
 
 /**
  * Comments:  基础错误代码枚举类
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/08 18:10
  */
 public enum BaseEnum {
@@ -30,7 +30,7 @@ public enum BaseEnum {
     PRIMARY_NULL("203", "主键字段为空"),
     HAVE_QUOTE("204", "存在引用"),
     MUST_CHINESE("205", "一定要是中文"),
-    LIMIT_MEMBER_Manager("206", "部门角色太低"),
+    LIMIT_MEMBER_MANAGER("206", "部门角色太低"),
     FIELD_LENGTH_WRONG("207", "字段的长度有错误"),
     OLD_PASSWORD_WRONG("208", "原密码错误"),
     TWICE_PASSWORD_EQUALS("209", "两次密码一样"),
@@ -73,17 +73,11 @@ public enum BaseEnum {
         return value;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
 
     public String getDesc() {
         return desc;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
 
     @Override
     public String toString() {

@@ -3,6 +3,8 @@ package com.suny.association.controller.core;
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
 import com.suny.association.pojo.po.CallbackResult;
+import com.suny.association.pojo.po.MemberRoles;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.core.ICallbackResultService;
 import com.suny.association.utils.ConversionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import java.util.Map;
 
 /**
  * Comments:   审批结果控制
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/04/19 12:50
  */
 @Controller
@@ -42,7 +44,8 @@ public class CallbackResultController extends BaseController {
     @ResponseBody
     public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        List<CallbackResult> callbackResultList = callbackResultService.list(ConversionUtil.convertToCriteriaMap(offset, limit));
+        ConditionMap<CallbackResult> conditionMap=new ConditionMap<>(new CallbackResult(),0,10);
+        List<CallbackResult> callbackResultList = callbackResultService.selectByParam(conditionMap);
         int total = callbackResultService.selectCount();
         return ConversionUtil.convertToBootstrapTableResult(callbackResultList, total);
     }

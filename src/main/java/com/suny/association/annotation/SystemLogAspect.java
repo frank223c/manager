@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 
 /**
  * Comments:  系统操作日志切点类
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/04/25 13:42
  */
 @Aspect
@@ -33,7 +33,9 @@ public class SystemLogAspect {
 
     private final IOperationLogService operationLogService;
 
-    //本地日志记录对象
+    /**
+     *本地日志记录对象
+     */
     private static final Logger logger = LoggerFactory.getLogger(SystemLogAspect.class);
 
     @Autowired
@@ -96,17 +98,17 @@ public class SystemLogAspect {
             operationLog.setOperationStatus(true);
              /*   操作ip*/
 //            operationLog.setOperationIp(WebUtils.getClientIpAdder(request));
-            /*   没有网络时则注释从网络获取ip，直接固定一个ip写入数据库     */
+//               没有网络时则注释从网络获取ip，直接固定一个ip写入数据库
             operationLog.setOperationIp("182.85.141.54");
-             /*  操作地址 */
+             //  操作地址
             //noinspection ConstantConditions
 //            operationLog.setOperationAddress(WebUtils.getGeneralLocation(ip).getAddress());
 
-            /*   没有网络时则注释从网络获取物理地址，直接固定一个物理地址写入数据库     */
+            //   没有网络时则注释从网络获取物理地址，直接固定一个物理地址写入数据库
             operationLog.setOperationAddress("江西省南昌市南昌县创新二路");
 
             System.out.println("准备向数据库插入操作记录");
-            /*开始插入操作日志*/
+            // 开始插入操作日志
             operationLogService.insert(operationLog);
 
             System.out.println("数据库插入操作记录结束");

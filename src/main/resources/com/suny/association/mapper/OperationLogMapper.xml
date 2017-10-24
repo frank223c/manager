@@ -118,7 +118,7 @@
     </insert>
 
 
-    <select id="list" parameterType="hashmap" resultMap="BaseResultMap">
+    <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
             o.operation_id,
             o.operation_message,

@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Comments:    权限的具体管理接口
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/05/02 13:03
  */
 public interface IPermissionService extends IBaseService<Permission>  {

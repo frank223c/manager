@@ -4,7 +4,9 @@ import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.enums.BaseEnum;
 import com.suny.association.pojo.po.Account;
 import com.suny.association.pojo.po.Member;
+import com.suny.association.pojo.po.Permission;
 import com.suny.association.pojo.po.Roles;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.core.IMemberService;
 import com.suny.association.service.interfaces.IRolesService;
@@ -28,13 +30,15 @@ import static com.suny.association.utils.JsonResult.successResult;
 
 /**
  * Comments:   账号控制器
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/22 22:12
  */
 @Controller
 @RequestMapping("/account")
 public class AccountController extends BaseController {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
+    private static final String STATUS ="status";
+    private static final String RESULT="result";
     private final IAccountService accountService;
     private final IMemberService memberService;
     private final IRolesService rolesService;
@@ -57,7 +61,7 @@ public class AccountController extends BaseController {
     @ResponseBody
     public JsonResult insert(@RequestBody Account account) {
         Map resultMap = updateOrInsert(account);
-        if (!(Boolean) resultMap.get("status")) {
+        if (!(Boolean) resultMap.get(STATUS)) {
             return (JsonResult) resultMap.get("result");
         }
         if ("".equals(account.getAccountPassword())) {
@@ -115,31 +119,31 @@ public class AccountController extends BaseController {
      * @return 验证结果，是一个map，包含枚举结果跟Boolean类型验证结果
      */
     private Map updateOrInsert(Account account) {
-        Map<Object, Object> resultMap = new HashMap<>();
+        Map<Object, Object> resultMap = new HashMap<>(16);
         Account byNameResult = accountService.selectByName(account.getAccountName());
         Account byPhoneResult = accountService.queryByPhone(account.getAccountPhone());
         Account byMailResult = accountService.queryByMail(account.getAccountEmail());
         if ("".equals(account.getAccountName()) || (account.getAccountName() == null)) {
-            resultMap.put("result", failResult(BaseEnum.FIELD_NULL));
-            resultMap.put("status", Boolean.FALSE);
+            resultMap.put(RESULT, failResult(BaseEnum.FIELD_NULL));
+            resultMap.put(STATUS, Boolean.FALSE);
             return resultMap;
         }
         if (null != byNameResult && !Objects.equals(byNameResult.getAccountId(), account.getAccountId())) {
-            resultMap.put("result", failResult(BaseEnum.REPEAT_USERNAME));
-            resultMap.put("status", Boolean.FALSE);
+            resultMap.put(RESULT, failResult(BaseEnum.REPEAT_USERNAME));
+            resultMap.put(STATUS, Boolean.FALSE);
             return resultMap;
         }
         if (null != byPhoneResult && !Objects.equals(byPhoneResult.getAccountId(), account.getAccountId())) {
-            resultMap.put("result", failResult(BaseEnum.REPEAT_PHONE));
-            resultMap.put("status", Boolean.FALSE);
+            resultMap.put(RESULT, failResult(BaseEnum.REPEAT_PHONE));
+            resultMap.put(STATUS, Boolean.FALSE);
             return resultMap;
         }
         if (null != byMailResult && !Objects.equals(byMailResult.getAccountId(), account.getAccountId())) {
-            resultMap.put("result", failResult(BaseEnum.REPEAT_EMAIL));
-            resultMap.put("status", Boolean.FALSE);
+            resultMap.put(RESULT, failResult(BaseEnum.REPEAT_EMAIL));
+            resultMap.put(STATUS, Boolean.FALSE);
             return resultMap;
         }
-        resultMap.put("status", Boolean.TRUE);
+        resultMap.put(STATUS, Boolean.TRUE);
         return resultMap;
     }
 
@@ -159,8 +163,8 @@ public class AccountController extends BaseController {
         if (byIdResult == null) {
             return failResult(BaseEnum.SELECT_FAILURE);
         }
-        if (!(Boolean) resultMap.get("status")) {
-            return (JsonResult) resultMap.get("result");
+        if (!(Boolean) resultMap.get(STATUS)) {
+            return (JsonResult) resultMap.get(RESULT);
         }
         accountService.update(account);
         return successResult(BaseEnum.UPDATE_SUCCESS);
@@ -175,9 +179,6 @@ public class AccountController extends BaseController {
      */
     @RequestMapping(value = "/update.html/{id}", method = RequestMethod.GET)
     public ModelAndView updatePage(@PathVariable("id") Integer id, ModelAndView modelAndView) {
-        //    获取shiro认证后的身份信息
-//        Subject subject = SecurityUtils.getSubject();
-//        if (subject.isPermitted("account:read")) {
         System.out.println("有【account:read 读取账号信息页面】这个权限");
               /*         这里是项目的代码，非测试代码             */
         Account account = accountService.selectById(id);
@@ -188,23 +189,12 @@ public class AccountController extends BaseController {
         modelAndView.addObject("rolesList", rolesList);
         modelAndView.setViewName("/accountInfo/accountUpdate");
         return modelAndView;
-//        } else {
-        // 没有权限就手动抛出shiro里面的一个没有权限的异常，仅作测试
-//            throw new UnauthorizedException();
-//        }
     }
 
     @SystemControllerLog(description = "查看账号管理页面")
     @RequestMapping(value = "/accountManager.html", method = RequestMethod.GET)
     public String index() {
-        //    获取shiro认证后的身份信息
-//        Subject subject = SecurityUtils.getSubject();
-        //     使用编程式的shiro判断是否有权限，有权限则进入管理页面
-//        if (subject.isPermitted("account:read")) {
         return "accountInfo/accountManager";
-//        }
-        // 没有权限就手动抛出shiro里面的一个没有权限的异常，仅作测试
-//        throw new UnauthorizedException();
     }
 
 
@@ -222,9 +212,10 @@ public class AccountController extends BaseController {
     public Map<Object, Object> queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
                                         @RequestParam(value = "status", required = false, defaultValue = "3") int status) {
+        ConditionMap<Account> conditionMap=new ConditionMap<>(new Account(),0,10);
         int totalCount = accountService.selectCount();
-        Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit, status);
-        List<Account> accountList = accountService.list(criteriaMap);
+//        Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit, status);
+        List<Account> accountList = accountService.selectByParam(conditionMap);
         return convertToBootstrapTableResult(accountList, totalCount);
     }
 

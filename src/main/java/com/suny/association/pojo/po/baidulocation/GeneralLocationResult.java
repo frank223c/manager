@@ -1,8 +1,8 @@
-package com.suny.association.pojo.po.baiduLocation;
+package com.suny.association.pojo.po.baidulocation;
 
 /**
  * Comments:   百度普通定位返回结果
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/04/22 9:49
  */
 public class GeneralLocationResult {
@@ -80,17 +80,29 @@ public class GeneralLocationResult {
         }
 
         private class AddressDetailBean {
-            /*  城市 */
+            /**
+             *城市
+             */
             private String city;
-            /* 城市代码*/
+            /**
+             * 城市代码
+             */
             private int cityCode;
-            /* 区县 */
+            /**
+             *区县
+             */
             private String district;
-            /*  省份   */
+            /**
+             *省份
+             */
             private String province;
-            /*  街道 */
+            /**
+             * 街道
+             * */
             private String street;
-            /* 门址  */
+            /**
+             *  门址
+             *  */
             private String streetNumber;
 
             public String getCity() {

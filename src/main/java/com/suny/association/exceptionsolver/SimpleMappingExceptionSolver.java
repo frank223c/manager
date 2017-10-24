@@ -1,4 +1,4 @@
-package com.suny.association.exceptionSolver;
+package com.suny.association.exceptionsolver;
 
 import com.suny.association.exception.BusinessException;
 import com.suny.association.utils.JsonResult;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * Comments:   异常解决类
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/08 18:18
  */
 public class SimpleMappingExceptionSolver implements HandlerExceptionResolver {
@@ -26,7 +26,7 @@ public class SimpleMappingExceptionSolver implements HandlerExceptionResolver {
         //首先先判断是否为ajax请求，不是的话使用jsp返回
         Map<String, Object> objectMap;
         if (request.getHeader("x-requested-with") == null) {
-            objectMap = new HashMap<>();
+            objectMap = new HashMap<>(16);
             objectMap.put("success", false);
             putMessageInfo(ex, objectMap);
             //就打印出log来
@@ -37,7 +37,7 @@ public class SimpleMappingExceptionSolver implements HandlerExceptionResolver {
         } else {
             //如果是ajax请求的话用json返回吧
             try {
-                objectMap = new HashMap<>();
+                objectMap = new HashMap<>(16);
                 objectMap.put("success", false);
                 putMessageInfo(ex, objectMap);
                 response.setContentType("application/json;charset=UTF-8");

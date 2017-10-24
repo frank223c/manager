@@ -6,6 +6,7 @@ import com.suny.association.enums.BaseEnum;
 import com.suny.association.pojo.po.Department;
 import com.suny.association.pojo.po.Member;
 import com.suny.association.pojo.po.MemberRoles;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.core.IDepartmentService;
 import com.suny.association.service.interfaces.core.IMemberRolesService;
@@ -38,23 +39,18 @@ import static com.suny.association.utils.JsonResult.successResult;
 
 /**
  * Comments:   成员信息管理类Controller
- * Author:   孙建荣
- * Create Date: 2017/03/15 20:46
+ *
+ * @author :   孙建荣
+ *         Create Date: 2017/03/15 20:46
  */
 @Controller
 @RequestMapping("/member")
 public class MemberController extends BaseController {
-
     private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
-
     private final IMemberService memberService;
-
     private final IDepartmentService departmentService;
-
     private final IMemberRolesService memberRolesService;
-
     private final IAccountService accountService;
-
 
     @Autowired
     public MemberController(IDepartmentService departmentService, IMemberService memberService, IMemberRolesService memberRolesService, IAccountService accountService) {
@@ -77,7 +73,8 @@ public class MemberController extends BaseController {
     public JsonResult insert(@RequestBody Member member) {
         if (member.getMemberName() == null || "".equals(member.getMemberName())) {
             return JsonResult.failResult(BaseEnum.FIELD_NULL);
-        } else if ("".equals(member.getMemberClassName()) || member.getMemberClassName() == null) {
+        }
+        if ("".equals(member.getMemberClassName()) || member.getMemberClassName() == null) {
             return JsonResult.failResult(BaseEnum.FIELD_NULL);
         }
         if (!(ValidActionUtil.isContainChinese(member.getMemberName()))) {
@@ -95,7 +92,7 @@ public class MemberController extends BaseController {
      * @return 数据跟视图地址
      */
     @SystemControllerLog(description = "新增成员页面")
-    @RequestMapping(value = "/insertPage.html", method = RequestMethod.GET)
+    @RequestMapping(value = "/insert.html", method = RequestMethod.GET)
     public ModelAndView insertPage(ModelAndView modelAndView) {
         List<Member> managerList = memberService.queryNormalManager();
         List<Department> departmentList = departmentService.selectAll();
@@ -106,6 +103,12 @@ public class MemberController extends BaseController {
         modelAndView.addObject("memberGradeList", CustomDate.getLastYearAndThisYears());
         modelAndView.setViewName("memberInfo/memberInsert");
         return modelAndView;
+    }
+
+    @SystemControllerLog(description = "上传协会成员数据页面")
+    @RequestMapping(value = "/uploadMemberInfo.html", method = RequestMethod.GET)
+    public String uploadMemberInfoPage() {
+        return "memberInfo/memberInfoUpdate";
     }
 
     @SystemControllerLog(description = "通过Excel文件批量新增数据")
@@ -158,18 +161,10 @@ public class MemberController extends BaseController {
                 logger.info("正在向客户端输出成员信息Excel模板");
                 Files.copy(file, response.getOutputStream());
             } catch (IOException e) {
-                logger.error("捕获了异常，向客户端发送Excel文件时发生错误");
-                e.printStackTrace();
+                logger.error("捕获了异常，向客户端发送Excel文件时发生错误{}", e.getMessage());
             }
         }
         logger.warn("要下载的文件{}不存在", fileName);
-    }
-
-
-    @SystemControllerLog(description = "上传成员数据页面")
-    @RequestMapping(value = "/uploadMemberInfo.html", method = RequestMethod.GET)
-    public String uploadMemberInfoPage() {
-        return "memberInfo/memberInfoUpdate";
     }
 
 
@@ -187,7 +182,7 @@ public class MemberController extends BaseController {
         return successResult(BaseEnum.DELETE_SUCCESS);
     }
 
-    @SystemControllerLog(description = "更新成员信息")
+    @SystemControllerLog(description = "更新协会成员信息")
     @RequestMapping(value = "/update.action", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult update(@RequestBody Member member) {
@@ -202,7 +197,7 @@ public class MemberController extends BaseController {
     }
 
     @RequestMapping(value = "/update.html/{id}", method = RequestMethod.GET)
-    public ModelAndView updatePage(@PathVariable("id") Integer id, ModelAndView modelAndView) {
+    public ModelAndView update(@PathVariable("id") Integer id, ModelAndView modelAndView) {
         Member member = memberService.selectById(id);
         List<Member> managerList = memberService.queryNormalManager();
         List<Department> departmentList = departmentService.selectAll();
@@ -216,9 +211,9 @@ public class MemberController extends BaseController {
     }
 
     @SystemControllerLog(description = "查询冻结的成员")
-    @RequestMapping(value = "/queryFreeze.action", method = RequestMethod.POST)
+    @RequestMapping(value = "/selectFreeze.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult queryFreeze() {
+    public JsonResult selectFreeze() {
         List<Member> memberList = memberService.queryNormalMember();
         if (memberList != null) {
             return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, memberList);
@@ -227,9 +222,9 @@ public class MemberController extends BaseController {
     }
 
     @SystemControllerLog(description = "查询正常的成员")
-    @RequestMapping(value = "/queryNormal.action", method = RequestMethod.POST)
+    @RequestMapping(value = "/selectNormal.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult queryNormal() {
+    public JsonResult selectNormal() {
         List<Member> memberList = memberService.queryNormalMember();
         if (memberList != null) {
             return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, memberList);
@@ -237,17 +232,31 @@ public class MemberController extends BaseController {
         return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
     }
 
-    @RequestMapping(value = "/queryAll.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectAll.action", method = RequestMethod.GET)
     @ResponseBody
-    public Map<Object, Object> queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
-                                        @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
-                                        @RequestParam(value = "departmentname", required = false) String departmentname,
-                                        @RequestParam(value = "status", required = false) int status) {
-        Map<Object, Object> tableDate = new HashMap<>();
-        if ("".equals(departmentname)) {
-            departmentname = null;
+    public Map<Object, Object> selectAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
+                                         @RequestParam(value = "departmentname", required = false) String departmentname,
+                                         @RequestParam(value = "status", required = false) int status) {
+        Boolean memberStatus = true;
+        Map<Object, Object> tableDate = new HashMap<>(16);
+        Member member = new Member();
+        Department department = new Department();
+        department.setDepartmentName(departmentname);
+        member.setMemberDepartment(department);
+        member.setMemberDepartment(department);
+        // 前端传过来的是数字,所以需要根据状态进行转换
+        // 0 冻结状态   1 正常状态   2 不设置状态条件
+        if (status == 0) {
+            memberStatus = false;
+        } else if (status == 1) {
+            memberStatus = true;
+        } else {
+            // 不设置状态查询条件
         }
-        List<Member> memberList = memberService.list(ConversionUtil.convertToCriteriaMap(offset, limit, departmentname, status));
+        member.setMemberStatus(memberStatus);
+        ConditionMap<Member> conditionMap = new ConditionMap<>(member, offset, limit);
+        List<Member> memberList = memberService.selectByParam(conditionMap);
         if (memberList.size() != 0 && !memberList.isEmpty()) {
             int total = memberService.selectCount();
             tableDate.put("rows", memberList);
@@ -260,8 +269,8 @@ public class MemberController extends BaseController {
     }
 
     @SystemControllerLog(description = "查询指定成员")
-    @RequestMapping(value = "/queryById.action/{memberId}", method = RequestMethod.GET)
-    public JsonResult queryById(@PathVariable("memberId") Integer memberId) {
+    @RequestMapping(value = "/selectById.action/{memberId}", method = RequestMethod.GET)
+    public JsonResult selectById(@PathVariable("memberId") Integer memberId) {
         Member member = memberService.selectById(memberId);
         return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, member);
     }

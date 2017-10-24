@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 /**
  * Comments:   权限控制过滤器
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/05/11 21:28
  */
 public class PermissionFilter implements Filter {

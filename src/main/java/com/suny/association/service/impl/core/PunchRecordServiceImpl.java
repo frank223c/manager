@@ -10,11 +10,11 @@ import com.suny.association.mapper.PunchTypeMapper;
 import com.suny.association.pojo.po.Member;
 import com.suny.association.pojo.po.PunchRecord;
 import com.suny.association.pojo.po.PunchType;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.core.IPunchRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * Comments:   考勤记录逻辑
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/07 22:39
  */
 @Service
@@ -179,17 +179,15 @@ public class PunchRecordServiceImpl extends AbstractBaseServiceImpl<PunchRecord>
     }
 
     /*   查询考勤记录表中的总记录数   */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public int selectCount() {
         return punchRecordMapper.selectCount();
     }
 
     /*   通过查询条件查询考勤记录   */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<PunchRecord> list(Map<Object, Object> criteriaMap) {
-        return punchRecordMapper.list(criteriaMap);
+    public List<PunchRecord> selectByParam(ConditionMap<PunchRecord> conditionMap) {
+        return punchRecordMapper.selectByParam(conditionMap);
     }
 
     /*  更新一条考勤记录    */
@@ -201,7 +199,6 @@ public class PunchRecordServiceImpl extends AbstractBaseServiceImpl<PunchRecord>
     }
 
     /*  通过名字一条考勤记录    */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public PunchRecord selectByName(String name) {
         return punchRecordMapper.selectByName(name);

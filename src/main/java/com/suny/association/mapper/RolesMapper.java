@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Comments:  账号角色表mapper映射接口
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/05 23:05
  */
 

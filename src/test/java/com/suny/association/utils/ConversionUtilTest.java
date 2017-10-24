@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 
 /**
  * Comments:
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/04/16 8:33
  */
 public class ConversionUtilTest extends TestCase {

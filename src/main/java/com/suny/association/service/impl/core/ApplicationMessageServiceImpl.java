@@ -4,6 +4,7 @@ import com.suny.association.annotation.SystemServiceLog;
 import com.suny.association.mapper.ApplicationMessageMapper;
 import com.suny.association.pojo.po.ApplicationMessage;
 import com.suny.association.pojo.po.CallbackResult;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.core.IApplicationMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 /**
  * Comments:   考勤记录异议申请业务逻辑
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/07 22:30
  */
 @Service
@@ -83,13 +84,12 @@ public class ApplicationMessageServiceImpl extends AbstractBaseServiceImpl<Appli
     /**
      * 条件查询异议考勤记录
      *
-     * @param criteriaMap 封装查询条件
+     * @param conditionMap 封装查询条件
      * @return 带查询条件的记录
      */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<ApplicationMessage> list(Map<Object, Object> criteriaMap) {
-        return applicationMessageMapper.list(criteriaMap);
+    public List<ApplicationMessage> selectByParam(ConditionMap<ApplicationMessage> conditionMap) {
+        return applicationMessageMapper.selectByParam(conditionMap);
     }
 
 

@@ -9,14 +9,15 @@ import java.io.IOException;
 
 /**
  * 基本访问URL操作,当用户访问项目第一个进入的过滤器.
- * Created by 孙建荣 on 17-9-20.下午1:25
+ * @author  孙建荣 on 17-9-20.下午1:25
  */
 public class LimitFilter implements Filter {
 
     private static Logger logger = LoggerFactory.getLogger(LimitFilter.class);
     private static final String EXECUTE_NEXT_FILTER = "EXECUTE_NEXT_FILTER";
 
-    /*   不需要登录就可以访问的资源*/
+    /**
+     *  不需要登录就可以访问的资源*/
     private static final String[] INHERENT_ESCAPE_URIS = {
             "/index.jsp","/login.html", "/login.action",
             "/userCenter.html", "/index.html"

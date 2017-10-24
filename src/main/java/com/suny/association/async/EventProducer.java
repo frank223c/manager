@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 事件生产者
- * Created by 孙建荣 on 17-9-28.下午5:09
+ * @author  孙建荣 on 17-9-28.下午5:09
  */
 public class EventProducer {
 

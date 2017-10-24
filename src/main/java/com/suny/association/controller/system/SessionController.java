@@ -3,6 +3,8 @@ package com.suny.association.controller.system;
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
 import com.suny.association.pojo.po.LoginHistory;
+import com.suny.association.pojo.po.OperationLog;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
 import com.suny.association.utils.ConversionUtil;
@@ -18,7 +20,7 @@ import java.util.Map;
 
 /**
  * Comments:    登录记录控制器
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/04/09 14:44
  */
 @Controller
@@ -36,7 +38,8 @@ public class SessionController extends BaseController {
     @ResponseBody
     public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        List<LoginHistory> loginHistoryList = loginHistoryService.list(ConversionUtil.convertToCriteriaMap(offset, limit));
+        ConditionMap<LoginHistory> conditionMap=new ConditionMap<>(new LoginHistory(),0,10);
+        List<LoginHistory> loginHistoryList = loginHistoryService.selectByParam(conditionMap);
         int total = loginHistoryService.selectCount();
         return ConversionUtil.convertToBootstrapTableResult(loginHistoryList, total);
     }

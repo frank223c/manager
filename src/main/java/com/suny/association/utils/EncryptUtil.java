@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Comments:  加密解密工具
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/08 16:47
  */
 public class EncryptUtil {
@@ -350,17 +350,17 @@ public class EncryptUtil {
      * @return String
      */
     public static String byte2hex(byte[] b) {
-        String hs = "";
-        String stmp = "";
+        StringBuilder hs =new StringBuilder();
+        String stmp;
         for (int n = 0; n < b.length; n++) {
             stmp = (java.lang.Integer.toHexString(b[n] & 0XFF));
             if (stmp.length() == 1) {
-                hs = hs + "0" + stmp;
+                hs = hs.append("0").append(stmp.toString());
             } else {
-                hs = hs + stmp;
+                hs = hs.append(stmp);
             }
         }
-        return hs.toUpperCase();
+        return hs.toString().toUpperCase();
     }
 
     /**

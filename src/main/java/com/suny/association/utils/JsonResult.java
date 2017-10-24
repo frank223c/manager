@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * Comments:   封装自己的返回JSON数据格式
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/17 16:01
  */
 public class JsonResult {
@@ -28,13 +28,19 @@ public class JsonResult {
     }.getType();
 
 
-    //  返回的状态
+    /**
+     *返回的状态
+     */
     private int status;
 
-    //给前端返回的内容
+    /**
+     *给前端返回的内容
+     */
     private String message;
 
-    //返回给前端的数据
+    /**
+     *返回给前端的数据
+     */
     private Object data;
 
     /**

@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Comments:   时间日期类工具类
- * Author:   孙建荣
+ * @author :   孙建荣
  * Create Date: 2017/03/19 13:57
  */
 public class CustomDate {
