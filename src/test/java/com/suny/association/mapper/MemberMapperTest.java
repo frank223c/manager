@@ -146,8 +146,8 @@ public class MemberMapperTest {
     }
 
     @Test
-    public void selectLimitMemberRole() throws Exception {
-        List<Member> memberList = memberMapper.selectFreezeMemberByParam(0, 2016);
+    public void selectLimitMemberByParam() throws Exception {
+        List<Member> memberList = memberMapper.selectLimitMemberByParam(0, 2016);
         for (Member member : memberList) {
             logger.info(member.toString());
         }

@@ -52,12 +52,14 @@ public interface MemberMapper extends IMapper<Member> {
      */
     List<Member> selectByMemberRoleId(@Param("memberRoleId") Integer memberRoleId);
 
+
     /**
-     * 查询冻结的管理员信息
-     *
-     * @return 协会成员信息
+     * 查询需要签到的协会成员的信息
+     * @param limitMemberRoleId   限制的成员角色ID
+     * @param memberGrade    届级
+     * @return  符合条件的签到人员
      */
-    List<Member> selectFreezeMemberByParam(@Param("memberRoleId") Integer memberRoleId, @Param("memberGrade") Integer memberGrade);
+    List<Member> selectLimitMemberByParam(@Param("limitMemberRoleId") Integer limitMemberRoleId, @Param("memberGrade") Integer memberGrade);
 
 
 }

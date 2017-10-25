@@ -122,14 +122,14 @@ public class PunchRecordServiceImpl extends AbstractBaseServiceImpl<PunchRecord>
         // 首先查询缺勤对应的考勤类型，如果没有查询到则默认就是0
         PunchType punchType = new PunchType();
         //  定义一个需要签到的角色，假如是2的话，那么低于2的角色成员都需要被签到，包括角色为2的成员
-        int roleId = 2;
+        int limitMemberRoleId = 2;
         if (punchTypeMapper.selectByName("缺勤") == null) {
             punchType.setPunchTypeId(0);
         } else {
             punchType = punchTypeMapper.selectByName("缺勤");
         }
         // 查询需要签到的成员信息
-        List<Member> memberList = memberMapper.selectFreezeMemberByParam(roleId, getPunchMemberGrade());
+        List<Member> memberList = memberMapper.selectLimitMemberByParam(limitMemberRoleId, getPunchMemberGrade());
         for (Member member : memberList) {
             PunchRecord punchRecord = new PunchRecord();
             punchRecord.setPunchIsCome(false);

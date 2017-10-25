@@ -286,8 +286,8 @@
         WHERE member_name = #{name}
     </select>-->
 
-    <!--根据成员届级跟角色ID去查询冻结的管理员信息-->
-    <select id="selectFreezeMemberByParam" resultMap="BaseResultMap">
+    <!--根据成员届级跟角色ID去查询对应的成员,这里的条件设置的是同时满足这3个条件【成员在协会状态为正常,角色小于xxx,并且届级等于xxx】-->
+    <select id="selectLimitMemberByParam" resultMap="BaseResultMap">
         SELECT
             m.member_id,
             m.member_role_id,
@@ -295,7 +295,7 @@
         FROM member AS m
         WHERE m.member_role_id <![CDATA[
         <=
-        ]]> #{memberRoleId} AND m.member_grade_number = #{memberGrade} AND m.member_status=0
+        ]]> #{limitMemberRoleId} AND m.member_grade_number = #{memberGrade} AND m.member_status = 1
     </select>
 
 
