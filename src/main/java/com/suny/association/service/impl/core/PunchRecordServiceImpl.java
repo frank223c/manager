@@ -129,7 +129,7 @@ public class PunchRecordServiceImpl extends AbstractBaseServiceImpl<PunchRecord>
             punchType = punchTypeMapper.selectByName("缺勤");
         }
         // 查询需要签到的成员信息
-        List<Member> memberList = memberMapper.selectLimitMemberRole(roleId, getPunchMemberGrade());
+        List<Member> memberList = memberMapper.selectFreezeMemberByParam(roleId, getPunchMemberGrade());
         for (Member member : memberList) {
             PunchRecord punchRecord = new PunchRecord();
             punchRecord.setPunchIsCome(false);

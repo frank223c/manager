@@ -57,7 +57,7 @@ public interface MemberMapper extends IMapper<Member> {
      *
      * @return 协会成员信息
      */
-    List<Member> selectLimitMemberRole(@Param("memberRoleId") Integer memberRoleId, @Param("memberGrade") Integer memberGrade);
+    List<Member> selectFreezeMemberByParam(@Param("memberRoleId") Integer memberRoleId, @Param("memberGrade") Integer memberGrade);
 
 
 }

@@ -82,57 +82,70 @@
         WHERE member_role_id = #{memberRoles}
     </select>
 
+    <!--==================================MemberMapper类里面的方法从这里开始=============================-->
 
+    <!--插入一条数据并返回自动生成的主键ID-->
     <insert id="insertAndReturnId" parameterType="com.suny.association.pojo.po.Member" useGeneratedKeys="true"
             keyProperty="memberId">
         INSERT INTO member
-        <trim prefix="set" suffixOverrides=",">
-            <if test="memberId != null">member_id = #{memberId,jdbcType=BIGINT} ,</if>
-            <if test="memberName != null">member_name =#{memberName,jdbcType=VARCHAR},</if>
-            <if test="memberClassName != null">member_class_name =#{memberClassName,jdbcType=VARCHAR},</if>
-            <if test="memberSex != null">member_sex =#{memberSex,jdbcType=BOOLEAN},</if>
-            <if test="memberGradeNumber != null">member_grade_number =#{memberGradeNumber,jdbcType=INTEGER},
-            </if>
-            <if test="memberManager != null">member_manager_id =#{memberManager,jdbcType=BIGINT},
-            </if>
-            <if test="memberDepartment != null">member_department_id
-                =#{memberDepartment.departmentId,jdbcType=INTEGER}
-            </if>
-            <if test="memberStatus != null">member_status =#{memberStatus,jdbcType=BOOLEAN},</if>
-            <if test="memberRoles != null">member_role_id =#{memberRoles.memberRoleId,jdbcType=INTEGER}</if>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null">member_id ,</if>
+            <if test="memberName != null">member_name ,</if>
+            <if test="memberClassName != null">member_class_name ,</if>
+            <if test="memberSex != null">member_sex ,</if>
+            <if test="memberGradeNumber != null">member_grade_number ,</if>
+            <if test="memberManager.memberId != null">member_manager_id ,</if>
+            <if test="memberDepartment.departmentId != null">member_department_id ,</if>
+            <if test="memberStatus != null">member_status,</if>
+            <if test="memberRoles.memberRoleId != null">member_role_id</if>
         </trim>
-
-
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null">#{memberId} ,</if>
+            <if test="memberName != null">#{memberName} ,</if>
+            <if test="memberClassName != null">#{memberClassName} ,</if>
+            <if test="memberSex != null">#{memberSex} ,</if>
+            <if test="memberGradeNumber != null">#{memberGradeNumber} ,</if>
+            <if test="memberManager.memberId != null">#{memberManager.memberId} ,</if>
+            <if test="memberDepartment.departmentId != null">#{memberDepartment.departmentId} ,</if>
+            <if test="memberStatus != null">#{memberStatus} ,</if>
+            <if test="memberRoles.memberRoleId != null">#{memberRoles.memberRoleId}</if>
+        </trim>
     </insert>
-
+    <!--往数据库插入一条新的数据-->
     <insert id="insert" parameterType="com.suny.association.pojo.po.Member" useGeneratedKeys="true"
             keyProperty="memberId">
         INSERT INTO member
-        <trim prefix="set" suffixOverrides=",">
-            <if test="memberId != null">member_id = #{memberId,jdbcType=BIGINT} ,</if>
-            <if test="memberName != null">member_name =#{memberName,jdbcType=VARCHAR},</if>
-            <if test="memberClassName != null">member_class_name =#{memberClassName,jdbcType=VARCHAR},</if>
-            <if test="memberSex != null">member_sex =#{memberSex,jdbcType=BOOLEAN},</if>
-            <if test="memberGradeNumber != null">member_grade_number =#{memberGradeNumber,jdbcType=INTEGER},</if>
-            <if test="memberManager != null">member_manager_id =#{memberManager,jdbcType=BIGINT},</if>
-            <if test="memberDepartment != null">
-                member_department_id=#{memberDepartment.departmentId,jdbcType=INTEGER},
-            </if>
-            <if test="memberStatus != null">member_status =#{memberStatus,jdbcType=BOOLEAN},</if>
-            <if test="memberRoles != null">member_role_id =#{memberRoles.memberRoleId,jdbcType=INTEGER}</if>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null">member_id ,</if>
+            <if test="memberName != null">member_name ,</if>
+            <if test="memberClassName != null">member_class_name ,</if>
+            <if test="memberSex != null">member_sex ,</if>
+            <if test="memberGradeNumber != null">member_grade_number ,</if>
+            <if test="memberManager.memberId != null">member_manager_id ,</if>
+            <if test="memberDepartment.departmentId != null">member_department_id ,</if>
+            <if test="memberStatus != null">member_status,</if>
+            <if test="memberRoles.memberRoleId != null">member_role_id</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null">#{memberId} ,</if>
+            <if test="memberName != null">#{memberName} ,</if>
+            <if test="memberClassName != null">#{memberClassName} ,</if>
+            <if test="memberSex != null">#{memberSex} ,</if>
+            <if test="memberGradeNumber != null">#{memberGradeNumber} ,</if>
+            <if test="memberManager.memberId != null">#{memberManager.memberId} ,</if>
+            <if test="memberDepartment.departmentId != null">#{memberDepartment.departmentId} ,</if>
+            <if test="memberStatus != null">#{memberStatus} ,</if>
+            <if test="memberRoles.memberRoleId != null">#{memberRoles.memberRoleId}</if>
         </trim>
     </insert>
-
-    <delete id="deleteById" parameterType="Integer">
+    <!--通过ID删除一条数据-->
+    <delete id="deleteById" parameterType="Long">
         DELETE FROM member
         WHERE member_id = #{id}
     </delete>
-
-    <delete id="deleteByLongId" parameterType="Long">
-        DELETE FROM member
-        WHERE member_id = #{id}
-    </delete>
-
+    <!--更新数据库中一条数据-->
     <update id="update" parameterType="com.suny.association.pojo.po.Member">
         UPDATE member
         <trim prefix="set" suffixOverrides=",">
@@ -151,15 +164,17 @@
         where member_id=#{memberId}
     </update>
 
-
+    <!--这里需要进行更改的是协会管理员角色的ID,建议设置一个基础的成员ID,基础成员ID以上可以是管理员-->
     <select id="selectFreezeManager" resultMap="BaseResultMap">
+        # 在这里member_role_id >2 的就是管理员状态
         SELECT
         <include refid="selectFields"/>
         FROM member
-        WHERE member_role_id > 3
+        WHERE member_role_id > 2
         AND
         member_status = 0
     </select>
+    <!--查询数据库中状态正常的管理员信息-->
     <select id="selectNormalManager" resultMap="BaseResultMap">
         SELECT
         <include refid="selectFields"/>
@@ -168,94 +183,111 @@
         AND
         member_status = 1
     </select>
-
+    <!--查询数据库中状态被冻结的普通成员-->
     <select id="selectFreezeMember" resultMap="BaseResultMap">
         SELECT
         <include refid="selectFields"/>
         FROM member
-        WHERE member_status = 0
+        WHERE member_role_id <![CDATA[
+        <
+        ]]> 2
+        AND member_status = 0
     </select>
-
+    <!--查询数据库中正常状态的协会普通成员-->
     <select id="selectNormalMember" resultMap="BaseResultMap">
         SELECT
         <include refid="selectFields"/>
         FROM member
-        WHERE member_status = 1
+        WHERE
+        member_role_id <![CDATA[
+        <
+        ]]>2
+        AND member_status = 1
     </select>
-
-    <select id="selectById" parameterType="Integer" resultMap="BaseResultMap">
+    <!--通过主键ID查询一个协会成员的信息-->
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
         SELECT
         <include refid="selectFields"/>
         FROM member
         WHERE member_id = #{id}
     </select>
 
-    <select id="queryByLongId" parameterType="Long" resultMap="BaseResultMap">
-        SELECT
-        <include refid="selectFields"/>
-        FROM member
-        WHERE member_id = #{id}
-    </select>
-
-    <select id="selectAllByConditions" resultMap="BaseResultMap">
-        SELECT
-        <include refid="selectFields"/>
-        FROM member
-        WHERE member_department_id =
-        ( SELECT department_id
-        FROM department
-        <if test="#{departmentname}!=null || #{ departmentname}==''">
-            WHERE department_name LIKE '%#{departmentname}%') AND
-        </if>
-        member_status =1
-        LIMIT
-        #{offset},#{limit}
-
-
-    </select>
+    <!--直接查询数据库中对应表的所有数据,谨慎使用-->
     <select id="selectAll" resultMap="BaseResultMap">
         SELECT
         <include refid="selectFields"/>
         FROM member
     </select>
 
+    <!--查询数据库表中数据的数量-->
+    <select id="selectCount" resultType="int">
+        SELECT count(member_id)
+        FROM member
+    </select>
+
+    <!-- <select id="selectAllByConditions" resultMap="BaseResultMap">
+         SELECT
+         <include refid="selectFields"/>
+         FROM member
+         WHERE member_department_id =
+         ( SELECT department_id
+         FROM department
+         <if test="#{departmentname}!=null || #{ departmentname}==''">
+             WHERE department_name LIKE '%#{departmentname}%') AND
+         </if>
+         member_status =1
+         LIMIT
+         #{offset},#{limit}
+
+
+     </select>-->
+
+    <!--通过查询条件进行查询数据,传进来的是一个封装的查询条件,里面包含一个实体类,offset,limit-->
     <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
         <include refid="selectFields"/>
         FROM member as m
         <where>
             1=1
-            <if test="departmentname!=null">
-                AND m.member_department_id = ( SELECT d.department_id FROM department as d WHERE
-                department_name like '%' #{departmentname,jdbcType=VARCHAR} '%')
+            <if test="entity.memberId != null">AND m.member_id =#{entity.memberId}</if>
+            <if test="entity.memberName != null">AND m.member_name =#{entity.memberName}</if>
+            <if test="entity.memberClassName != null">AND m.member_class_name =#{entity.memberClassName}</if>
+            <if test="entity.memberSex != null">AND m.member_sex =#{entity.memberSex}</if>
+            <if test="entity.memberGradeNumber != null">AND m.member_grade_number =#{entity.memberGradeNumber}</if>
+            <if test="entity.memberManager !=null and entity.memberManager.memberId != null">AND m.member_manager_id
+                =#{entity.memberManager.memberId}
             </if>
-            <if test="status !=null">
-                AND m.member_status =#{status}
+            <if test="entity.memberDepartment !=null and entity.memberDepartment.departmentId != null">AND
+                m.member_department_id =#{entity.memberDepartment.departmentId}
+            </if>
+            <if test="entity.memberStatus != null">AND m.member_status =#{entity.memberStatus}</if>
+            <if test="entity.memberRoles !=null and entity.memberRoles.memberRoleId != null">AND m.member_role_id
+                =#{entity.memberRoles.memberRoleId}
             </if>
         </where>
         LIMIT #{offset},#{limit}
     </select>
 
-    <select id="selectCount" resultType="int">
-        SELECT count(*)
-        FROM member;
-    </select>
-
+    <!--查过角色ID查询拥有这个角色的成员列表-->
     <select id="selectByMemberRoleId" parameterType="int" resultType="com.suny.association.pojo.po.Member">
         SELECT
-            m.member_id,
-            m.member_id
+            member_id,
+            member_id
         FROM member AS m
         WHERE m.member_role_id = #{memberRoleId}
     </select>
 
-    <select id="selectByName" resultMap="BaseResultMap" parameterType="string">
+
+    <!--这个方法可能会发生查出多个数据问题,禁止调用-->
+    <!--<select id="selectByName" resultMap="BaseResultMap" parameterType="string">
         SELECT
         <include refid="selectFields"/>
         FROM member
         WHERE member_name = #{name}
-    </select>
-    <select id="selectLimitMemberRole" resultMap="BaseResultMap">
+    </select>-->
+
+    <!--根据成员届级跟角色ID去查询冻结的管理员信息-->
+    <select id="selectFreezeMemberByParam" resultMap="BaseResultMap">
         SELECT
             m.member_id,
             m.member_role_id,
@@ -263,7 +295,7 @@
         FROM member AS m
         WHERE m.member_role_id <![CDATA[
         <=
-        ]]> #{memberRoleId} AND m.member_grade_number = #{memberGrade}
+        ]]> #{memberRoleId} AND m.member_grade_number = #{memberGrade} AND m.member_status=0
     </select>
 
 

@@ -45,6 +45,7 @@ public class Member implements Serializable {
      * 成员在部门的状态，false【0】为退会状态,true【1】为在会状态
      */
     private Boolean memberStatus;
+
     /**
      * 成员在部门里面的部门角色
      */
