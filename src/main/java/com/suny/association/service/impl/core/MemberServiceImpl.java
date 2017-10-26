@@ -34,7 +34,12 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Service
 public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implements IMemberService {
+    /**
+     * 协会名字前缀
+     */
+    private static final String ASSOCIATION_NAME_PREFIX = "rjxh";
     private static final Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
+    private static final Integer ZERO = 0;
     private final MemberMapper memberMapper;
     private final AccountMapper accountMapper;
     private final DepartmentMapper departmentMapper;
@@ -56,10 +61,32 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     @Override
     public void insert(Member member) {
         memberMapper.insertAndReturnId(member);
+        // 这里会自动填充ID
         Integer memberId = member.getMemberId();
         if (memberId != null) {
-            insertAccount(memberId);
+            Account account = generateSimpleAccount(memberId);
+            logger.info("自动生成的协会成员账号登录名为:{}", account.getAccountName());
+            accountMapper.insert(account);
+        } else {
+            logger.error("自动产生用户账号失败,产生账号失败的信息为:成员ID{},届级{},班级{},名字{}", member.getMemberId(), member.getMemberGradeNumber(), member.getMemberClassName(), member.getMemberName());
         }
+    }
+
+
+    /**
+     * 根据成员的ID自动产生一个用户账号,成员的ID用于关联用户账号跟协会成员信息
+     *
+     * @param memberId 协会成员的ID
+     */
+    private Account generateSimpleAccount(Integer memberId) {
+        Account account = new Account();
+        Member member = new Member();
+        member.setMemberId(memberId);
+        //设置账号名字
+        account.setAccountName(ASSOCIATION_NAME_PREFIX + memberId);
+        //设置对应的成员账号
+        account.setAccountMember(member);
+        return account;
     }
 
     /**
@@ -69,7 +96,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
      */
     @SystemServiceLog(description = "自动创建一条账号信息失败")
     @Transactional(rollbackFor = {Exception.class})
-    public void insertAccount(Integer memberId) {
+    public void generationAccount1(Integer memberId) {
         Account autoAccount = new Account();
         Member member = new Member();
         member.setMemberId(memberId);
@@ -79,7 +106,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
         //设置对应的管理员账号
         autoAccount.setAccountMember(member);
         accountMapper.insert(autoAccount);
-        System.out.println(autoAccount.getAccountMember().getMemberId());
+        logger.info("{}", autoAccount.getAccountMember().getMemberId());
 
     }
 
@@ -152,7 +179,8 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
         // 定义一个插入失败的列表，返回给前端
         AtomicReference<List<Member>> failList = new AtomicReference<>(new ArrayList<>());
         //   Member member;   // 定义一个成员实体变量
-        int successNum = 0;    // 成功插入的行数
+        // 成功插入的行数
+        int successNum = ZERO;
         List<String[]> memberList = ExcelUtils.parseExcel(file, fileExtension, 0, 0);// 包含成员信息跟账号信息的一个集合，原子操作
         int memberListSize = memberList.size();
         if (memberListSize > 0) {
@@ -270,13 +298,13 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
      */
     @SystemControllerLog(description = "批量插入成员信息失败")
     @Transactional(rollbackFor = Exception.class)
-    private Member insertBatch(Member member) {
+    public Member insertBatch(Member member) {
         try {
             memberMapper.insertAndReturnId(member);
             return member;
         } catch (Exception e) {
             logger.error("插入成员信息发生了异常，信息为{}", member);
-            e.printStackTrace();
+            logger.error("{}", e.getMessage());
         }
         return null;
     }
@@ -289,7 +317,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
      */
     @SystemControllerLog(description = "批量自动产生账号信息失败")
     @Transactional(rollbackFor = Exception.class)
-    private boolean insertBatch(Account account) {
+    public boolean insertBatch(Account account) {
         try {
             /* 获取插入成功的行数  */
             int successRow = accountMapper.insertAndReturnId(account);

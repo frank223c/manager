@@ -94,10 +94,10 @@
             <if test="memberClassName != null">member_class_name ,</if>
             <if test="memberSex != null">member_sex ,</if>
             <if test="memberGradeNumber != null">member_grade_number ,</if>
-            <if test="memberManager.memberId != null">member_manager_id ,</if>
-            <if test="memberDepartment.departmentId != null">member_department_id ,</if>
+            <if test="memberManager != null and memberManager.memberId != null">member_manager_id ,</if>
+            <if test="memberDepartment != null and memberDepartment.departmentId != null">member_department_id ,</if>
             <if test="memberStatus != null">member_status,</if>
-            <if test="memberRoles.memberRoleId != null">member_role_id</if>
+            <if test="memberRoles != null and memberRoles.memberRoleId != null">member_role_id</if>
         </trim>
         VALUES
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -106,10 +106,10 @@
             <if test="memberClassName != null">#{memberClassName} ,</if>
             <if test="memberSex != null">#{memberSex} ,</if>
             <if test="memberGradeNumber != null">#{memberGradeNumber} ,</if>
-            <if test="memberManager.memberId != null">#{memberManager.memberId} ,</if>
-            <if test="memberDepartment.departmentId != null">#{memberDepartment.departmentId} ,</if>
+            <if test="memberManager != null and memberManager.memberId != null">#{memberManager.memberId} ,</if>
+            <if test="memberDepartment != null and memberDepartment.departmentId != null">#{memberDepartment.departmentId} ,</if>
             <if test="memberStatus != null">#{memberStatus} ,</if>
-            <if test="memberRoles.memberRoleId != null">#{memberRoles.memberRoleId}</if>
+            <if test="memberRoles != null and memberRoles.memberRoleId != null">#{memberRoles.memberRoleId}</if>
         </trim>
     </insert>
     <!--往数据库插入一条新的数据-->
@@ -122,10 +122,10 @@
             <if test="memberClassName != null">member_class_name ,</if>
             <if test="memberSex != null">member_sex ,</if>
             <if test="memberGradeNumber != null">member_grade_number ,</if>
-            <if test="memberManager.memberId != null">member_manager_id ,</if>
-            <if test="memberDepartment.departmentId != null">member_department_id ,</if>
+            <if test="memberManager ！= null and memberManager.memberId != null">member_manager_id ,</if>
+            <if test="memberDepartment != null and memberDepartment.departmentId != null">member_department_id ,</if>
             <if test="memberStatus != null">member_status,</if>
-            <if test="memberRoles.memberRoleId != null">member_role_id</if>
+            <if test="memberRoles != null and memberRoles.memberRoleId != null">member_role_id</if>
         </trim>
         VALUES
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -134,10 +134,10 @@
             <if test="memberClassName != null">#{memberClassName} ,</if>
             <if test="memberSex != null">#{memberSex} ,</if>
             <if test="memberGradeNumber != null">#{memberGradeNumber} ,</if>
-            <if test="memberManager.memberId != null">#{memberManager.memberId} ,</if>
-            <if test="memberDepartment.departmentId != null">#{memberDepartment.departmentId} ,</if>
+            <if test="memberManager ！= null and memberManager.memberId != null">#{memberManager.memberId} ,</if>
+            <if test="memberDepartment != null and memberDepartment.departmentId != null">#{memberDepartment.departmentId} ,</if>
             <if test="memberStatus != null">#{memberStatus} ,</if>
-            <if test="memberRoles.memberRoleId != null">#{memberRoles.memberRoleId}</if>
+            <if test="memberRoles != null and memberRoles.memberRoleId != null">#{memberRoles.memberRoleId}</if>
         </trim>
     </insert>
     <!--通过ID删除一条数据-->

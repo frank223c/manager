@@ -40,9 +40,6 @@ public class PunchRecordServiceImpl extends AbstractBaseServiceImpl<PunchRecord>
         this.punchTypeMapper = punchTypeMapper;
     }
 
-    public PunchRecordServiceImpl() {
-    }
-
     /**
      * 更新考勤记录类型
      *
@@ -123,10 +120,11 @@ public class PunchRecordServiceImpl extends AbstractBaseServiceImpl<PunchRecord>
         PunchType punchType = new PunchType();
         //  定义一个需要签到的角色，假如是2的话，那么低于2的角色成员都需要被签到，包括角色为2的成员
         int limitMemberRoleId = 2;
-        if (punchTypeMapper.selectByName("缺勤") == null) {
+        PunchType absenctPunchType = punchTypeMapper.selectByName("缺勤");
+        if (absenctPunchType == null) {
             punchType.setPunchTypeId(0);
         } else {
-            punchType = punchTypeMapper.selectByName("缺勤");
+            punchType = absenctPunchType;
         }
         // 查询需要签到的成员信息
         List<Member> memberList = memberMapper.selectLimitMemberByParam(limitMemberRoleId, getPunchMemberGrade());
