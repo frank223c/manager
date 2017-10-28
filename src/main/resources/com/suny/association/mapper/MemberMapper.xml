@@ -161,55 +161,149 @@
     <select id="selectFreezeManager" resultMap="BaseResultMap">
         # 在这里member_role_id >2 的就是管理员状态
         SELECT
-        <include refid="selectFields"/>
-        FROM member
-        WHERE member_role_id > 2
-        AND
-        member_status = 0
+            m.member_id,
+            m.member_name,
+            m.member_class_name,
+            m.member_sex,
+            m.member_grade_number,
+            m.member_manager_id,
+            m.member_department_id,
+            m.member_status,
+            m.member_role_id,
+            mr.member_role_id   AS m_r_member_role_id,
+            mr.member_role_name AS m_r_member_role_name,
+            d.department_id     AS d_department_id,
+            d.department_name   AS d_department_name
+        FROM member AS m LEFT JOIN
+            member_roles mr
+                ON mr.`member_role_id` = m.`member_role_id`
+            LEFT JOIN department d
+                ON d.`department_id` = m.`member_department_id`
+        WHERE m.member_role_id > 2
+              AND
+              m.member_status = 0
     </select>
     <!--查询数据库中状态正常的管理员信息-->
     <select id="selectNormalManager" resultMap="BaseResultMap">
         SELECT
-        <include refid="selectFields"/>
-        FROM member
-        WHERE member_role_id > 2
-        AND
-        member_status = 1
+            m.member_id,
+            m.member_name,
+            m.member_class_name,
+            m.member_sex,
+            m.member_grade_number,
+            m.member_manager_id,
+            m.member_department_id,
+            m.member_status,
+            m.member_role_id,
+            mr.member_role_id   AS m_r_member_role_id,
+            mr.member_role_name AS m_r_member_role_name,
+            d.department_id     AS d_department_id,
+            d.department_name   AS d_department_name
+        FROM member AS m LEFT JOIN
+            member_roles mr
+                ON mr.`member_role_id` = m.`member_role_id`
+            LEFT JOIN department d
+                ON d.`department_id` = m.`member_department_id`
+        WHERE m.`member_role_id` > 2 AND m.`member_status` = 1
     </select>
     <!--查询数据库中状态被冻结的普通成员-->
     <select id="selectFreezeMember" resultMap="BaseResultMap">
         SELECT
-        <include refid="selectFields"/>
-        FROM member
-        WHERE member_role_id <![CDATA[
+            m.member_id,
+            m.member_name,
+            m.member_class_name,
+            m.member_sex,
+            m.member_grade_number,
+            m.member_manager_id,
+            m.member_department_id,
+            m.member_status,
+            m.member_role_id,
+            mr.member_role_id   AS m_r_member_role_id,
+            mr.member_role_name AS m_r_member_role_name,
+            d.department_id     AS d_department_id,
+            d.department_name   AS d_department_name
+        FROM member AS m LEFT JOIN
+            member_roles mr
+                ON mr.`member_role_id` = m.`member_role_id`
+            LEFT JOIN department d
+                ON d.`department_id` = m.`member_department_id`
+        WHERE m.`member_role_id` <![CDATA[
         <
         ]]> 2
-        AND member_status = 0
+              AND m.`member_status` = 0
     </select>
     <!--查询数据库中正常状态的协会普通成员-->
     <select id="selectNormalMember" resultMap="BaseResultMap">
         SELECT
-        <include refid="selectFields"/>
-        FROM member
+            m.member_id,
+            m.member_name,
+            m.member_class_name,
+            m.member_sex,
+            m.member_grade_number,
+            m.member_manager_id,
+            m.member_department_id,
+            m.member_status,
+            m.member_role_id,
+            mr.member_role_id   AS m_r_member_role_id,
+            mr.member_role_name AS m_r_member_role_name,
+            d.department_id     AS d_department_id,
+            d.department_name   AS d_department_name
+        FROM member AS m LEFT JOIN
+            member_roles mr
+                ON mr.`member_role_id` = m.`member_role_id`
+            LEFT JOIN department d
+                ON d.`department_id` = m.`member_department_id`
         WHERE
-        member_role_id <![CDATA[
+            m.`member_role_id` <![CDATA[
         <
         ]]>2
-        AND member_status = 1
+            AND m.`member_status` = 1
     </select>
     <!--通过主键ID查询一个协会成员的信息-->
     <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
         SELECT
-        <include refid="selectFields"/>
-        FROM member
+            m.member_id,
+            m.member_name,
+            m.member_class_name,
+            m.member_sex,
+            m.member_grade_number,
+            m.member_manager_id,
+            m.member_department_id,
+            m.member_status,
+            m.member_role_id,
+            mr.member_role_id   AS m_r_member_role_id,
+            mr.member_role_name AS m_r_member_role_name,
+            d.department_id     AS d_department_id,
+            d.department_name   AS d_department_name
+        FROM member AS m LEFT JOIN
+            member_roles mr
+                ON mr.`member_role_id` = m.`member_role_id`
+            LEFT JOIN department d
+                ON d.`department_id` = m.`member_department_id`
         WHERE member_id = #{id}
     </select>
 
     <!--直接查询数据库中对应表的所有数据,谨慎使用-->
     <select id="selectAll" resultMap="BaseResultMap">
         SELECT
-        <include refid="selectFields"/>
-        FROM member
+            m.member_id,
+            m.member_name,
+            m.member_class_name,
+            m.member_sex,
+            m.member_grade_number,
+            m.member_manager_id,
+            m.member_department_id,
+            m.member_status,
+            m.member_role_id,
+            mr.member_role_id   AS m_r_member_role_id,
+            mr.member_role_name AS m_r_member_role_name,
+            d.department_id     AS d_department_id,
+            d.department_name   AS d_department_name
+        FROM member AS m LEFT JOIN
+            member_roles mr
+                ON mr.`member_role_id` = m.`member_role_id`
+            LEFT JOIN department d
+                ON d.`department_id` = m.`member_department_id`
     </select>
 
     <!--查询数据库表中数据的数量-->
@@ -218,29 +312,10 @@
         FROM member
     </select>
 
-    <!-- <select id="selectAllByConditions" resultMap="BaseResultMap">
-         SELECT
-         <include refid="selectFields"/>
-         FROM member
-         WHERE member_department_id =
-         ( SELECT department_id
-         FROM department
-         <if test="#{departmentname}!=null || #{ departmentname}==''">
-             WHERE department_name LIKE '%#{departmentname}%') AND
-         </if>
-         member_status =1
-         LIMIT
-         #{offset},#{limit}
-
-
-     </select>-->
-
 
     <!--查过角色ID查询拥有这个角色的成员列表-->
     <select id="selectByMemberRoleId" parameterType="int" resultType="com.suny.association.pojo.po.Member">
-        SELECT
-            member_id,
-            member_id
+        SELECT member_id
         FROM member AS m
         WHERE m.member_role_id = #{memberRoleId}
     </select>
@@ -265,12 +340,6 @@
         <=
         ]]> #{limitMemberRoleId} AND m.member_grade_number = #{memberGrade} AND m.member_status = 1
     </select>
-
-
-    <sql id="selectFields">
-        m.member_id, m.member_name, m.member_class_name, m.member_sex, m.member_grade_number, m.member_manager_id, m.member_department_id,
-        m.member_status, m.member_role_id
-    </sql>
 
 
 </mapper>
