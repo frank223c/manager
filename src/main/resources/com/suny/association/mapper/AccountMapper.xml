@@ -217,10 +217,8 @@
         SELECT count(*)
         FROM account;
     </select>
-    <select id="selectMemberReference" resultType="com.suny.association.pojo.po.Account">
-        SELECT *
-        FROM account
-        WHERE account_member_id = #{memberId}
+    <select id="selectMemberReference" parameterType="integer" resultType="com.suny.association.pojo.po.Account">
+        SELECT a.`account_id`,a.`account_name`,a.`account_phone`,(SELECT m.`member_name`  FROM member  m WHERE m.`member_id`=a.`account_member_id`) `account_member_id` FROM account  a WHERE a.`account_id`=#{memberId}
     </select>
 
 </mapper>

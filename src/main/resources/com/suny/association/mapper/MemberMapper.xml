@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suny.association.mapper.MemberMapper">
+    <!--这里可以使用嵌套查询跟嵌套结果两种方式进行查询，
+       嵌套结果：使用嵌套结果映射来处理重复的联合结果的子集，封装联表查询的数据(去除重复的数据)-->
     <resultMap id="BaseResultMap" type="com.suny.association.pojo.po.Member">
         <id property="memberId" column="member_id"/>
         <result property="memberName" column="member_name"/>
@@ -10,79 +12,66 @@
         <result property="memberStatus" column="member_status"/>
         <!--部门复杂类型关联-->
         <association property="memberDepartment" column="member_department_id"
-                     javaType="com.suny.association.pojo.po.Department"
-                     select="getDepartment"/>
-        <!--成员角色复杂类型关联-->
-        <association property="memberRoles" column="member_role_id"
-                     javaType="com.suny.association.pojo.po.MemberRoles"
-                     select="getMemberRole"/>
-        <!--//这里有问题-->
+                     javaType="com.suny.association.pojo.po.Department">
+            <id property="departmentId" column="d_department_id"/>
+            <result property="departmentName" column="d_department_name"/>
+        </association>
+        <!--角色复杂类型关联-->
+        <association property="memberRoles" column="member_role" javaType="com.suny.association.pojo.po.MemberRoles">
+            <id property="memberRoleId" column="m_r_member_role_id"/>
+            <result property="memberRoleName" column="m_r_member_role_name"/>
+        </association>
+        <!--//这里有问题,这里会引起StackOverFlow的问题,因为管理员也有管理员,所以无限递归-->
         <!--协会成员对应的管理员复杂类型集合-->
-        <association property="memberManager" column="member_manager_id"
-                     javaType="com.suny.association.pojo.po.Member"
-                     select="getMemberManage"/>
+        <!-- <association property="memberManager" column="member_manager_id"
+                      javaType="com.suny.association.pojo.po.Member"
+                      resultMap="BaseResultMap"/>-->
     </resultMap>
 
-    <!--成员管理员-->
-    <resultMap id="memberManagerResult" type="com.suny.association.pojo.po.Member">
-        <id property="memberId" column="member_id"/>
-        <result property="memberName" column="member_name"/>
-        <result property="memberClassName" column="member_class_name"/>
-        <result property="memberSex" column="member_sex"/>
-        <result property="memberGradeNumber" column="member_grade_number"/>
-        <result property="memberStatus" column="member_status"/>
-        <!--部门复杂类型关联-->
-        <association property="memberDepartment" column="member_department_id"
-                     javaType="com.suny.association.pojo.po.Department"
-                     select="getDepartment"/>
-        <!--成员角色复杂类型关联-->
-        <association property="memberRoles" column="member_role_id" javaType="com.suny.association.pojo.po.MemberRoles"
-                     select="getMemberRole"/>
-
-        <!--协会成员对应的管理员复杂类型集合-->
-        <association property="memberManager" column="member_manager_id" javaType="com.suny.association.pojo.po.Member"
-                     select="getMemberManage"/>
-    </resultMap>
-
-    <!--成员角色-->
-    <resultMap id="memberRolesResult" type="com.suny.association.pojo.po.MemberRoles">
-        <id property="memberRoleId" column="member_role_id"/>
-        <result property="memberRoleName" column="member_role_name"/>
-    </resultMap>
-
-    <!--部门-->
-    <resultMap id="memberDepartmentResult" type="com.suny.association.pojo.po.Department">
-        <id column="department_id" property="departmentId"/>
-        <result column="department_name" property="departmentName"/>
-    </resultMap>
-
-    <!--查询管理员信息-->
-    <select id="getMemberManage" resultMap="memberManagerResult">
-        SELECT
-        <include refid="selectFields"/>
-        FROM member
-        WHERE member_manager_id = #{ memberManager }
-    </select>
-
-    <!--查询部门-->
-    <select id="getDepartment" parameterType="int" resultMap="memberDepartmentResult">
-        SELECT
-            department_id,
-            department_name
-        FROM department
-        WHERE department_id = #{memberDepartment}
-    </select>
-
-    <!--获得成员角色-->
-    <select id="getMemberRole" parameterType="int" resultMap="memberRolesResult">
-        SELECT
-            member_role_id,
-            member_role_name
-        FROM member_roles
-        WHERE member_role_id = #{memberRoles}
-    </select>
 
     <!--==================================MemberMapper类里面的方法从这里开始=============================-->
+
+    <!--通过查询条件进行查询数据,传进来的是一个封装的查询条件,里面包含一个实体类,offset,limit-->
+    <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
+        SELECT
+        m.member_id,
+        m.member_name,
+        m.member_class_name,
+        m.member_sex,
+        m.member_grade_number,
+        m.member_manager_id,
+        m.member_department_id,
+        m.member_status,
+        m.member_role_id,
+        mr.member_role_id AS m_r_member_role_id,
+        mr.member_role_name AS m_r_member_role_name,
+        d.department_id AS d_department_id,
+        d.department_name AS d_department_name
+        FROM member AS m LEFT JOIN
+        member_roles mr
+        ON mr.`member_role_id` = m.`member_role_id`
+        LEFT JOIN department d
+        ON d.`department_id` = m.`member_department_id`
+        <where>
+            1=1
+            <if test="entity.memberId != null">AND m.member_id =#{entity.memberId}</if>
+            <if test="entity.memberName != null">AND m.member_name =#{entity.memberName}</if>
+            <if test="entity.memberClassName != null">AND m.member_class_name =#{entity.memberClassName}</if>
+            <if test="entity.memberSex != null">AND m.member_sex =#{entity.memberSex}</if>
+            <if test="entity.memberGradeNumber != null">AND m.member_grade_number =#{entity.memberGradeNumber}</if>
+            <if test="entity.memberManager !=null and entity.memberManager.memberId != null">AND m.member_manager_id
+                =#{entity.memberManager.memberId}
+            </if>
+            <if test="entity.memberDepartment !=null and entity.memberDepartment.departmentId != null">AND
+                m.member_department_id =#{entity.memberDepartment.departmentId}
+            </if>
+            <if test="entity.memberStatus != null">AND m.member_status =#{entity.memberStatus}</if>
+            <if test="entity.memberRoles !=null and entity.memberRoles.memberRoleId != null">AND m.member_role_id
+                =#{entity.memberRoles.memberRoleId}
+            </if>
+        </where>
+        LIMIT #{offset},#{limit}
+    </select>
 
     <!--插入一条数据并返回自动生成的主键ID-->
     <insert id="insertAndReturnId" parameterType="com.suny.association.pojo.po.Member" useGeneratedKeys="true"
@@ -107,7 +96,9 @@
             <if test="memberSex != null">#{memberSex} ,</if>
             <if test="memberGradeNumber != null">#{memberGradeNumber} ,</if>
             <if test="memberManager != null and memberManager.memberId != null">#{memberManager.memberId} ,</if>
-            <if test="memberDepartment != null and memberDepartment.departmentId != null">#{memberDepartment.departmentId} ,</if>
+            <if test="memberDepartment != null and memberDepartment.departmentId != null">
+                #{memberDepartment.departmentId} ,
+            </if>
             <if test="memberStatus != null">#{memberStatus} ,</if>
             <if test="memberRoles != null and memberRoles.memberRoleId != null">#{memberRoles.memberRoleId}</if>
         </trim>
@@ -135,7 +126,9 @@
             <if test="memberSex != null">#{memberSex} ,</if>
             <if test="memberGradeNumber != null">#{memberGradeNumber} ,</if>
             <if test="memberManager ！= null and memberManager.memberId != null">#{memberManager.memberId} ,</if>
-            <if test="memberDepartment != null and memberDepartment.departmentId != null">#{memberDepartment.departmentId} ,</if>
+            <if test="memberDepartment != null and memberDepartment.departmentId != null">
+                #{memberDepartment.departmentId} ,
+            </if>
             <if test="memberStatus != null">#{memberStatus} ,</if>
             <if test="memberRoles != null and memberRoles.memberRoleId != null">#{memberRoles.memberRoleId}</if>
         </trim>
@@ -242,31 +235,6 @@
 
      </select>-->
 
-    <!--通过查询条件进行查询数据,传进来的是一个封装的查询条件,里面包含一个实体类,offset,limit-->
-    <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
-        SELECT
-        <include refid="selectFields"/>
-        FROM member as m
-        <where>
-            1=1
-            <if test="entity.memberId != null">AND m.member_id =#{entity.memberId}</if>
-            <if test="entity.memberName != null">AND m.member_name =#{entity.memberName}</if>
-            <if test="entity.memberClassName != null">AND m.member_class_name =#{entity.memberClassName}</if>
-            <if test="entity.memberSex != null">AND m.member_sex =#{entity.memberSex}</if>
-            <if test="entity.memberGradeNumber != null">AND m.member_grade_number =#{entity.memberGradeNumber}</if>
-            <if test="entity.memberManager !=null and entity.memberManager.memberId != null">AND m.member_manager_id
-                =#{entity.memberManager.memberId}
-            </if>
-            <if test="entity.memberDepartment !=null and entity.memberDepartment.departmentId != null">AND
-                m.member_department_id =#{entity.memberDepartment.departmentId}
-            </if>
-            <if test="entity.memberStatus != null">AND m.member_status =#{entity.memberStatus}</if>
-            <if test="entity.memberRoles !=null and entity.memberRoles.memberRoleId != null">AND m.member_role_id
-                =#{entity.memberRoles.memberRoleId}
-            </if>
-        </where>
-        LIMIT #{offset},#{limit}
-    </select>
 
     <!--查过角色ID查询拥有这个角色的成员列表-->
     <select id="selectByMemberRoleId" parameterType="int" resultType="com.suny.association.pojo.po.Member">
@@ -300,8 +268,8 @@
 
 
     <sql id="selectFields">
-        member_id, member_name, member_class_name, member_sex, member_grade_number, member_manager_id, member_department_id,
-        member_status, member_role_id
+        m.member_id, m.member_name, m.member_class_name, m.member_sex, m.member_grade_number, m.member_manager_id, m.member_department_id,
+        m.member_status, m.member_role_id
     </sql>
 
 

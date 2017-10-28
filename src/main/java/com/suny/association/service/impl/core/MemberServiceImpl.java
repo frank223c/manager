@@ -89,32 +89,17 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
         return account;
     }
 
-    /**
-     * 在插入一条成员信息后自动创建一个简单的账号
-     *
-     * @param memberId 成员id
-     */
-    @SystemServiceLog(description = "自动创建一条账号信息失败")
-    @Transactional(rollbackFor = {Exception.class})
-    public void generationAccount1(Integer memberId) {
-        Account autoAccount = new Account();
-        Member member = new Member();
-        member.setMemberId(memberId);
-        String memberIdString = String.valueOf(memberId);
-        //设置账号名字
-        autoAccount.setAccountName(memberIdString);
-        //设置对应的管理员账号
-        autoAccount.setAccountMember(member);
-        accountMapper.insert(autoAccount);
-        logger.info("{}", autoAccount.getAccountMember().getMemberId());
 
-    }
 
     /*  通过社团成员id查询是否被用户账号存在引用    */
     @Override
     public Member selectMemberReference(int memberId) {
         Account account = accountMapper.selectMemberReference(memberId);
-        return memberMapper.selectById(account.getAccountMember().getMemberId());
+        logger.info(account.toString());
+        logger.info("获取到的Account账号ID为{},登录名为{}",account.getAccountId(),account.getAccountName());
+        Member member = memberMapper.selectById(account.getAccountMember().getMemberId());
+        logger.info(member.toString());
+        return member;
     }
 
     /*  查询成员表里面的总记录数    */

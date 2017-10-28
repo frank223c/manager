@@ -4,6 +4,8 @@ import com.suny.association.pojo.po.Member;
 import com.suny.association.service.interfaces.core.IMemberService;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -14,6 +16,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  *  @version 1.0
  **************************************/
 public class MemberServiceImplTest {
+    private static Logger logger = LoggerFactory.getLogger(MemberServiceImplTest.class);
     private IMemberService memberServiceImpl;
 
     @Before
@@ -26,9 +29,16 @@ public class MemberServiceImplTest {
     public void insert() throws Exception {
         Member member = new Member();
         member.setMemberName("测试成员姓名");
+        member.setMemberId(10000);
         member.setMemberGradeNumber(2017);
         member.setMemberClassName("测试班级");
         memberServiceImpl.insert(member);
+    }
+
+    @Test
+    public void selectMemberReference() throws Exception {
+        Member member = memberServiceImpl.selectMemberReference(1);
+        logger.info(member.toString());
     }
 
 

@@ -201,8 +201,9 @@ public class Member implements Serializable {
                 ", 性别=" + memberSex +
                 ", 届级=" + memberGradeNumber +
                 ", 部门=" + memberDepartment +
+                ", 部长=" + memberManager +
                 ", 状态=" + memberStatus +
-                ", 角色=" + memberRoles +
+                ", 角色=" + memberRoles.toString() +
                 '}';
     }
 }

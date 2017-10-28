@@ -15,26 +15,11 @@ public class ConditionMap<T> {
     /**
      * 查询数据库中的起始位置,默认是从0开始查询
      */
-    private int offset=0;
+    private int offset = 0;
     /**
      * 限制查询数据库中的数据的数量,默认是一次只查询10条
      */
-    private int limit=10;
-
-    private ConditionMap() {
-    }
-
-    public void setEntity(T entity) {
-        this.entity = entity;
-    }
-
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
+    private int limit = 10;
 
     public ConditionMap(T entity, int offset, int limit) {
         this.entity = entity;

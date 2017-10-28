@@ -32,4 +32,12 @@ public class MemberRoles {
     public void setMemberRoleName(String memberRoleName) {
         this.memberRoleName = memberRoleName == null ? null : memberRoleName.trim();
     }
+
+    @Override
+    public String toString() {
+        return "MemberRoles{" +
+                "memberRoleId=" + memberRoleId +
+                ", memberRoleName='" + memberRoleName + '\'' +
+                '}';
+    }
 }
