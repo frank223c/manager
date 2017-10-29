@@ -129,12 +129,12 @@ public class MemberController extends BaseController {
             return JsonResult.failResult(BaseEnum.FILE_EXTENSION_WARN);
         }
         /* 查看成功插入的行数  */
-        AtomicReference<List<Member>> listAtomicReference = memberService.insertBatchFormFile(file, fileExtension);
-        int size = listAtomicReference.get().size();
+        Map<String,List<Member>> listAtomicReference = memberService.insertBatchFormFile(file, fileExtension);
+        int size = listAtomicReference.size();
         if (size == 0) {
             return successResult(BaseEnum.ADD_SUCCESS_ALL);
         } else {
-            return JsonResult.successResultAndData(BaseEnum.ADD_SUCCESS_PART_OF, listAtomicReference.get());
+            return JsonResult.successResultAndData(BaseEnum.ADD_SUCCESS_PART_OF, listAtomicReference);
         }
     }
 

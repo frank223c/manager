@@ -21,6 +21,7 @@ public interface MemberMapper extends IMapper<Member> {
      * 批量往数据库中插入记录,切记符合参数插入,否则报错
      *
      * @param memberList 协会成员信息列表
+     * @return 协会成员信息列表
      */
     int insertBatch(List<Member> memberList);
 

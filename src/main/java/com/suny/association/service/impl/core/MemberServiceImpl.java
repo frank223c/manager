@@ -2,8 +2,6 @@ package com.suny.association.service.impl.core;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.annotation.SystemServiceLog;
-import com.suny.association.enums.BaseEnum;
-import com.suny.association.exception.BusinessException;
 import com.suny.association.exception.ExcelInfoFormatWrongException;
 import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.DepartmentMapper;
@@ -22,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Comments:  成员逻辑层类
@@ -39,7 +35,6 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
      */
     private static final String ASSOCIATION_NAME_PREFIX = "rjxh";
     private static final Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
-    private static final Integer ZERO = 0;
     private final MemberMapper memberMapper;
     private final AccountMapper accountMapper;
     private final DepartmentMapper departmentMapper;
@@ -195,7 +190,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, List<Member>> insertBatchFormFile(File file, String fileExtension) {
-        List<String[]> arrayMemberList = ExcelUtils.parseExcel(file, fileExtension, 0, 0);// 包含成员信息跟账号信息的一个集合，原子操作
+        List<String[]> arrayMemberList = ExcelUtils.parseExcel(file, fileExtension, 0, 0);
         List<Member> processMemberList = processArrayToMember(arrayMemberList);
         List<Member> repetitionMemberList = Collections.synchronizedList(new ArrayList<>(16));
         //  根据填入的成员信息查询数据库中是否有相同的对象
@@ -214,7 +209,6 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
         List<Account> batchSimpleAccount = generateBatchSimpleAccount(successMemberList);
         int successNum = accountMapper.insertBatchSimpleAccount(batchSimpleAccount);
         logger.warn("插入成功的行数为{}", successNum);
-
         // 反馈给前端
         Map<String, List<Member>> resultMap = new HashMap<>(30);
         resultMap.put("processMemberList", processMemberList);
@@ -222,6 +216,12 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
         return resultMap;
     }
 
+    /**
+     * 判断数据库中是否有相相同的协会成员数据
+     *
+     * @param pendingMember 待处理的协会成员信息
+     * @return 有相等的就返回true, 没有就返回false
+     */
     @Override
     public Boolean selectEqualsMember(Member pendingMember) {
         ConditionMap<Member> conditionMap = new ConditionMap<>(pendingMember, 0, 10);
@@ -275,6 +275,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
      */
     @SystemControllerLog(description = "批量插入成员信息失败")
     @Transactional(rollbackFor = Exception.class)
+    @Override
     public List<Member> insertBatch(List<Member> memberList) {
         int i = memberMapper.insertBatch(memberList);
         logger.info("成功插入的数量为:{}", i);

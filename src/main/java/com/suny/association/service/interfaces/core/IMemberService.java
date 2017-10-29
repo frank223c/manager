@@ -1,7 +1,9 @@
 package com.suny.association.service.interfaces.core;
 
+import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.pojo.po.Member;
 import com.suny.association.service.IBaseService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.util.List;
@@ -80,4 +82,8 @@ public interface IMemberService extends IBaseService<Member> {
 
 
     Boolean selectEqualsMember(Member pendingMember);
+
+    @SystemControllerLog(description = "批量插入成员信息失败")
+    @Transactional(rollbackFor = Exception.class)
+    List<Member> insertBatch(List<Member> memberList);
 }

@@ -3,6 +3,7 @@ package com.suny.association.service.impl.core;
 import com.suny.association.pojo.po.Department;
 import com.suny.association.pojo.po.Member;
 import com.suny.association.pojo.po.MemberRoles;
+import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.core.IMemberService;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**************************************
@@ -138,28 +140,58 @@ public class MemberServiceImplTest {
 
     @Test
     public void insertBatch() throws Exception {
+        Member member = new Member();
+        member.setMemberClassName("测试班级");
+        member.setMemberName("测试名字");
+        member.setMemberSex(false);
+        member.setMemberDepartment(new Department(1, "办公室"));
+        member.setMemberGradeNumber(2017);
 
-    }
+        Member member2 = new Member();
+        member2.setMemberClassName("测试班级");
+        member2.setMemberName("测试名字");
+        member2.setMemberSex(false);
+        member2.setMemberDepartment(new Department(1, "办公室"));
+        member2.setMemberGradeNumber(2017);
 
-    @Test
-    public void insertBatch1() throws Exception {
+        List<Member> memberList = new ArrayList<>();
+        memberList.add(member);
+        memberList.add(member2);
+        memberServiceImpl.insertBatch(memberList);
+
     }
 
 
     @Test
     public void selectById() throws Exception {
+        Member member = memberServiceImpl.selectById(10000);
+        logger.info(member.toString());
     }
 
     @Test
     public void selectByName() throws Exception {
+        Member member = memberServiceImpl.selectByName("孙建荣");
+        logger.info(member.toString());
     }
 
     @Test
     public void selectAll() throws Exception {
+        List<Member> memberList = memberServiceImpl.selectAll();
+        for (Member member : memberList) {
+            logger.info(member.toString());
+        }
     }
 
     @Test
     public void selectByParam() throws Exception {
+        Member coditionMember = new Member();
+        coditionMember.setMemberName("孙建荣");
+        ConditionMap<Member> conditionMap = new ConditionMap<>(coditionMember, 0, 10);
+        List<Member> memberList = memberServiceImpl.selectByParam(conditionMap);
+        for (Member member : memberList) {
+            logger.info(member.toString());
+        }
+
     }
 
 }

@@ -300,7 +300,29 @@
                 ON d.`department_id` = m.`member_department_id`
         WHERE member_id = #{id}
     </select>
-
+    <!--通过成员的名字去查询-->
+    <select id="selectByName" parameterType="String" resultMap="BaseResultMap">
+        SELECT
+            m.member_id,
+            m.member_name,
+            m.member_class_name,
+            m.member_sex,
+            m.member_grade_number,
+            m.member_manager_id,
+            m.member_department_id,
+            m.member_status,
+            m.member_role_id,
+            mr.member_role_id   AS m_r_member_role_id,
+            mr.member_role_name AS m_r_member_role_name,
+            d.department_id     AS d_department_id,
+            d.department_name   AS d_department_name
+        FROM member AS m LEFT JOIN
+            member_roles mr
+                ON mr.`member_role_id` = m.`member_role_id`
+            LEFT JOIN department d
+                ON d.`department_id` = m.`member_department_id`
+        WHERE member_name = #{name}
+    </select>
     <!--直接查询数据库中对应表的所有数据,谨慎使用-->
     <select id="selectAll" resultMap="BaseResultMap">
         SELECT

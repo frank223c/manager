@@ -26,11 +26,11 @@ public class ExcelUtils {
     /**
      * Excel表格2003版本之前的文件的后缀名
      */
-    private static final String EXCEL_FILE_BEFORE_2003_EXTENSION ="xls";
+    private static final String EXCEL_FILE_BEFORE_2003_EXTENSION = "xls";
     /**
      * Excel表格2007版本之后的文件的后缀名
      */
-    private static final String EXCEL_FILE_AFTER_2007_EXTENSION ="xlsx";
+    private static final String EXCEL_FILE_AFTER_2007_EXTENSION = "xlsx";
     /**
      * 文件魔数,Excel表格2003版本以前的魔术值
      */
@@ -42,7 +42,10 @@ public class ExcelUtils {
     /**
      * 定义在Excel表格中超过多少位的值,在Java中就不能使用Integer类型进行运行了
      */
-    private static final Integer LONG_NUMBER_LENGTH=11;
+    private static final Integer LONG_NUMBER_LENGTH = 11;
+
+    private ExcelUtils() {
+    }
 
     /**
      * 根据传入的Excel文件解析出数据,然后返回一个有序的List对象，根据POI的解析规则,一步步把解析出来的数据放到数组里去.
