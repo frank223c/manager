@@ -90,16 +90,21 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     }
 
 
-
     /*  通过社团成员id查询是否被用户账号存在引用    */
     @Override
     public Member selectMemberReference(int memberId) {
         Account account = accountMapper.selectMemberReference(memberId);
-        logger.info(account.toString());
-        logger.info("获取到的Account账号ID为{},登录名为{}",account.getAccountId(),account.getAccountName());
-        Member member = memberMapper.selectById(account.getAccountMember().getMemberId());
-        logger.info(member.toString());
-        return member;
+        if (account == null) {
+            logger.warn("成员ID{}没有绑定用户账号,请立即绑定!", memberId);
+            return null;
+        }
+        Member member = account.getAccountMember();
+        if (member != null) {
+            logger.info("获取到的Account账号ID:{},登录名:{},对应的成员ID:{},届级:{},班级:{},姓名:{}", account.getAccountId(), account.getAccountName(), member.getMemberId(), member.getMemberGradeNumber(), member.getMemberClassName(), member.getMemberName());
+            return account.getAccountMember();
+        }
+        logger.warn("成员ID{}没有绑定用户账号,请立即绑定!", memberId);
+        return null;
     }
 
     /*  查询成员表里面的总记录数    */

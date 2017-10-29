@@ -37,8 +37,7 @@ public class MemberServiceImplTest {
 
     @Test
     public void selectMemberReference() throws Exception {
-        Member member = memberServiceImpl.selectMemberReference(1);
-        logger.info(member.toString());
+        memberServiceImpl.selectMemberReference(1);
     }
 
 

@@ -7,11 +7,18 @@ import org.apache.ibatis.annotations.Param;
 
 /**
  * Comments:  账号表mapper接口映射
+ *
  * @author :   孙建荣
- * Create Date: 2017/03/05 23:05
+ *         Create Date: 2017/03/05 23:05
  */
 public interface AccountMapper extends IMapper<Account> {
 
+    /**
+     * 根据传入协会成员的ID查询该成员是否绑定一个用户账号
+     *
+     * @param memberId 协会成员的ID
+     * @return 绑定的用户账号信息
+     */
     Account selectMemberReference(int memberId);
 
     Account queryByPhone(Long phoneNumber);
