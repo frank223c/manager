@@ -5,6 +5,8 @@ import com.suny.association.pojo.po.Account;
 import com.suny.association.pojo.po.Member;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * Comments:  账号表mapper接口映射
  *
@@ -12,6 +14,14 @@ import org.apache.ibatis.annotations.Param;
  *         Create Date: 2017/03/05 23:05
  */
 public interface AccountMapper extends IMapper<Account> {
+
+    /**
+     * 批量插入简单的账号,仅限于Excel文件上传的
+     *
+     * @param accountList 批量账号列表
+     * @return 成功插入的行数
+     */
+    int insertBatchSimpleAccount(List<Account> accountList);
 
     /**
      * 根据传入协会成员的ID查询该成员是否绑定一个用户账号

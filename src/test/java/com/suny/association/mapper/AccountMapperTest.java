@@ -1,12 +1,16 @@
 package com.suny.association.mapper;
 
 import com.suny.association.pojo.po.Account;
+import com.suny.association.pojo.po.Member;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -23,13 +27,36 @@ public class AccountMapperTest {
     @Before
     public void setUp() {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath*:Spring/applicationContext.xml");
-         accountMapper = (AccountMapper) applicationContext.getBean("accountMapper");
+        accountMapper = (AccountMapper) applicationContext.getBean("accountMapper");
     }
 
     @Test
     public void selectMemberReference() throws Exception {
         Account account = accountMapper.selectMemberReference(1);
         logger.info(account.toString());
+    }
+
+    @Test
+    public void insertBatchSimpleAccount() {
+
+        List<Account> accountList = new ArrayList<>();
+
+        Account account = new Account();
+        account.setAccountName("testBatch");
+        Member member = new Member();
+        member.setMemberId(10419);
+        account.setAccountMember(member);
+
+        Account account2 = new Account();
+        account2.setAccountName("testBatch");
+        Member member2 = new Member();
+        member2.setMemberId(10420);
+        account2.setAccountMember(member);
+
+        accountList.add(account);
+        accountList.add(account2);
+        int i = accountMapper.insertBatchSimpleAccount(accountList);
+        logger.info("{}", i);
     }
 
     @Test

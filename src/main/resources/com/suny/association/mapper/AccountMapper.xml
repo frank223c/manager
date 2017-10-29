@@ -152,6 +152,21 @@
             <if test="accountRoles != null">#{accountRoles.roleId,jdbcType=INTEGER},</if>
         </trim>
     </insert>
+    <!--批量插入简单的账号,仅限于Excel文件上传的-->
+    <insert id="insertBatchSimpleAccount" parameterType="java.util.List" keyProperty="accountId"
+            useGeneratedKeys="true">
+        INSERT INTO account(
+        account_name ,
+        account_member_id
+        )
+        VALUES
+        <foreach collection="list" item="account" separator="," index="index">
+            <trim prefix="(" suffix=")">
+                #{account.accountName},
+                #{account.accountMember.memberId}
+            </trim>
+        </foreach>
+    </insert>
 
     <update id="update" parameterType="com.suny.association.pojo.po.Account">
         UPDATE account

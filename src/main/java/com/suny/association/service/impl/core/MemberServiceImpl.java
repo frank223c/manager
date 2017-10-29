@@ -194,18 +194,15 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
     @SystemControllerLog(description = "批量插入成员信息失败")
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public AtomicReference<List<Member>> insertBatchFormFile(File file, String fileExtension) {
-        // 定义一个插入失败的列表，返回给前端
-        // 成功插入的行数
-        int successNum = ZERO;
+    public Map<String, List<Member>> insertBatchFormFile(File file, String fileExtension) {
         List<String[]> arrayMemberList = ExcelUtils.parseExcel(file, fileExtension, 0, 0);// 包含成员信息跟账号信息的一个集合，原子操作
         List<Member> processMemberList = processArrayToMember(arrayMemberList);
-        AtomicReference<List<Member>> repetitionMemberList = new AtomicReference<>(new ArrayList<>(16));
+        List<Member> repetitionMemberList = Collections.synchronizedList(new ArrayList<>(16));
         //  根据填入的成员信息查询数据库中是否有相同的对象
         for (Member pendingMember : processMemberList) {
             if (selectEqualsMember(pendingMember)) {
                 logger.error("数据库中存在这个成员,成员名字:【{}】,班级【{}】,年级【{}】", pendingMember.getMemberName(), pendingMember.getMemberClassName(), pendingMember.getMemberGradeNumber());
-                repetitionMemberList.get().add(pendingMember);
+                repetitionMemberList.add(pendingMember);
             } else {
                 // 到达这里就说明数据正常并且在数据库红没有重复
                 processMemberList.add(pendingMember);
@@ -215,7 +212,14 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
         List<Member> successMemberList = insertBatch(processMemberList);
         logger.info("成功插入成员信息的的行数为:{}，失败的行数为{}", successMemberList.size());
         List<Account> batchSimpleAccount = generateBatchSimpleAccount(successMemberList);
-        return null;
+        int successNum = accountMapper.insertBatchSimpleAccount(batchSimpleAccount);
+        logger.warn("插入成功的行数为{}", successNum);
+
+        // 反馈给前端
+        Map<String, List<Member>> resultMap = new HashMap<>(30);
+        resultMap.put("processMemberList", processMemberList);
+        resultMap.put("processMemberList", processMemberList);
+        return resultMap;
     }
 
     @Override
@@ -271,7 +275,7 @@ public class MemberServiceImpl extends AbstractBaseServiceImpl<Member> implement
      */
     @SystemControllerLog(description = "批量插入成员信息失败")
     @Transactional(rollbackFor = Exception.class)
-    private List<Member> insertBatch(List<Member> memberList) {
+    public List<Member> insertBatch(List<Member> memberList) {
         int i = memberMapper.insertBatch(memberList);
         logger.info("成功插入的数量为:{}", i);
         return memberList;

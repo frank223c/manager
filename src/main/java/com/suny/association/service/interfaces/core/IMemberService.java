@@ -5,6 +5,7 @@ import com.suny.association.service.IBaseService;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -75,7 +76,7 @@ public interface IMemberService extends IBaseService<Member> {
      * @param fileExtension 文件扩展名
      * @return 读取出来的协会成员信息
      */
-    AtomicReference<List<Member>> insertBatchFormFile(File file, String fileExtension);
+    Map<String,List<Member>> insertBatchFormFile(File file, String fileExtension);
 
 
     Boolean selectEqualsMember(Member pendingMember);
