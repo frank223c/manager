@@ -29,7 +29,7 @@ public interface IMemberService extends IBaseService<Member> {
      * @param member 协会成员信息
      * @return 自动产生的主键ID
      */
-    int insertReturnCount(Member member);
+    int insertAndReturnId(Member member);
 
     /**
      * 查询冻结的协会管理员信息
@@ -78,4 +78,5 @@ public interface IMemberService extends IBaseService<Member> {
     AtomicReference<List<Member>> insertBatchFormFile(File file, String fileExtension);
 
 
+    Boolean selectEqualsMember(Member pendingMember);
 }

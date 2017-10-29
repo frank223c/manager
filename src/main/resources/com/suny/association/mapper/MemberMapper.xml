@@ -133,6 +133,24 @@
             <if test="memberRoles != null and memberRoles.memberRoleId != null">#{memberRoles.memberRoleId}</if>
         </trim>
     </insert>
+    <!--批量自动插入信息,切勿插入空的信息,否则报错-->
+    <insert id="insertBatch" parameterType="java.util.List" keyProperty="memberId" useGeneratedKeys="true">
+        INSERT INTO member(
+        member_name, member_class_name, member_sex, member_grade_number, member_department_id
+        )
+        VALUES
+        <foreach collection="list" index="index" separator="," item="member">
+            <trim prefix="(" suffix=")">
+                #{member.memberName} ,
+                #{member.memberClassName} ,
+                #{member.memberSex} ,
+                #{member.memberGradeNumber} ,
+                #{member.memberDepartment.departmentId}
+            </trim>
+        </foreach>
+    </insert>
+
+
     <!--通过ID删除一条数据-->
     <delete id="deleteById" parameterType="Long">
         DELETE FROM member
@@ -314,9 +332,26 @@
 
 
     <!--查过角色ID查询拥有这个角色的成员列表-->
-    <select id="selectByMemberRoleId" parameterType="int" resultType="com.suny.association.pojo.po.Member">
-        SELECT member_id
-        FROM member AS m
+    <select id="selectByMemberRoleId" parameterType="int" resultMap="BaseResultMap">
+        SELECT
+            m.member_id,
+            m.member_name,
+            m.member_class_name,
+            m.member_sex,
+            m.member_grade_number,
+            m.member_manager_id,
+            m.member_department_id,
+            m.member_status,
+            m.member_role_id,
+            mr.member_role_id   AS m_r_member_role_id,
+            mr.member_role_name AS m_r_member_role_name,
+            d.department_id     AS d_department_id,
+            d.department_name   AS d_department_name
+        FROM member AS m LEFT JOIN
+            member_roles mr
+                ON mr.`member_role_id` = m.`member_role_id`
+            LEFT JOIN department d
+                ON d.`department_id` = m.`member_department_id`
         WHERE m.member_role_id = #{memberRoleId}
     </select>
 

@@ -13,6 +13,12 @@ public class Member implements Serializable {
 
     private static final long serialVersionUID = -43708088833959784L;
     /**
+     * 成员在社团里面对应的一个管理人员信息
+     */
+    @JsonIgnore
+    private Member memberManager;
+
+    /**
      * 社团成员的ID,默认是自增长的
      */
     private Integer memberId;
@@ -32,11 +38,7 @@ public class Member implements Serializable {
      * 成员的届数,如入学当年为2017年,则值为【2017】
      */
     private Integer memberGradeNumber;
-    /**
-     * 成员在社团里面对应的一个管理人员信息
-     */
-    @JsonIgnore
-    private Member memberManager;
+
     /**
      * 成员的部门信息
      */

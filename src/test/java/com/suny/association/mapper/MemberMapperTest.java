@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**************************************
@@ -138,11 +139,38 @@ public class MemberMapperTest {
 
     @Test
     public void selectByMemberRoleId() throws Exception {
-        List<Member> memberList = memberMapper.selectByMemberRoleId(3);
+        List<Member> memberList = memberMapper.selectByMemberRoleId(0);
         for (Member member : memberList) {
             logger.info(member.toString());
         }
 
+    }
+
+
+    @Test
+    public void insertBatch() {
+        Member member = new Member();
+        member.setMemberName("测试批量插入姓名");
+        member.setMemberClassName("测试批量插入班级");
+        member.setMemberSex(true);
+        member.setMemberDepartment(new Department(1, "办公室"));
+        member.setMemberGradeNumber(2017);
+
+        Member member2 = new Member();
+        member2.setMemberName("测试批量插入姓名2");
+        member2.setMemberClassName("测试批量插入班级2");
+        member2.setMemberSex(true);
+        member2.setMemberDepartment(new Department(1, "办公室"));
+        member2.setMemberGradeNumber(2017);
+
+        List<Member> memberList = new ArrayList<>();
+        memberList.add(member);
+        memberList.add(member2);
+
+        memberMapper.insertBatch(memberList);
+        for (int i=0; i<memberList.size();i++){
+            logger.info("自动生成的主键ID:{}",memberList.get(i).getMemberId());
+        }
     }
 
     @Test
