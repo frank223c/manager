@@ -211,10 +211,21 @@ public class MemberController extends BaseController {
     }
 
     @SystemControllerLog(description = "查询冻结的成员")
-    @RequestMapping(value = "/selectFreeze.action", method = RequestMethod.POST)
+    @RequestMapping(value = "/selectFreezeMember.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult selectFreeze() {
-        List<Member> memberList = memberService.selectNormalMember();
+    public JsonResult selectFreezeMember() {
+        List<Member> memberList = memberService.selectFreezeMember();
+        if (memberList != null) {
+            return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, memberList);
+        }
+        return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
+    }
+
+    @SystemControllerLog(description = "查询冻结的管理员")
+    @RequestMapping(value = "/selectFreezeManager.action", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult selectFreezeManager() {
+        List<Member> memberList = memberService.selectFreezeManager();
         if (memberList != null) {
             return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, memberList);
         }
@@ -222,10 +233,21 @@ public class MemberController extends BaseController {
     }
 
     @SystemControllerLog(description = "查询正常的成员")
-    @RequestMapping(value = "/selectNormal.action", method = RequestMethod.POST)
+    @RequestMapping(value = "/selectNormalMember.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult selectNormal() {
+    public JsonResult selectNormalMember() {
         List<Member> memberList = memberService.selectNormalMember();
+        if (memberList != null) {
+            return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, memberList);
+        }
+        return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
+    }
+
+    @SystemControllerLog(description = "查询正常的管理员")
+    @RequestMapping(value = "/selectNormalManager.action", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult selectNormalManager() {
+        List<Member> memberList = memberService.selectNormalManager();
         if (memberList != null) {
             return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, memberList);
         }
