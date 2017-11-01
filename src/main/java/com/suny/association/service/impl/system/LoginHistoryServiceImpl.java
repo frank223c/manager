@@ -107,15 +107,15 @@ public class LoginHistoryServiceImpl extends AbstractBaseServiceImpl<LoginHistor
         //  10. 填充 字段 登录用户
         loginHistory.setLoginName(username);
         //  11.通过ip地址去获取普通的定位地址
-        GeneralLocationResult generalLocation = WebUtils.getGeneralLocation(loginIp);
+//        GeneralLocationResult generalLocation = WebUtils.getRequestClientInfo(loginIp);
         //   11.1 判断是否得到了通过定位到的IP得到的地址
-        if (generalLocation != null) {
-            loginHistory.setLoginAddress(generalLocation.getStatus() == 0 ? generalLocation.getAddress() : "未知位置");
-        } else {
-            //    11.2   普通定位地址为空的话就给登录地址自动设置一个默认的值
-            logger.warn("连接网络可能出了点问题，把操作位置默认设为未知位置");
-            loginHistory.setLoginAddress("未知位置");
-        }
+//        if (generalLocation != null) {
+//            loginHistory.setLoginAddress(generalLocation.getStatus() == 0 ? generalLocation.getAddress() : "未知位置");
+//        } else {
+//                11.2   普通定位地址为空的话就给登录地址自动设置一个默认的值
+//            logger.warn("连接网络可能出了点问题，把操作位置默认设为未知位置");
+//            loginHistory.setLoginAddress("未知位置");
+//        }
         insert(loginHistory);
     }
 

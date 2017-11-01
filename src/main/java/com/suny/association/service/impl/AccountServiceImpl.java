@@ -9,6 +9,8 @@ import com.suny.association.pojo.po.Permission;
 import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.IAccountService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,7 @@ import java.util.Map;
  */
 @Service
 public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> implements IAccountService {
+    private static Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
     private final AccountMapper accountMapper;
 
 
@@ -47,6 +50,11 @@ public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> impleme
         try {
             accountMapper.insert(account);
         } catch (Exception e) {
+            logger.error("插入账号信息失败{}",e.getMessage());
+            // 抛自定义的异常
+
+
+
             throw new RuntimeException(e);
         }
     }

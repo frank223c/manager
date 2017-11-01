@@ -1,7 +1,5 @@
 package com.suny.association.utils;
 
-import com.google.gson.Gson;
-import com.suny.association.pojo.po.baidulocation.GeneralLocationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -30,12 +28,14 @@ public class WebUtils {
      * HTML页面的起始标签
      */
     private static final String HTML_ATTRIBUTE="<html>";
-
-
     private static final String HTML_DOCTYPE_DECLARATION="<!DOCTYPE html>";
-
+    /**
+     * 可能会出现的本地IP地址
+     */
     private static final String LOCALHOST_IP_IPV4="127.0.0.1";
     private static final String LOCALHOST_IP_IPV6="0:0:0:0:0:0:0:1";
+    private static final String TAOBAO_GET_IP_INFO_URL="http://ip.taobao.com/service/getIpInfo.php?ip=";
+
 
     /**
      * 获取当前请求的request请求实例
@@ -60,25 +60,24 @@ public class WebUtils {
     }
 
     /**
-     * 获取普通精度的位置
+     * 获取普通精度的位置.
      *
      * @param ip ip地址
      * @return 百度普通定位地址
      */
-    public static GeneralLocationResult getGeneralLocation(String ip) {
-        // ip地址
+    public static IpInfo getRequestClientInfo(String ip) {
+        if (LOCALHOST_IP_IPV4.equals(ip.trim())||LOCALHOST_IP_IPV6.equals(ip.trim())){
+             return localhostIpInfo();
+        }
+        URL myUrl;
         String ipString = null;
-        //服务器返回的json数据
-        String jsonData = null;
+        StringBuilder responseJson = null;
         try {
             ipString = URLEncoder.encode(ip, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             logger.warn("不支持的编码异常{}", e.getMessage());
         }
-        // 百度定位密匙
-        String key = "8256e813b3dec54c5a6aac371c05e5eaa";
-        String url = String.format("http://api.map.baidu.com/location/ip?ak=%s&ip=%s&coor=bd09ll", key, ipString);
-        URL myUrl;
+        String url = String.format(TAOBAO_GET_IP_INFO_URL+"%s",ipString);
         URLConnection urlConnection = null;
         try {
             myUrl = new URL(url);
@@ -93,9 +92,9 @@ public class WebUtils {
             ) {
                 String data;
                 while ((data = bufferedReader.readLine()) != null) {
-                    jsonData += data;
+                    responseJson.append(data);
                 }
-                return parseJsonDate(jsonData);
+                return parseJsonDate(responseJson.toString());
             } catch (UnknownHostException e) {
                 logger.error("无法获取hosts地址，检查是否有网络连接");
             } catch (IOException e1) {
@@ -105,38 +104,26 @@ public class WebUtils {
         return null;
     }
 
-    /**
-     * 解析百度传回来的json数据
-     *
-     * @param jsonData json数据
-     * @return 得到的结果
-     */
-    private static GeneralLocationResult parseJsonDate(String jsonData) {
-        GeneralLocationResult generalLocationResult = new GeneralLocationResult();
-        /*  如果包含HTML标签则说明访问到一个错误页面   */
-        if (jsonData.contains(HTML_ATTRIBUTE) || jsonData.substring(0, 20).contains(HTML_DOCTYPE_DECLARATION)) {
-            logger.warn("访问到一个错误页面，无法进行解析");
-            generalLocationResult.setStatus(200);
-            return generalLocationResult;
-        }
-        /*这里对文本进行解析，因为此时返回的是一个返回的是请求出错的json数据
-            * 返回格式是统一的类型，所以我们进行切割得到状态码
-            * 统一状态码大概是这样的：   null{"status":2,"message":"Request Parameter Error:ip illegal"}
-            * 其中status后面的数字是会变的，然后message也是根据不同的状态码来变的   */
-        int statusTextIndex = jsonData.indexOf("status\":");
-        int messageTextIndex = jsonData.indexOf(",\"message");
-        int statusCode = Integer.parseInt(jsonData.substring(statusTextIndex + 8, messageTextIndex));
-        /*   如果返回的文本不等于空的话，并且包含状态码0的话就说明百度成功定位了  */
-        if (statusCode == 0) {
-            Gson gson = new Gson();
-             /*  使用Google的 Gson 把json数据封装到实体类里面去   */
-            generalLocationResult = gson.fromJson(jsonData, GeneralLocationResult.class);
-            return generalLocationResult;
-        } else {
-            generalLocationResult.setStatus(200);
-            return generalLocationResult;
-        }
+
+    // TODO 这里我就写死在这里的一个本地信息
+    private static IpInfo localhostIpInfo(){
+        return new IpInfo("59.53.207.251","中国","华东","江西省","南昌市","南昌县","电信");
     }
+
+    private static IpInfo parseJsonDate(String jsonInfo){
+        ResponseInfo responseInfo = JackJsonUtil.processJsonToObject(jsonInfo, ResponseInfo.class);
+        // TODO 等待完善
+        if(responseInfo.getCode()== 1){
+            logger.error("查询地址失败");
+            return localhostIpInfo();
+        }
+            return responseInfo.getIpInfo();
+    }
+
+
+
+
+
 
 
     /***
@@ -331,16 +318,206 @@ public class WebUtils {
 
     }
 
+    public static class ResponseInfo {
+        /**
+         * 返回的状态码
+         */
+        private int code;
+        /**
+         * 返回的查询数据
+         */
+        private IpInfo ipInfo;
 
-    /**
-     * 判断是否为ajax请求
-     *
-     * @param request request请求
-     * @return 是否为ajax请求
-     */
-    public static boolean isAjaxRequest(HttpServletRequest request) {
-        String requestedWith = request.getHeader("x-requested-with");
-        return requestedWith != null && "XMLHttpRequest".equalsIgnoreCase(requestedWith);
+        public int getCode() {
+            return code;
+        }
+
+        public void setCode(int code) {
+            this.code = code;
+        }
+
+        public IpInfo getIpInfo() {
+            return ipInfo;
+        }
+
+        public void setIpInfo(IpInfo ipInfo) {
+            this.ipInfo = ipInfo;
+        }
     }
+
+    /**************************************
+     *  Description   查询IP地址信息
+     *  @author 孙建荣
+     *  @date 17-11-1.下午8:37
+     *  @version 1.0
+     **************************************/
+    public static class IpInfo {
+
+        private String ip;
+        /**
+         * 国家
+         */
+        private String country;
+        private String area;
+        /**
+         *省
+         */
+        private String region;
+        /**
+         * 市
+         */
+        private String city;
+        /**
+         * 县
+         */
+        private String county;
+        /**
+         * 电信商
+         */
+        private String isp;
+
+
+        private String countryId;
+        private String areaId;
+        private String regionId;
+        private String cityId;
+        private String countyId;
+        private String ispId;
+
+        /**
+         * 私有的构造方法,不允许空的构造方法
+         */
+        private IpInfo(){
+
+        }
+
+        /**
+         * 最基本的构造方法,包含常用的
+         * @param ip  ip地址
+         * @param country  国家
+         * @param area  地区
+         * @param region  省
+         * @param city   市
+         * @param county  县
+         * @param isp   宽带服务商
+         */
+        public IpInfo(String ip, String country, String area, String region, String city, String county, String isp) {
+            this.ip = ip;
+            this.country = country;
+            this.area = area;
+            this.region = region;
+            this.city = city;
+            this.county = county;
+            this.isp = isp;
+        }
+
+        public String getIp() {
+            return ip;
+        }
+
+        public void setIp(String ip) {
+            this.ip = ip;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public void setCountry(String country) {
+            this.country = country;
+        }
+
+        public String getArea() {
+            return area;
+        }
+
+        public void setArea(String area) {
+            this.area = area;
+        }
+
+        public String getRegion() {
+            return region;
+        }
+
+        public void setRegion(String region) {
+            this.region = region;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getCounty() {
+            return county;
+        }
+
+        public void setCounty(String county) {
+            this.county = county;
+        }
+
+        public String getIsp() {
+            return isp;
+        }
+
+        public void setIsp(String isp) {
+            this.isp = isp;
+        }
+
+        public String getCountryId() {
+            return countryId;
+        }
+
+        public void setCountryId(String countryId) {
+            this.countryId = countryId;
+        }
+
+        public String getAreaId() {
+            return areaId;
+        }
+
+        public void setAreaId(String areaId) {
+            this.areaId = areaId;
+        }
+
+        public String getRegionId() {
+            return regionId;
+        }
+
+        public void setRegionId(String regionId) {
+            this.regionId = regionId;
+        }
+
+        public String getCityId() {
+            return cityId;
+        }
+
+        public void setCityId(String cityId) {
+            this.cityId = cityId;
+        }
+
+        public String getCountyId() {
+            return countyId;
+        }
+
+        public void setCountyId(String countyId) {
+            this.countyId = countyId;
+        }
+
+        public String getIspId() {
+            return ispId;
+        }
+
+        public void setIspId(String ispId) {
+            this.ispId = ispId;
+        }
+    }
+
+
+
+
 
 }

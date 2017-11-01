@@ -1,7 +1,6 @@
 package com.suny.association.async;
 
-import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.suny.association.utils.JackJsonUtil;
 import com.suny.association.utils.JedisAdapter;
 import com.suny.association.utils.RedisKeyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class EventProducer {
 
     public boolean fireEvent(EventModel eventModel) {
         try {
-            String json = JSONObject.toJSONString(eventModel);
+            String json = JackJsonUtil.processObjectToJson(eventModel);
             String key = RedisKeyUtils.getEventQueueKey();
             jedisAdapter.lpush(key, json);
             return true;

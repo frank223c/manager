@@ -4,7 +4,7 @@ import com.suny.association.pojo.po.Account;
 import com.suny.association.pojo.po.Member;
 import com.suny.association.pojo.po.OperationLog;
 import com.suny.association.service.interfaces.system.IOperationLogService;
-import com.suny.association.utils.JsonResult;
+import com.suny.association.utils.JackJsonUtil;
 import com.suny.association.utils.WebUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -102,7 +102,7 @@ public class SystemLogAspect {
             operationLog.setOperationIp("182.85.141.54");
              //  操作地址
             //noinspection ConstantConditions
-//            operationLog.setOperationAddress(WebUtils.getGeneralLocation(ip).getAddress());
+//            operationLog.setOperationAddress(WebUtils.getRequestClientInfo(ip).getAddress());
 
             //   没有网络时则注释从网络获取物理地址，直接固定一个物理地址写入数据库
             operationLog.setOperationAddress("江西省南昌市南昌县创新二路");
@@ -141,7 +141,7 @@ public class SystemLogAspect {
         String params = "";
         if (joinPoint.getArgs() != null && joinPoint.getArgs().length > 0) {
             for (int i = 0; i < joinPoint.getArgs().length; i++) {
-                params += JsonResult.toJson(joinPoint.getArgs()[i]) + ";";
+                params += JackJsonUtil.processObjectToJson(joinPoint.getArgs()[i])+ ";";
             }
         }
         try {
@@ -177,7 +177,7 @@ public class SystemLogAspect {
             operationLog.setOperationIp(WebUtils.getClientIpAdder(request));
              /*  操作地址 */
             //noinspection ConstantConditions
-            operationLog.setOperationAddress(WebUtils.getGeneralLocation(ip).getAddress());
+            operationLog.setOperationAddress(WebUtils.getRequestClientInfo(ip).toString());
 
             /*开始插入操作日志*/
             operationLogService.insert(operationLog);

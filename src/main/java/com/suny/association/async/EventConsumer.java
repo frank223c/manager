@@ -1,12 +1,11 @@
 package com.suny.association.async;
 
-import com.alibaba.fastjson.JSON;
+import com.suny.association.utils.JackJsonUtil;
 import com.suny.association.utils.JedisAdapter;
 import com.suny.association.utils.RedisKeyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -64,7 +63,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                         if (message.equals(key)) {
                             continue;
                         }
-                        EventModel eventModel = JSON.parseObject(message, EventModel.class);
+                        EventModel eventModel = JackJsonUtil.processJsonToObject(message, EventModel.class);
                         if (!config.containsKey(eventModel.getType())) {
                             logger.error("不能识别的事件");
                             continue;
