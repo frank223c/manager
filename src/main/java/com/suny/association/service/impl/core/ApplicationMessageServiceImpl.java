@@ -52,7 +52,6 @@ public class ApplicationMessageServiceImpl extends AbstractBaseServiceImpl<Appli
      * @param id 申请的id
      * @return 通过id查询出来的记录
      */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public ApplicationMessage selectById(long id) {
         return applicationMessageMapper.selectById(id);
@@ -64,7 +63,6 @@ public class ApplicationMessageServiceImpl extends AbstractBaseServiceImpl<Appli
      * @param name 用户名
      * @return 通过用户名查询出来的结果
      */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public ApplicationMessage selectByName(String name) {
         return applicationMessageMapper.selectByName(name);
@@ -75,7 +73,6 @@ public class ApplicationMessageServiceImpl extends AbstractBaseServiceImpl<Appli
      *
      * @return 总记录数
      */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
     public int selectCount() {
         return applicationMessageMapper.selectCount();

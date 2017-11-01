@@ -99,10 +99,6 @@
 
     <!--=============================================================================================-->
 
-    <sql id="BaseSelectFields">
-        account_id, account_name, account_password, account_phone, account_email, account_status, account_role_id, account_member_id
-    </sql>
-
 
     <insert id="insert" parameterType="com.suny.association.pojo.po.Account">
         INSERT INTO account
@@ -190,8 +186,20 @@
 
     <select id="queryByMemberId" parameterType="int" resultMap="BaseResultMap">
         SELECT
-        <include refid="BaseSelectFields"/>
-        FROM account
+            a.account_id,
+            a.account_name,
+            a.account_phone,
+            a.account_email,
+            a.account_status,
+            a.account_member_id,
+            a.account_role_id,
+            r.role_id          AS r_role_id,
+            r.role_description AS r_role_name,
+            m.member_id        AS m_member_id,
+            m.member_name      AS m_member_name
+        FROM account a
+            JOIN roles r ON a.account_role_id = r.role_id
+            JOIN member m ON a.account_member_id = m.member_id
         WHERE account_member_id = #{memberId}
     </select>
 
@@ -206,8 +214,11 @@
     <select id="queryQuoteByMemberId" parameterType="Long" resultMap="BaseResultMap">
         SELECT
             a.account_id,
-            a.account_member_id
+            a.account_member_id,
+            m.member_id        AS m_member_id,
+            m.member_name      AS m_member_name
         FROM account AS a
+            JOIN member m ON a.account_member_id = m.member_id
         WHERE a.account_member_id = #{memberId}
     </select>
 
@@ -216,17 +227,18 @@
         SELECT
             a.account_id,
             a.account_name,
-            a.account_password,
+            a.account_phone,
+            a.account_email,
             a.account_status,
+            a.account_password,
             a.account_member_id,
             a.account_role_id,
-            r.role_id          AS role_id,
-            r.role_description AS role_name,
-            m.member_id        AS member_id,
-            m.member_name      AS member_name
+            r.role_id          AS r_role_id,
+            r.role_description AS r_role_name,
+            m.member_id        AS m_member_id,
+            m.member_name      AS m_member_name
         FROM account a
-            JOIN roles r
-                ON a.account_role_id = r.role_id
+            JOIN roles r ON a.account_role_id = r.role_id
             JOIN member m ON a.account_member_id = m.member_id
         WHERE a.account_name = #{name};
     </select>
@@ -249,29 +261,75 @@
     <select id="queryByPhone" parameterType="java.lang.Long" resultMap="BaseResultMap">
         SELECT
             a.account_id,
-            a.account_phone
-        FROM account AS a
+            a.account_name,
+            a.account_phone,
+            a.account_email,
+            a.account_status,
+            a.account_member_id,
+            a.account_role_id,
+            r.role_id          AS r_role_id,
+            r.role_description AS r_role_name,
+            m.member_id        AS m_member_id,
+            m.member_name      AS m_member_name
+        FROM account a
+            JOIN roles r ON a.account_role_id = r.role_id
+            JOIN member m ON a.account_member_id = m.member_id
         WHERE a.account_phone = #{phoneNumber}
     </select>
 
     <select id="queryByMail" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT
             a.account_id,
-            a.account_email
-        FROM account AS a
+            a.account_name,
+            a.account_phone,
+            a.account_email,
+            a.account_status,
+            a.account_member_id,
+            a.account_role_id,
+            r.role_id          AS r_role_id,
+            r.role_description AS r_role_name,
+            m.member_id        AS m_member_id,
+            m.member_name      AS m_member_name
+        FROM account a
+            JOIN roles r ON a.account_role_id = r.role_id
+            JOIN member m ON a.account_member_id = m.member_id
         WHERE a.account_email = #{email}
     </select>
 
 
     <select id="selectAll" resultMap="BaseResultMap">
         SELECT
-        <include refid="BaseSelectFields"/>
-        FROM account
+            a.account_id,
+            a.account_name,
+            a.account_phone,
+            a.account_email,
+            a.account_status,
+            a.account_member_id,
+            a.account_role_id,
+            r.role_id          AS r_role_id,
+            r.role_description AS r_role_name,
+            m.member_id        AS m_member_id,
+            m.member_name      AS m_member_name
+        FROM account a
+            JOIN roles r ON a.account_role_id = r.role_id
+            JOIN member m ON a.account_member_id = m.member_id
     </select>
     <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
-        <include refid="BaseSelectFields"/>
-        FROM account
+        a.account_id,
+        a.account_name,
+        a.account_phone,
+        a.account_email,
+        a.account_status,
+        a.account_member_id,
+        a.account_role_id,
+        r.role_id          AS r_role_id,
+        r.role_description AS r_role_name,
+        m.member_id        AS m_member_id,
+        m.member_name      AS m_member_name
+        FROM account a
+        JOIN roles r ON a.account_role_id = r.role_id
+        JOIN member m ON a.account_member_id = m.member_id
         <where>
             1=1
             <if test="status != null">

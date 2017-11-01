@@ -205,7 +205,7 @@ public class Member implements Serializable {
                 ", 部门=" + memberDepartment +
                 ", 部长=" + memberManager +
                 ", 状态=" + memberStatus +
-                ", 角色=" + memberRoles.toString() +
+                ", 角色=" + memberRoles +
                 '}';
     }
 }
