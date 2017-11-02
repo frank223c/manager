@@ -3,9 +3,8 @@ package com.suny.association.controller.system;
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
 import com.suny.association.enums.BaseEnum;
-import com.suny.association.pojo.po.Permission;
-import com.suny.association.pojo.po.Roles;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.Permission;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.system.IPermissionService;
 import com.suny.association.utils.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.suny.association.utils.ConversionUtil.convertToBootstrapTableResult;
-import static com.suny.association.utils.ConversionUtil.convertToCriteriaMap;
 import static com.suny.association.utils.JsonResult.failResult;
 import static com.suny.association.utils.JsonResult.successResult;
 

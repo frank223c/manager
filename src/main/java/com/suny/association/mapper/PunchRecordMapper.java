@@ -1,7 +1,7 @@
 package com.suny.association.mapper;
 
 import com.suny.association.mapper.interfaces.IMapper;
-import com.suny.association.pojo.po.PunchRecord;
+import com.suny.association.entity.po.PunchRecord;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;

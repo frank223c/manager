@@ -2,8 +2,8 @@ package com.suny.association.service.impl.system;
 
 import com.suny.association.annotation.SystemServiceLog;
 import com.suny.association.mapper.LoginHistoryMapper;
-import com.suny.association.pojo.po.LoginHistory;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.LoginHistory;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
 import com.suny.association.utils.WebUtils;

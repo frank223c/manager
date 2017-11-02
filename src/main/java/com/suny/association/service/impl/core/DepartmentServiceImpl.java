@@ -1,16 +1,14 @@
 package com.suny.association.service.impl.core;
 
 import com.suny.association.mapper.DepartmentMapper;
-import com.suny.association.pojo.po.Department;
-import com.suny.association.pojo.po.LoginTicket;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.Department;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.core.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Comments:   部门表业务逻辑

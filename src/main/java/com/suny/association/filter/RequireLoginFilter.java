@@ -2,7 +2,7 @@ package com.suny.association.filter;
 
 import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.LoginTicketMapper;
-import com.suny.association.pojo.po.LoginTicket;
+import com.suny.association.entity.po.LoginTicket;
 import com.suny.association.utils.LoginTicketUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

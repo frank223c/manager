@@ -3,11 +3,10 @@ package com.suny.association.service.impl.core;
 import com.suny.association.annotation.SystemServiceLog;
 import com.suny.association.mapper.CallbackResultMapper;
 import com.suny.association.mapper.MemberMapper;
-import com.suny.association.pojo.po.ApplicationMessage;
-import com.suny.association.pojo.po.CallbackResult;
-import com.suny.association.pojo.po.Member;
-import com.suny.association.pojo.po.PermissionAllot;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.ApplicationMessage;
+import com.suny.association.entity.po.CallbackResult;
+import com.suny.association.entity.po.Member;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.core.ICallbackResultService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Comments:   审批结果逻辑控制

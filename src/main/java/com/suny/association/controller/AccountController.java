@@ -2,11 +2,10 @@ package com.suny.association.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.enums.BaseEnum;
-import com.suny.association.pojo.po.Account;
-import com.suny.association.pojo.po.Member;
-import com.suny.association.pojo.po.Permission;
-import com.suny.association.pojo.po.Roles;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.Account;
+import com.suny.association.entity.po.Member;
+import com.suny.association.entity.po.Roles;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.core.IMemberService;
 import com.suny.association.service.interfaces.IRolesService;
@@ -24,7 +23,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.suny.association.utils.ConversionUtil.convertToBootstrapTableResult;
-import static com.suny.association.utils.ConversionUtil.convertToCriteriaMap;
 import static com.suny.association.utils.JsonResult.failResult;
 import static com.suny.association.utils.JsonResult.successResult;
 

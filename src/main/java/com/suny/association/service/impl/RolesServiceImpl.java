@@ -2,9 +2,9 @@ package com.suny.association.service.impl;
 
 import com.suny.association.annotation.SystemServiceLog;
 import com.suny.association.mapper.RolesMapper;
-import com.suny.association.pojo.po.Account;
-import com.suny.association.pojo.po.Roles;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.Account;
+import com.suny.association.entity.po.Roles;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.IRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Comments:   账号角色业务逻辑

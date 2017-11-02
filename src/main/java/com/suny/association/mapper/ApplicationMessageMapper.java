@@ -1,7 +1,7 @@
 package com.suny.association.mapper;
 
 import com.suny.association.mapper.interfaces.IMapper;
-import com.suny.association.pojo.po.ApplicationMessage;
+import com.suny.association.entity.po.ApplicationMessage;
 
 /**
  * Comments:   申请修改考勤类型mapper接口映射

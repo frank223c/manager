@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suny.association.mapper.PermissionMapper">
 
-    <resultMap id="BaseResultMap" type="com.suny.association.pojo.po.Permission">
+    <resultMap id="BaseResultMap" type="com.suny.association.entity.po.Permission">
         <id property="permissionId" column="permission_id"/>
         <result property="permissionName" column="permission_name"/>
         <result property="description" column="permission_description"/>
@@ -11,7 +11,7 @@
     </resultMap>
 
 
-    <insert id="insert" parameterType="com.suny.association.pojo.po.Permission">
+    <insert id="insert" parameterType="com.suny.association.entity.po.Permission">
         INSERT INTO permission
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test=" permissionName != null">
@@ -42,7 +42,7 @@
         WHERE permission_id = #{permissionId}
     </delete>
 
-    <update id="update" parameterType="com.suny.association.pojo.po.Permission">
+    <update id="update" parameterType="com.suny.association.entity.po.Permission">
         UPDATE permission
         SET
         <trim suffixOverrides=",">

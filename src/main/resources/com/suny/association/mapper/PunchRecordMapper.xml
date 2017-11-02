@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suny.association.mapper.PunchRecordMapper">
-    <resultMap id="BaseResultMap" type="com.suny.association.pojo.po.PunchRecord">
+    <resultMap id="BaseResultMap" type="com.suny.association.entity.po.PunchRecord">
         <id property="punchRecordId" column="punch_record_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
         <result property="punchDatetime" column="punch_datetime" jdbcType="TIMESTAMP"
                 javaType="java.time.LocalDateTime"/>
         <result property="punchTodayDate" column="punch_today_date" jdbcType="DATE" javaType="java.time.LocalDate"/>
         <result property="punchIsCome" column="punch_is_come" jdbcType="BOOLEAN" javaType="java.lang.Boolean"/>
-        <association property="punchTypeId" column="punch_type_id" javaType="com.suny.association.pojo.po.PunchType"
+        <association property="punchTypeId" column="punch_type_id" javaType="com.suny.association.entity.po.PunchType"
                      select="queryPunchTypeInfo"/>
-        <association property="punchMemberId" column="punch_member_id" javaType="com.suny.association.pojo.po.Member"
+        <association property="punchMemberId" column="punch_member_id" javaType="com.suny.association.entity.po.Member"
                      select="queryMember"/>
     </resultMap>
 
-    <resultMap id="memberInfo" type="com.suny.association.pojo.po.Member">
+    <resultMap id="memberInfo" type="com.suny.association.entity.po.Member">
         <id property="memberId" column="member_id"/>
         <result property="memberName" column="member_name"/>
         <result property="memberGradeNumber" column="member_grade_number"/>
         <association property="memberDepartment" column="member_department_id"
-                     javaType="com.suny.association.pojo.po.Department"
+                     javaType="com.suny.association.entity.po.Department"
                      select="getDepartment"/>
     </resultMap>
     <insert id="batchInsertsPunchRecord" parameterType="ArrayList" >
@@ -58,12 +58,12 @@
         WHERE d.department_id = #{memberDepartment.departmentId}
     </select>
     <!--部门-->
-    <resultMap id="memberDepartmentResult" type="com.suny.association.pojo.po.Department">
+    <resultMap id="memberDepartmentResult" type="com.suny.association.entity.po.Department">
         <id column="department_id" property="departmentId"/>
         <result column="department_name" property="departmentName"/>
     </resultMap>
 
-    <resultMap id="punchTypeInfo" type="com.suny.association.pojo.po.PunchType">
+    <resultMap id="punchTypeInfo" type="com.suny.association.entity.po.PunchType">
         <id property="punchTypeId" column="punch_type_id"/>
         <result property="punchTypeName" column="punch_type_name"/>
     </resultMap>
@@ -112,7 +112,7 @@
         WHERE p.punch_today_date = #{localDate}
     </select>
 
-    <update id="update" parameterType="com.suny.association.pojo.po.PunchRecord">
+    <update id="update" parameterType="com.suny.association.entity.po.PunchRecord">
         update punch_record
         <trim prefix="set" suffixOverrides=",">
             <if test=" punchDatetime != null">
@@ -134,7 +134,7 @@
         where punch_record_id = #{punchRecordId,jdbcType=BIGINT}
     </update>
 
-    <update id="updatePunch" parameterType="com.suny.association.pojo.po.PunchRecord">
+    <update id="updatePunch" parameterType="com.suny.association.entity.po.PunchRecord">
         update punch_record
         <trim prefix="set" suffixOverrides=",">
             <if test=" punchDatetime != null">

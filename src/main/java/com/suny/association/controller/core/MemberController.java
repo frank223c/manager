@@ -3,10 +3,10 @@ package com.suny.association.controller.core;
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
 import com.suny.association.enums.BaseEnum;
-import com.suny.association.pojo.po.Department;
-import com.suny.association.pojo.po.Member;
-import com.suny.association.pojo.po.MemberRoles;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.Department;
+import com.suny.association.entity.po.Member;
+import com.suny.association.entity.po.MemberRoles;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.core.IDepartmentService;
 import com.suny.association.service.interfaces.core.IMemberRolesService;
@@ -33,7 +33,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.suny.association.utils.JsonResult.successResult;
 

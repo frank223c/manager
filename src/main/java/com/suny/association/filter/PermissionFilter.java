@@ -3,7 +3,7 @@ package com.suny.association.filter;
 
 import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.LoginTicketMapper;
-import com.suny.association.pojo.po.*;
+import com.suny.association.entity.po.*;
 import com.suny.association.service.interfaces.system.IAccessPermissionService;
 import com.suny.association.service.interfaces.system.IPermissionAllotService;
 import com.suny.association.utils.LoginTicketUtils;

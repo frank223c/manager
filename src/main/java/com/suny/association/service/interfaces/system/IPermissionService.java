@@ -1,7 +1,7 @@
 package com.suny.association.service.interfaces.system;
 
-import com.suny.association.pojo.po.Permission;
-import com.suny.association.pojo.po.PermissionAllot;
+import com.suny.association.entity.po.Permission;
+import com.suny.association.entity.po.PermissionAllot;
 import com.suny.association.service.IBaseService;
 
 import java.util.List;

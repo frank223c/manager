@@ -2,8 +2,8 @@ package com.suny.association.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.enums.BaseEnum;
-import com.suny.association.pojo.po.Roles;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.Roles;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.IRolesService;
 import com.suny.association.utils.ConversionUtil;
 import com.suny.association.utils.JsonResult;

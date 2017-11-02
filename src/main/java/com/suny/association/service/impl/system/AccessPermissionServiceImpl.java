@@ -1,15 +1,13 @@
 package com.suny.association.service.impl.system;
 
 import com.suny.association.mapper.AccessPermissionMapper;
-import com.suny.association.pojo.po.AccessPermission;
-import com.suny.association.pojo.po.Permission;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.AccessPermission;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.system.IAccessPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Comments:   访问url地址所需要的权限业务逻辑层

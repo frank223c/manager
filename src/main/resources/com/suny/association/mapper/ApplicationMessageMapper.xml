@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suny.association.mapper.ApplicationMessageMapper">
-    <resultMap id="BaseResultMap" type="com.suny.association.pojo.po.ApplicationMessage">
+    <resultMap id="BaseResultMap" type="com.suny.association.entity.po.ApplicationMessage">
         <id property="applicationId" column="application_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result property="applicationReason" column="application_reason" jdbcType="VARCHAR"
                 javaType="java.lang.String"/>
         <result property="applyForTime" column="apply_for_time" jdbcType="TIMESTAMP"
                 javaType="java.time.LocalDateTime"/>
         <association property="punchRecordId" column="punch_record_id"
-                     javaType="com.suny.association.pojo.po.PunchRecord"
+                     javaType="com.suny.association.entity.po.PunchRecord"
                      select="queryRecord"/>
-        <association property="punchTypeId" column="punch_type_id" javaType="com.suny.association.pojo.po.PunchType"
+        <association property="punchTypeId" column="punch_type_id" javaType="com.suny.association.entity.po.PunchType"
                      select="queryPunchTypeInfo"/>
         <association property="changePunchType" column="change_punch_type"
-                     javaType="com.suny.association.pojo.po.PunchType" select="queryPunchTypeInfo"/>
+                     javaType="com.suny.association.entity.po.PunchType" select="queryPunchTypeInfo"/>
         <association property="applicationResult" column="application_result"
-                     javaType="com.suny.association.pojo.po.CallbackResult" select="queryCallBack"/>
+                     javaType="com.suny.association.entity.po.CallbackResult" select="queryCallBack"/>
     </resultMap>
 
     <!--查询对应的考勤记录-->
@@ -31,19 +31,19 @@
         WHERE p.punch_record_id = #{punchRecordId}
     </select>
     <!--考勤记录集合-->
-    <resultMap id="queryRecordMap" type="com.suny.association.pojo.po.PunchRecord">
+    <resultMap id="queryRecordMap" type="com.suny.association.entity.po.PunchRecord">
         <id property="punchRecordId" column="punch_record_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
         <result property="punchDatetime" column="punch_datetime" jdbcType="TIMESTAMP"
                 javaType="java.time.LocalDateTime"/>
         <result property="punchTodayDate" column="punch_today_date" jdbcType="DATE" javaType="java.time.LocalDate"/>
         <result property="punchIsCome" column="punch_is_come" jdbcType="BIT" javaType="java.lang.Boolean"/>
-        <association property="punchTypeId" column="punch_type_id" javaType="com.suny.association.pojo.po.PunchType"
+        <association property="punchTypeId" column="punch_type_id" javaType="com.suny.association.entity.po.PunchType"
                      select="queryPunchTypeInfo"/>
-        <association property="punchMemberId" column="punch_member_id" javaType="com.suny.association.pojo.po.Member"
+        <association property="punchMemberId" column="punch_member_id" javaType="com.suny.association.entity.po.Member"
                      select="queryMember"/>
     </resultMap>
     <!--考勤记录中的考勤类型-->
-    <resultMap id="punchTypeInfo" type="com.suny.association.pojo.po.PunchType">
+    <resultMap id="punchTypeInfo" type="com.suny.association.entity.po.PunchType">
         <id property="punchTypeId" column="punch_type_id"/>
         <result property="punchTypeName" column="punch_type_name"/>
     </resultMap>
@@ -56,12 +56,12 @@
             punch_type_id = #{ punchTypeId }
     </select>
     <!--考勤记录中对应的成员-->
-    <resultMap id="memberInfo" type="com.suny.association.pojo.po.Member">
+    <resultMap id="memberInfo" type="com.suny.association.entity.po.Member">
         <id property="memberId" column="member_id"/>
         <result property="memberName" column="member_name"/>
         <result property="memberGradeNumber" column="member_grade_number"/>
         <association property="memberDepartment" column="member_department_id"
-                     javaType="com.suny.association.pojo.po.Department" select="queryDepartment"/>
+                     javaType="com.suny.association.entity.po.Department" select="queryDepartment"/>
     </resultMap>
     <select id="queryMember" resultMap="memberInfo" parameterType="int">
         SELECT
@@ -75,7 +75,7 @@
             m.member_id = #{ punchMemberId }
     </select>
     <!--考勤记录中成员对应的的部门-->
-    <resultMap id="departmentMap" type="com.suny.association.pojo.po.Department">
+    <resultMap id="departmentMap" type="com.suny.association.entity.po.Department">
         <id column="department_id" property="departmentId"/>
         <result column="department_name" property="departmentName"/>
     </resultMap>
@@ -88,20 +88,20 @@
     </select>
 
     <!--查询异议考勤记录集合-->
-    <resultMap id="queryCallBackMap" type="com.suny.association.pojo.po.CallbackResult">
+    <resultMap id="queryCallBackMap" type="com.suny.association.entity.po.CallbackResult">
         <id property="callbackId" column="callback_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
         <result property="callbackResult" column="callback_result" javaType="java.lang.Boolean" jdbcType="BOOLEAN"/>
         <result property="callbackReason" column="callback_reason" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <result property="callbackTime" column="callback_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
         <association property="callbackManagerId" column="callback_manager_id"
-                     javaType="com.suny.association.pojo.po.Member"
+                     javaType="com.suny.association.entity.po.Member"
                      select="getMemberManage"/>
         <association property="applicationMessageId" column="application_message_id"
-                     javaType="com.suny.association.pojo.po.ApplicationMessage" select="queryApplication"/>
+                     javaType="com.suny.association.entity.po.ApplicationMessage" select="queryApplication"/>
     </resultMap>
 
     <!--审批异议考勤记录的管理员信息-->
-    <resultMap id="memberManagerResult" type="com.suny.association.pojo.po.Member">
+    <resultMap id="memberManagerResult" type="com.suny.association.entity.po.Member">
         <id property="memberId" column="member_id"/>
         <result property="memberName" column="member_name"/>
         <result property="memberClassName" column="member_class_name"/>
@@ -110,13 +110,13 @@
         <result property="memberStatus" column="member_status"/>
         <!--部门复杂类型关联-->
         <association property="memberDepartment" column="member_department_id"
-                     javaType="com.suny.association.pojo.po.Department"
+                     javaType="com.suny.association.entity.po.Department"
                      select="getDepartment"/>
         <!--成员角色复杂类型关联-->
-        <association property="memberRoles" column="member_role_id" javaType="com.suny.association.pojo.po.MemberRoles"
+        <association property="memberRoles" column="member_role_id" javaType="com.suny.association.entity.po.MemberRoles"
                      select="getMemberRole"/>
         <!--协会成员对应的管理员复杂类型集合-->
-        <association property="memberManager" column="member_manager_id" javaType="com.suny.association.pojo.po.Member"
+        <association property="memberManager" column="member_manager_id" javaType="com.suny.association.entity.po.Member"
                      select="getMemberManage"/>
     </resultMap>
 
@@ -137,7 +137,7 @@
     </select>
 
     <!--部门-->
-    <resultMap id="memberDepartmentResult" type="com.suny.association.pojo.po.Department">
+    <resultMap id="memberDepartmentResult" type="com.suny.association.entity.po.Department">
         <id column="department_id" property="departmentId"/>
         <result column="department_name" property="departmentName"/>
     </resultMap>
@@ -150,7 +150,7 @@
         WHERE d.department_id = #{memberDepartment}
     </select>
     <!--成员角色-->
-    <resultMap id="memberRolesResult" type="com.suny.association.pojo.po.MemberRoles">
+    <resultMap id="memberRolesResult" type="com.suny.association.entity.po.MemberRoles">
         <id property="memberRoleId" column="member_role_id"/>
         <result property="memberRoleName" column="member_role_name"/>
     </resultMap>
@@ -165,7 +165,7 @@
 
 
     <!--别的地方调用mapper查询，非本mapper调用-->
-    <resultMap id="queryApplicationMap" type="com.suny.association.pojo.po.ApplicationMessage">
+    <resultMap id="queryApplicationMap" type="com.suny.association.entity.po.ApplicationMessage">
         <id property="applicationId" column="application_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
     </resultMap>
     <select id="queryApplication" parameterType="int" resultMap="queryApplicationMap">
@@ -220,7 +220,7 @@
         WHERE application_id = #{applicationId}
     </select>
 
-    <update id="update" parameterType="com.suny.association.pojo.po.ApplicationMessage">
+    <update id="update" parameterType="com.suny.association.entity.po.ApplicationMessage">
         UPDATE application_message
         SET
             application_result = #{applicationResult.callbackId,jdbcType=INTEGER}

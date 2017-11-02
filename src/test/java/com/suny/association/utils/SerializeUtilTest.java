@@ -1,6 +1,6 @@
 package com.suny.association.utils;
 
-import com.suny.association.pojo.po.LoginTicket;
+import com.suny.association.entity.po.LoginTicket;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

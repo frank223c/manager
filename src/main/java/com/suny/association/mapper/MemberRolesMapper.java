@@ -1,9 +1,7 @@
 package com.suny.association.mapper;
 
 import com.suny.association.mapper.interfaces.IMapper;
-import com.suny.association.pojo.po.MemberRoles;
-
-import java.util.List;
+import com.suny.association.entity.po.MemberRoles;
 
 /**
  * Comments:  成员角色mapper映射
@@ -13,5 +11,4 @@ import java.util.List;
 
 public interface MemberRolesMapper extends IMapper<MemberRoles>{
 
-    List<MemberRoles> queryQuote(Integer memberRoleId);
 }

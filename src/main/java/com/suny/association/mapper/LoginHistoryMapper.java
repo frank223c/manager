@@ -1,7 +1,7 @@
 package com.suny.association.mapper;
 
 import com.suny.association.mapper.interfaces.IMapper;
-import com.suny.association.pojo.po.LoginHistory;
+import com.suny.association.entity.po.LoginHistory;
 
 import java.util.List;
 

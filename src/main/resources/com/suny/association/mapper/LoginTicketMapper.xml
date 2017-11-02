@@ -5,22 +5,22 @@
     <sql id="insertFields">  account_id, ticket, expired, status </sql>
 
 
-    <update id="update" parameterType="com.suny.association.pojo.po.LoginTicket">
+    <update id="update" parameterType="com.suny.association.entity.po.LoginTicket">
         UPDATE login_ticket
         SET ticket = #{ticket}, expired = #{expired}, status = #{status}
         WHERE account_id = #{accountId};
     </update>
-    <insert id="insert" parameterType="com.suny.association.pojo.po.LoginTicket">
+    <insert id="insert" parameterType="com.suny.association.entity.po.LoginTicket">
         insert into login_ticket (<include refid="insertFields"/>) values (#{accountId},#{ticket},#{expired},#{status});
     </insert>
 
     <!--通过账号的ID去查询-->
-    <select id="selectByAccountId" resultType="com.suny.association.pojo.po.LoginTicket">
+    <select id="selectByAccountId" resultType="com.suny.association.entity.po.LoginTicket">
         SELECT
         <include refid="selectFields"/>
         FROM login_ticket WHERE account_id=#{accountId}
     </select>
-    <select id="selectByTicket" resultType="com.suny.association.pojo.po.LoginTicket">
+    <select id="selectByTicket" resultType="com.suny.association.entity.po.LoginTicket">
         SELECT
         <include refid="selectFields"/>
         FROM login_ticket WHERE ticket=#{ticket}

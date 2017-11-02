@@ -1,6 +1,6 @@
 package com.suny.association.service.interfaces;
 
-import com.suny.association.pojo.po.LoginTicket;
+import com.suny.association.entity.po.LoginTicket;
 import com.suny.association.service.IBaseService;
 
 import java.util.Map;

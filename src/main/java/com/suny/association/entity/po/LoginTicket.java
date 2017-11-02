@@ -1,9 +1,7 @@
-package com.suny.association.pojo.po;
+package com.suny.association.entity.po;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
 
 /**
  * 登录后带有的标记

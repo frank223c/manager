@@ -1,7 +1,7 @@
 package com.suny.association.mapper;
 
-import com.suny.association.pojo.po.Account;
-import com.suny.association.pojo.po.Member;
+import com.suny.association.entity.po.Account;
+import com.suny.association.entity.po.Member;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -11,8 +11,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**************************************
  *  Description  

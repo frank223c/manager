@@ -3,8 +3,6 @@ package com.suny.association.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +64,7 @@ public class ConversionUtil {
      */
     public static Map<Object, Object> convertToBootstrapTableResult(List resultList, int totalCount) {
         Map<Object, Object> tableDate = new HashMap<>(16);
-        if (resultList.size() != 0 && !resultList.isEmpty()) {
+        if (!resultList.isEmpty()) {
             tableDate.put("rows", resultList);
             tableDate.put("total", totalCount);
             return tableDate;
@@ -76,65 +74,7 @@ public class ConversionUtil {
         return tableDate;
     }
 
-    /**
-     * 根据反射动态封装查询条件
-     *
-     * @param clazz 反射的类
-     * @return 动态封装查询条件
-     */
-    static Map<Object, Object> dynamicCriteriaMap(Class clazz) {
-        String queryAllMethodName = "selectAll";
-        String className = clazz.getSimpleName();
-        Method[] methods = clazz.getDeclaredMethods();
-        Object[] threeArrayParam = new Object[]{"String", "int", "int"};
-        int i = 0;
-        int j = 0;
-        while (i < methods.length) {
-            if (methods[i].getName().equals(queryAllMethodName)) {
-                Method method = methods[i];
-                Class<?>[] parameterTypes = method.getParameterTypes();
-                if ("AccountController".equals(className)) {
-                    logger.info("传过来的是" + className);
-                    logger.info("是否匹配" + matchParameterType(parameterTypes, threeArrayParam));
-                }
-                while (j < parameterTypes.length) {
-                    logger.info("参数类型是" + parameterTypes[j].getName());
-                    j++;
-                }
-            }
-            i++;
-        }
-        return null;
-    }
 
-
-    /**
-     * 比较数组里面的状态是否全部相等
-     *
-     * @param parameterTypes  方法里面的参数
-     * @param threeArrayParam 固定的三个参数的查询条件类型
-     * @return 是否全部相等
-     */
-    private static Boolean matchParameterType(Object[] parameterTypes, Object[] threeArrayParam) {
-        ArrayList<Boolean> matchStatus = new ArrayList<>();
-        if (parameterTypes.length != threeArrayParam.length) {
-            return false;
-        }
-        for (int i = 0; i < parameterTypes.length; i++) {
-            matchStatus.add(i, ((Class) parameterTypes[i]).getName() == threeArrayParam[i]);
-        }
-        int statusSize = matchStatus.size();
-        for (int i = statusSize - 1; i >= 0; i--) {
-            while (statusSize > 0) {
-                if (!(matchStatus.get(i)).equals(matchStatus.get(statusSize - 1))) {
-                    return false;
-                }
-                statusSize--;
-            }
-            return true;
-        }
-        return true;
-    }
 }
 
 

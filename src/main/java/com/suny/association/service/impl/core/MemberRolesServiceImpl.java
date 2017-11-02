@@ -1,9 +1,11 @@
 package com.suny.association.service.impl.core;
 
 import com.suny.association.annotation.SystemServiceLog;
+import com.suny.association.mapper.MemberMapper;
 import com.suny.association.mapper.MemberRolesMapper;
-import com.suny.association.pojo.po.MemberRoles;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.Member;
+import com.suny.association.entity.po.MemberRoles;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.core.IMemberRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,21 +13,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * Comments:
+ * Comments:  协会角色操作
  * @author :   孙建荣
  * Create Date: 2017/03/07 22:36
  */
 @Service
 public class MemberRolesServiceImpl extends AbstractBaseServiceImpl<MemberRoles> implements IMemberRolesService {
-
+    private  MemberMapper memberMapper;
     private MemberRolesMapper memberRolesMapper;
 
     @Autowired
-    public MemberRolesServiceImpl(MemberRolesMapper memberRolesMapper) {
+    public MemberRolesServiceImpl(MemberRolesMapper memberRolesMapper, MemberMapper memberMapper) {
         this.memberRolesMapper = memberRolesMapper;
+        this.memberMapper = memberMapper;
     }
 
     public MemberRolesServiceImpl() {
@@ -97,8 +99,8 @@ public class MemberRolesServiceImpl extends AbstractBaseServiceImpl<MemberRoles>
      * @return 引用该角色的成员
      */
     @Override
-    public List<MemberRoles> queryQuote(Integer memberRoleId) {
-        return memberRolesMapper.queryQuote(memberRoleId);
+    public List<Member> selectByMemberRoleId(Integer memberRoleId) {
+        return memberMapper.selectByMemberRoleId(memberRoleId);
     }
 
 

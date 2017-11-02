@@ -4,9 +4,8 @@ import com.suny.association.annotation.SystemServiceLog;
 import com.suny.association.enums.BaseEnum;
 import com.suny.association.exception.BusinessException;
 import com.suny.association.mapper.AccountMapper;
-import com.suny.association.pojo.po.Account;
-import com.suny.association.pojo.po.Permission;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.Account;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.IAccountService;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Comments:  账号表业务逻辑控制

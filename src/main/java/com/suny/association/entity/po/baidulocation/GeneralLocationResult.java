@@ -1,4 +1,4 @@
-package com.suny.association.pojo.po.baidulocation;
+package com.suny.association.entity.po.baidulocation;
 
 /**
  * Comments:   百度普通定位返回结果

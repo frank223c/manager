@@ -1,7 +1,7 @@
 package com.suny.association.mapper;
 
 import com.suny.association.mapper.interfaces.IMapper;
-import com.suny.association.pojo.po.Member;
+import com.suny.association.entity.po.Member;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

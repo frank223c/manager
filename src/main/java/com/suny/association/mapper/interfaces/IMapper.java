@@ -1,6 +1,6 @@
 package com.suny.association.mapper.interfaces;
 
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.vo.ConditionMap;
 import java.util.List;
 
 /**

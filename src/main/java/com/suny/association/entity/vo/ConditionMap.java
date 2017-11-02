@@ -1,4 +1,4 @@
-package com.suny.association.pojo.vo;
+package com.suny.association.entity.vo;
 
 /**************************************
  *  Description   前端传给服务器的普通查询条件的封装

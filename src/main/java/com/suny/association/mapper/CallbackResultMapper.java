@@ -1,7 +1,7 @@
 package com.suny.association.mapper;
 
 import com.suny.association.mapper.interfaces.IMapper;
-import com.suny.association.pojo.po.CallbackResult;
+import com.suny.association.entity.po.CallbackResult;
 
 /**
  * Comments:   审批结果表mapper接口映射

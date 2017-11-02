@@ -2,9 +2,8 @@ package com.suny.association.controller.system;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
-import com.suny.association.pojo.po.LoginHistory;
-import com.suny.association.pojo.po.OperationLog;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.LoginHistory;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
 import com.suny.association.utils.ConversionUtil;

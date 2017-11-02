@@ -1,4 +1,4 @@
-<%--@elvariable id="member" type="com.suny.association.pojo.po.Member"--%>
+<%--@elvariable id="member" type="com.suny.association.entity.po.Member"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.

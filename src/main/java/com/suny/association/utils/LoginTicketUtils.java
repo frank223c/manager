@@ -1,13 +1,8 @@
 package com.suny.association.utils;
 
-import com.suny.association.mapper.AccountMapper;
-import com.suny.association.mapper.LoginTicketMapper;
-import com.suny.association.pojo.po.Account;
-import com.suny.association.pojo.po.LoginTicket;
+import com.suny.association.entity.po.LoginTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-import sun.security.krb5.internal.Ticket;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

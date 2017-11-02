@@ -1,4 +1,4 @@
-package com.suny.association.pojo.po;
+package com.suny.association.entity.po;
 
 /**
  * @author sunjianrong

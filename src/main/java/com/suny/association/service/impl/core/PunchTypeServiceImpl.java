@@ -2,18 +2,15 @@ package com.suny.association.service.impl.core;
 
 import com.suny.association.annotation.SystemServiceLog;
 import com.suny.association.mapper.PunchTypeMapper;
-import com.suny.association.pojo.po.ApplicationMessage;
-import com.suny.association.pojo.po.PunchType;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.PunchType;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.core.IPunchTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Comments:  考勤类型业务逻辑

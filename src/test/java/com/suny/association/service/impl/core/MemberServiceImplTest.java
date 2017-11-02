@@ -1,9 +1,9 @@
 package com.suny.association.service.impl.core;
 
-import com.suny.association.pojo.po.Department;
-import com.suny.association.pojo.po.Member;
-import com.suny.association.pojo.po.MemberRoles;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.Department;
+import com.suny.association.entity.po.Member;
+import com.suny.association.entity.po.MemberRoles;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.core.IMemberService;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,7 +1,7 @@
 package com.suny.association.service.interfaces.core;
 
-import com.suny.association.pojo.po.ApplicationMessage;
-import com.suny.association.pojo.po.CallbackResult;
+import com.suny.association.entity.po.ApplicationMessage;
+import com.suny.association.entity.po.CallbackResult;
 import com.suny.association.service.IBaseService;
 
 /**

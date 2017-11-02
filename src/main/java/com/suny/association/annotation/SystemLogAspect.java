@@ -1,8 +1,8 @@
 package com.suny.association.annotation;
 
-import com.suny.association.pojo.po.Account;
-import com.suny.association.pojo.po.Member;
-import com.suny.association.pojo.po.OperationLog;
+import com.suny.association.entity.po.Account;
+import com.suny.association.entity.po.Member;
+import com.suny.association.entity.po.OperationLog;
 import com.suny.association.service.interfaces.system.IOperationLogService;
 import com.suny.association.utils.JackJsonUtil;
 import com.suny.association.utils.WebUtils;

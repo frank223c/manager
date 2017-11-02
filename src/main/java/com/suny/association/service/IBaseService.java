@@ -1,9 +1,8 @@
 package com.suny.association.service;
 
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.vo.ConditionMap;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Comments:   通用的逻辑层方法

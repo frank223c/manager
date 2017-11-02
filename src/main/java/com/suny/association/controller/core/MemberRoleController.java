@@ -2,12 +2,12 @@ package com.suny.association.controller.core;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
+import com.suny.association.entity.dto.BootstrapTableResult;
+import com.suny.association.entity.po.MemberRoles;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.enums.BaseEnum;
-import com.suny.association.pojo.po.MemberRoles;
-import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.interfaces.core.IMemberRolesService;
 import com.suny.association.service.interfaces.core.IMemberService;
-import com.suny.association.utils.ConversionUtil;
 import com.suny.association.utils.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.suny.association.utils.JsonResult.failResult;
 import static com.suny.association.utils.JsonResult.successResult;
@@ -42,7 +41,7 @@ public class MemberRoleController extends BaseController {
     @RequestMapping(value = "/delete.action/{memberRoleId}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResult delete(@PathVariable("memberRoleId") Integer memberRoleId) {
-        if (memberService.selectByMemberRoleId(memberRoleId).size() >= 1) {
+        if (!memberService.selectByMemberRoleId(memberRoleId).isEmpty()) {
             return failResult(BaseEnum.HAVE_QUOTE);
         } else if (memberRolesService.selectById(memberRoleId) == null) {
             return failResult(BaseEnum.DELETE_FAILURE);
@@ -114,14 +113,22 @@ public class MemberRoleController extends BaseController {
      * @return 带查询条件的数据
      */
     @SystemControllerLog(description = "查询成员角色")
-    @RequestMapping(value = "/list.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectByParam.action", method = RequestMethod.GET)
     @ResponseBody
-    public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
-                                     @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        ConditionMap<MemberRoles> conditionMap=new ConditionMap<>(new MemberRoles(),0,10);
+    public BootstrapTableResult selectByParam(@RequestParam(value = "memberRoleId",defaultValue = "")String memberRoleId,
+                                        @RequestParam(value = "memberRoleId",defaultValue = "") String memberRoleName,
+                                       @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+                                       @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
+        MemberRoles memberRoles=new MemberRoles();
+            if(!"".equals(memberRoleId)){
+                memberRoles.setMemberRoleId(Integer.valueOf(memberRoleId));
+            }
+            if (!"".equals(memberRoleName)){
+                memberRoles.setMemberRoleName(memberRoleName);
+            }
+        ConditionMap<MemberRoles> conditionMap=new ConditionMap<>(memberRoles,offset,limit);
         List<MemberRoles> rolesList = memberRolesService.selectByParam(conditionMap);
-        int total = memberRolesService.selectCount();
-        return ConversionUtil.convertToBootstrapTableResult(rolesList, total);
+        return new BootstrapTableResult(rolesList.size(), rolesList);
     }
 
     @SystemControllerLog(description = "查看成员角色页面")

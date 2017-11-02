@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suny.association.mapper.LoginHistoryMapper">
-    <!--<resultMap id="BaseResultMap" type="com.suny.association.pojo.po.LoginHistory">
+    <!--<resultMap id="BaseResultMap" tycom.suny.association.entitytypojo.po.LoginHistory">
         <id property="loginHistoryId" column="login_history_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
         <result property="loginIp" column="login_ip" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="loginName" column="login_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
@@ -12,9 +12,9 @@
         <result property="loginUserAgent" column="login_user_agent" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="loginStatus" column="login_status" jdbcType="BOOLEAN" javaType="java.lang.Boolean"/>
         &lt;!&ndash;<association property="historyAccountId" column="history_account_id"&ndash;&gt;
-        &lt;!&ndash;javaType="com.suny.association.pojo.po.Account" select="getAccount"/>&ndash;&gt;
+        &lt;!&ndash;javaTycom.suny.association.entitytypojo.po.Account" select="getAccount"/>&ndash;&gt;
     </resultMap>-->
-    <insert id="insert" parameterType="com.suny.association.pojo.po.LoginHistory">
+    <insert id="insert" parameterType="com.suny.association.entity.po.LoginHistory">
         INSERT INTO login_history
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test=" loginHistoryId != null">login_history_id ,</if>
@@ -44,7 +44,7 @@
         login_history_id, login_name, login_ip, login_address, login_time, login_browser, login_os_version, login_user_agent, login_status
     </sql>
 
-    <select id="selectByParam" parameterType="hashmap" resultType="com.suny.association.pojo.po.LoginHistory">
+    <select id="selectByParam" parameterType="hashmap" resultType="com.suny.association.entity.po.LoginHistory">
         SELECT
         <include refid="selectFields"/>
         FROM login_history
@@ -56,7 +56,7 @@
         SELECT count(*)
         FROM login_history;
     </select>
-    <select id="queryLoginLogByMemberId" resultType="com.suny.association.pojo.po.LoginHistory">
+    <select id="queryLoginLogByMemberId" resultType="com.suny.association.entity.po.LoginHistory">
 
     </select>
 

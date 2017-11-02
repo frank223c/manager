@@ -2,8 +2,8 @@ package com.suny.association.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.enums.BaseEnum;
-import com.suny.association.pojo.po.Account;
-import com.suny.association.pojo.po.Member;
+import com.suny.association.entity.po.Account;
+import com.suny.association.entity.po.Member;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.ILoginService;
 import com.suny.association.utils.JsonResult;
@@ -111,7 +111,7 @@ public class BackedLoginController {
                 if (rememberMe) {
                     cookie.setMaxAge(3600 * 24 * 5);
                 }
-                // cookie.setSecure(true); cookie的secure值为true时，在http中是无效的；在https中才有效。请注意这里在HTTP连接中会导致无cookie传输
+                // cookie.setSecure(true); 在http中是客户端cookie无效的；在https中才有效。请注意这里在HTTP连接中会导致导致客户端的cookie无法传输
                 response.addCookie(cookie);
                 //    1.4.4   把一些进入主页面需要的数据先放进去
                 saveUser(request, response, username);

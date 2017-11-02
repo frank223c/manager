@@ -3,10 +3,9 @@ package com.suny.association.controller.core;
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
 import com.suny.association.enums.BaseEnum;
-import com.suny.association.pojo.po.ApplicationMessage;
-import com.suny.association.pojo.po.CallbackResult;
-import com.suny.association.pojo.po.MemberRoles;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.ApplicationMessage;
+import com.suny.association.entity.po.CallbackResult;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.core.IApplicationMessageService;
 import com.suny.association.service.interfaces.core.ICallbackResultService;
 import com.suny.association.service.interfaces.core.IMemberService;
@@ -22,8 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
-
-import static com.suny.association.utils.ConversionUtil.convertToCriteriaMap;
 
 /**
  * Comments:   异议考勤结果控制器

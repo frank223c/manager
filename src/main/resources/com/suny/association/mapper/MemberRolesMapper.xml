@@ -1,71 +1,75 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suny.association.mapper.MemberRolesMapper">
-    <resultMap id="BaseResultMap" type="com.suny.association.pojo.po.MemberRoles">
-        <id property="memberRoleId" column="member_role_id"/>
+    <resultMap id="BaseResultMap" type="com.suny.association.entity.po.MemberRoles">
+        <id property="memberRoleId" column="member_role_id" />
         <result property="memberRoleName" column="member_role_name"/>
     </resultMap>
-
-
-    <insert id="insert" parameterType="com.suny.association.pojo.po.MemberRoles">
+    <!--插入新的协会角色-->
+    <insert id="insert" parameterType="com.suny.association.entity.po.MemberRoles">
         INSERT INTO member_roles
         (member_role_name)
         VALUES
         (#{memberRoleName})
     </insert>
-
-    <delete id="deleteById" parameterType="int">
+    <!--通过协会角色ID删除-->
+    <delete id="deleteById" parameterType="long">
         DELETE FROM member_roles
-        WHERE member_role_id = #{memberRoleId}
+        WHERE member_role_id = #{id}
     </delete>
-
-    <update id="update" parameterType="com.suny.association.pojo.po.MemberRoles">
+    <!--更新协会角色-->
+    <update id="update" parameterType="com.suny.association.entity.po.MemberRoles">
         UPDATE member_roles
         SET member_role_name = #{memberRoleName}
         WHERE member_role_id = #{memberRoleId}
     </update>
-
+    <!--查询所有的协会角色-->
     <select id="selectAll" resultMap="BaseResultMap">
         SELECT
         mr.member_role_id,
         mr.member_role_name
         FROM member_roles AS mr
     </select>
-
-    <select id="selectById" parameterType="Integer" resultMap="BaseResultMap">
+    <!--通过ID查询-->
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
         SELECT
         mr.member_role_id,
         mr.member_role_name
         FROM member_roles AS mr
         WHERE mr.member_role_id = #{memberRoleId}
     </select>
-
+    <!--通过名字去查询-->
     <select id="selectByName" parameterType="String" resultMap="BaseResultMap">
         SELECT
         mr.member_role_id,
         mr.member_role_name
         FROM member_roles AS mr
-        WHERE mr.member_role_name LIKE CONCAT(CONCAT('%', #{memberRoleName}), '%')
+        WHERE mr.member_role_name
+              LIKE CONCAT(CONCAT('%', #{memberRoleName}), '%')
     </select>
-
+    <!--通过查询去查询-->
     <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
         mr.member_role_id,
         mr.member_role_name
         FROM member_roles AS mr
+            <where>
+                and 1=1
+                <if test="entity.memberRoleId != null">
+                    AND member_role_id=#{entity.memberRoleId}
+                </if>
+                <if test="entity.memberRoleName != null">
+                    AND member_role_name=#{entity.memberRoleName}
+                </if>
+            </where>
         LIMIT
         #{offset},
         #{limit}
     </select>
-
+   <!--查询数据库表中的数据总量-->
     <select id="selectCount" resultType="int">
         SELECT count(*)
         FROM member_roles;
-    </select>
-    <select id="queryQuote" parameterType="int" resultType="com.suny.association.pojo.po.MemberRoles">
-        SELECT *
-        FROM member_roles
-        WHERE member_role_id = #{memberRoleId}
     </select>
 
 

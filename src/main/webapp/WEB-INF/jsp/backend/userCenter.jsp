@@ -1,5 +1,5 @@
-<%--@elvariable id="account" type="com.suny.association.pojo.po.Account"--%>
-<%--@elvariable id="member" type="com.suny.association.pojo.po.Member"--%>
+<%--@elvariable id="account" type="com.suny.association.entity.po.Account"--%>
+<%--@elvariable id="member" type="com.suny.association.entity.po.Member"--%>
 <%--
   Created by IntelliJ IDEA.
   User: 孙建荣

@@ -2,8 +2,8 @@ package com.suny.association.service.impl.system;
 
 import com.suny.association.annotation.SystemServiceLog;
 import com.suny.association.mapper.OperationLogMapper;
-import com.suny.association.pojo.po.OperationLog;
-import com.suny.association.pojo.vo.ConditionMap;
+import com.suny.association.entity.po.OperationLog;
+import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.system.IOperationLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Comments:  操作记录业务逻辑

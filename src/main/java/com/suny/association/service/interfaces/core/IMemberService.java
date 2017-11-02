@@ -1,14 +1,13 @@
 package com.suny.association.service.interfaces.core;
 
 import com.suny.association.annotation.SystemControllerLog;
-import com.suny.association.pojo.po.Member;
+import com.suny.association.entity.po.Member;
 import com.suny.association.service.IBaseService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Comments:   成员表业务逻辑接口

@@ -3,7 +3,7 @@
 <mapper namespace="com.suny.association.mapper.MemberMapper">
     <!--这里可以使用嵌套查询跟嵌套结果两种方式进行查询，
        嵌套结果：使用嵌套结果映射来处理重复的联合结果的子集，封装联表查询的数据(去除重复的数据)-->
-    <resultMap id="BaseResultMap" type="com.suny.association.pojo.po.Member">
+    <resultMap id="BaseResultMap" type="com.suny.association.entity.po.Member">
         <id property="memberId" column="member_id"/>
         <result property="memberName" column="member_name"/>
         <result property="memberClassName" column="member_class_name"/>
@@ -12,19 +12,19 @@
         <result property="memberStatus" column="member_status"/>
         <!--部门复杂类型关联-->
         <association property="memberDepartment" column="member_department_id"
-                     javaType="com.suny.association.pojo.po.Department">
+                     javaType="com.suny.association.entity.po.Department">
             <id property="departmentId" column="d_department_id"/>
             <result property="departmentName" column="d_department_name"/>
         </association>
         <!--角色复杂类型关联-->
-        <association property="memberRoles" column="member_role" javaType="com.suny.association.pojo.po.MemberRoles">
+        <association property="memberRoles" column="member_role" javaType="com.suny.association.entity.po.MemberRoles">
             <id property="memberRoleId" column="m_r_member_role_id"/>
             <result property="memberRoleName" column="m_r_member_role_name"/>
         </association>
         <!--//这里有问题,这里会引起StackOverFlow的问题,因为管理员也有管理员,所以无限递归-->
         <!--协会成员对应的管理员复杂类型集合-->
         <!-- <association property="memberManager" column="member_manager_id"
-                      javaType="com.suny.association.pojo.po.Member"
+                      javaTycom.suny.association.entitytypojo.po.Member"
                       resultMap="BaseResultMap"/>-->
     </resultMap>
 
@@ -74,7 +74,7 @@
     </select>
 
     <!--插入一条数据并返回自动生成的主键ID-->
-    <insert id="insertAndReturnId" parameterType="com.suny.association.pojo.po.Member" useGeneratedKeys="true"
+    <insert id="insertAndReturnId" parameterType="com.suny.association.entity.po.Member" useGeneratedKeys="true"
             keyProperty="memberId">
         INSERT INTO member
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -104,7 +104,7 @@
         </trim>
     </insert>
     <!--往数据库插入一条新的数据-->
-    <insert id="insert" parameterType="com.suny.association.pojo.po.Member" useGeneratedKeys="true"
+    <insert id="insert" parameterType="com.suny.association.entity.po.Member" useGeneratedKeys="true"
             keyProperty="memberId">
         INSERT INTO member
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -157,7 +157,7 @@
         WHERE member_id = #{id}
     </delete>
     <!--更新数据库中一条数据-->
-    <update id="update" parameterType="com.suny.association.pojo.po.Member">
+    <update id="update" parameterType="com.suny.association.entity.po.Member">
         UPDATE member
         <trim prefix="set" suffixOverrides=",">
             <if test="memberId != null">member_id = #{memberId,jdbcType=BIGINT} ,</if>
@@ -397,6 +397,8 @@
         <=
         ]]> #{limitMemberRoleId} AND m.member_grade_number = #{memberGrade} AND m.member_status = 1
     </select>
+
+
 
 
 </mapper>

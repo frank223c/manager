@@ -1,6 +1,6 @@
 package com.suny.association.service.interfaces;
 
-import com.suny.association.pojo.po.Account;
+import com.suny.association.entity.po.Account;
 import com.suny.association.service.IBaseService;
 
 /**

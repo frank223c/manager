@@ -2,7 +2,7 @@ package com.suny.association.service.impl;
 
 
 import com.suny.association.mapper.AccountMapper;
-import com.suny.association.pojo.po.Account;
+import com.suny.association.entity.po.Account;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
