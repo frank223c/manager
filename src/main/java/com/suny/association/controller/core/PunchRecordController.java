@@ -2,6 +2,7 @@ package com.suny.association.controller.core;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
+import com.suny.association.entity.dto.BootstrapTableResult;
 import com.suny.association.enums.BaseEnum;
 import com.suny.association.entity.po.Member;
 import com.suny.association.entity.po.PunchRecord;
@@ -133,12 +134,12 @@ public class PunchRecordController extends BaseController {
 
     @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
-    public Map query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResult query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         ConditionMap<PunchRecord> conditionMap = new ConditionMap<>(new PunchRecord(), 0, 10);
         List<PunchRecord> punchRecordList = punchRecordService.selectByParam(conditionMap);
         int total = punchRecordService.selectCount();
-        return ConversionUtil.convertToBootstrapTableResult(punchRecordList, total);
+        return new BootstrapTableResult(total, punchRecordList);
     }
 
     @SystemControllerLog(description = "查看考勤记录页面")

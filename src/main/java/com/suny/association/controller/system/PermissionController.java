@@ -2,9 +2,10 @@ package com.suny.association.controller.system;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
-import com.suny.association.enums.BaseEnum;
+import com.suny.association.entity.dto.BootstrapTableResult;
 import com.suny.association.entity.po.Permission;
 import com.suny.association.entity.vo.ConditionMap;
+import com.suny.association.enums.BaseEnum;
 import com.suny.association.service.interfaces.system.IPermissionService;
 import com.suny.association.utils.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Map;
 
-import static com.suny.association.utils.ConversionUtil.convertToBootstrapTableResult;
 import static com.suny.association.utils.JsonResult.failResult;
 import static com.suny.association.utils.JsonResult.successResult;
 
@@ -135,14 +134,13 @@ public class PermissionController extends BaseController {
     @SystemControllerLog(description = "查询所有的权限信息")
     @RequestMapping(value = "/queryAll.action", method = RequestMethod.GET)
     @ResponseBody
-    public Map<Object, Object> queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResult queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
                                         @RequestParam(value = "status", required = false, defaultValue = "3") int status) {
         ConditionMap<Permission> conditionMap=new ConditionMap<>(new Permission(),0,10);
         int totalCount = permissionService.selectCount();
-//        Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit, status);
         List<Permission> permissionList = permissionService.selectByParam(conditionMap);
-        return convertToBootstrapTableResult(permissionList, totalCount);
+        return new BootstrapTableResult(totalCount,permissionList);
     }
 
     @SystemControllerLog(description = "查看权限管理页面")

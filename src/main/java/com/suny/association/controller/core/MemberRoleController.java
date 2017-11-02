@@ -128,7 +128,8 @@ public class MemberRoleController extends BaseController {
             }
         ConditionMap<MemberRoles> conditionMap=new ConditionMap<>(memberRoles,offset,limit);
         List<MemberRoles> rolesList = memberRolesService.selectByParam(conditionMap);
-        return new BootstrapTableResult(rolesList.size(), rolesList);
+        int totalCount = memberRolesService.selectCount();
+        return new BootstrapTableResult(totalCount, rolesList);
     }
 
     @SystemControllerLog(description = "查看成员角色页面")

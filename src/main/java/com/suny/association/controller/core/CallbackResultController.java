@@ -2,6 +2,7 @@ package com.suny.association.controller.core;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
+import com.suny.association.entity.dto.BootstrapTableResult;
 import com.suny.association.entity.po.CallbackResult;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.core.ICallbackResultService;
@@ -41,12 +42,12 @@ public class CallbackResultController extends BaseController {
      */
     @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
-    public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResult query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         ConditionMap<CallbackResult> conditionMap=new ConditionMap<>(new CallbackResult(),0,10);
         List<CallbackResult> callbackResultList = callbackResultService.selectByParam(conditionMap);
         int total = callbackResultService.selectCount();
-        return ConversionUtil.convertToBootstrapTableResult(callbackResultList, total);
+        return new BootstrapTableResult(total, callbackResultList);
     }
 
 

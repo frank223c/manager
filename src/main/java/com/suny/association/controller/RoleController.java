@@ -1,6 +1,7 @@
 package com.suny.association.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
+import com.suny.association.entity.dto.BootstrapTableResult;
 import com.suny.association.enums.BaseEnum;
 import com.suny.association.entity.po.Roles;
 import com.suny.association.entity.vo.ConditionMap;
@@ -112,12 +113,12 @@ public class RoleController extends BaseController {
      */
     @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
-    public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResult query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         ConditionMap<Roles> conditionMap=new ConditionMap<>(new Roles(),0,10);
         List<Roles> rolesList = rolesService.selectByParam(conditionMap);
         int total = rolesService.selectCount();
-        return ConversionUtil.convertToBootstrapTableResult(rolesList, total);
+        return new BootstrapTableResult(total, rolesList);
     }
 
     @SystemControllerLog(description = "查看账号角色页面")

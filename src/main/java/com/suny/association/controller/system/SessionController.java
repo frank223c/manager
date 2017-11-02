@@ -2,11 +2,11 @@ package com.suny.association.controller.system;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
+import com.suny.association.entity.dto.BootstrapTableResult;
 import com.suny.association.entity.po.LoginHistory;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
-import com.suny.association.utils.ConversionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,20 +35,18 @@ public class SessionController extends BaseController {
 
     @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
-    public Map<Object, Object> query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResult query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         ConditionMap<LoginHistory> conditionMap=new ConditionMap<>(new LoginHistory(),0,10);
         List<LoginHistory> loginHistoryList = loginHistoryService.selectByParam(conditionMap);
         int total = loginHistoryService.selectCount();
-        return ConversionUtil.convertToBootstrapTableResult(loginHistoryList, total);
+        return new BootstrapTableResult(total,loginHistoryList);
     }
 
     @SystemControllerLog(description = "查询指定账号登录记录")
     @RequestMapping(value = "/queryByMemberId.action", method = RequestMethod.GET)
     @ResponseBody
     public Map<Object, Object> queryById(@RequestParam("memberId") int memberId) {
-//        List<LoginHistory> loginHistoryList = loginHistoryService.queryLoginLogByMemberId(memberId);
-//        return ConversionUtil.convertToBootstrapTableResult(loginHistoryList, 5);
         return null;
     }
 

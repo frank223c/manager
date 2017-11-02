@@ -2,6 +2,7 @@ package com.suny.association.controller.system;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
+import com.suny.association.entity.dto.BootstrapTableResult;
 import com.suny.association.entity.po.OperationLog;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.system.IOperationLogService;
@@ -13,9 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
-
-import static com.suny.association.utils.ConversionUtil.convertToBootstrapTableResult;
 
 /**
  * Comments:   操作记录控制器
@@ -42,12 +40,12 @@ public class OperationLogController extends BaseController {
      */
     @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
-    public Map query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResult query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         ConditionMap<OperationLog> conditionMap=new ConditionMap<>(new OperationLog(),0,10);
         List<OperationLog> operationLogList = operationLogService.selectByParam(conditionMap);
         int total = operationLogService.selectCount();
-        return convertToBootstrapTableResult(operationLogList, total);
+        return new BootstrapTableResult(total,operationLogList);
     }
 
     @SystemControllerLog(description = "查看操作记录页面")

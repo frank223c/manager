@@ -1,14 +1,15 @@
 package com.suny.association.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
-import com.suny.association.enums.BaseEnum;
+import com.suny.association.entity.dto.BootstrapTableResult;
 import com.suny.association.entity.po.Account;
 import com.suny.association.entity.po.Member;
 import com.suny.association.entity.po.Roles;
 import com.suny.association.entity.vo.ConditionMap;
+import com.suny.association.enums.BaseEnum;
 import com.suny.association.service.interfaces.IAccountService;
-import com.suny.association.service.interfaces.core.IMemberService;
 import com.suny.association.service.interfaces.IRolesService;
+import com.suny.association.service.interfaces.core.IMemberService;
 import com.suny.association.utils.JsonResult;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.suny.association.utils.ConversionUtil.convertToBootstrapTableResult;
 import static com.suny.association.utils.JsonResult.failResult;
 import static com.suny.association.utils.JsonResult.successResult;
 
@@ -207,14 +207,13 @@ public class AccountController extends BaseController {
     @SystemControllerLog(description = "查询账号信息")
     @RequestMapping(value = "/queryAll.action", method = RequestMethod.GET)
     @ResponseBody
-    public Map<Object, Object> queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResult queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
                                         @RequestParam(value = "status", required = false, defaultValue = "3") int status) {
-        ConditionMap<Account> conditionMap=new ConditionMap<>(new Account(),0,10);
+        ConditionMap<Account> conditionMap=new ConditionMap<>(new Account(),offset,limit);
         int totalCount = accountService.selectCount();
-//        Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit, status);
         List<Account> accountList = accountService.selectByParam(conditionMap);
-        return convertToBootstrapTableResult(accountList, totalCount);
+        return new BootstrapTableResult(totalCount, accountList);
     }
 
 

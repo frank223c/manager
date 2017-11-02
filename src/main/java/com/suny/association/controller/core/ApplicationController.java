@@ -2,6 +2,7 @@ package com.suny.association.controller.core;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
+import com.suny.association.entity.dto.BootstrapTableResult;
 import com.suny.association.enums.BaseEnum;
 import com.suny.association.entity.po.ApplicationMessage;
 import com.suny.association.entity.po.CallbackResult;
@@ -104,13 +105,13 @@ public class ApplicationController extends BaseController {
      */
     @RequestMapping(value = "/queryAll.action", method = RequestMethod.GET)
     @ResponseBody
-    public Map query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResult query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                      @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         ConditionMap<ApplicationMessage> conditionMap=new ConditionMap<>(new ApplicationMessage(),0,10);
 //        Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit);
         List<ApplicationMessage> punchRecordList = applicationMessageService.selectByParam(conditionMap);
         int total = applicationMessageService.selectCount();
-        return ConversionUtil.convertToBootstrapTableResult(punchRecordList, total);
+        return new BootstrapTableResult(total, punchRecordList);
     }
 
     /**
