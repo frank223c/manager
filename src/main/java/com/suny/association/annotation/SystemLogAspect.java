@@ -43,13 +43,17 @@ public class SystemLogAspect {
         this.operationLogService = operationLogService;
     }
 
-    //service层切点
+    /**
+     *service层切点
+     */
     @Pointcut("@annotation(com.suny.association.annotation.SystemServiceLog)")
     public void serviceAspect() {
 
     }
 
-    //controller层切点
+    /**
+     *controller层切点
+     */
     @Pointcut("@annotation(com.suny.association.annotation.SystemControllerLog)")
     public void controllerAspect() {
 
@@ -71,11 +75,11 @@ public class SystemLogAspect {
         String ip = WebUtils.getClientIpAdder(request);
         try {
             /*控制台输出*/
-            System.out.println("====前置通知开始");
-            System.out.println("请求的方法为=======" + joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()");
-            System.out.println("方法描述为=======" + getControllerMethodDescription(joinPoint));
-            System.out.println("请求人=======" + member.getMemberName());
-            System.out.println("请求人ip=======" + ip);
+            logger.info("====前置通知开始");
+            logger.info("请求的方法为======={}",joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()");
+            logger.info("方法描述为======={}",getControllerMethodDescription(joinPoint));
+            logger.info("请求人======={}",member.getMemberName());
+            logger.info("请求人ip======={}",ip);
             /*数据库日志，下面是把数据报存到数据库的的动作*/
             OperationLog operationLog = new OperationLog();
             String userAgent = request.getHeader("user-agent");
@@ -105,13 +109,13 @@ public class SystemLogAspect {
                 operationLog.setOperationAddress("未知地址");
             }
             operationLog.setOperationIp(clientIpAdder);
-            System.out.println("准备向数据库插入操作记录");
+            logger.info("准备向数据库插入操作记录");
             // 开始插入操作日志
             operationLogService.insert(operationLog);
 
-            System.out.println("数据库插入操作记录结束");
+            logger.info("数据库插入操作记录结束");
 
-            System.out.println("===前置通知结束");
+            logger.info("===前置通知结束");
         } catch (Exception e) {
             //记录本地异常日志
             logger.error("==前置通知异常==");
@@ -138,19 +142,21 @@ public class SystemLogAspect {
         //获取用户请求方法的参数并序列化为JSON格式字符串
         String params = "";
         if (joinPoint.getArgs() != null && joinPoint.getArgs().length > 0) {
+            StringBuilder paramsBuilder = new StringBuilder();
             for (int i = 0; i < joinPoint.getArgs().length; i++) {
-                params += JackJsonUtil.processObjectToJson(joinPoint.getArgs()[i])+ ";";
+                paramsBuilder.append(JackJsonUtil.processObjectToJson(joinPoint.getArgs()[i])).append(";");
             }
+            params = paramsBuilder.toString();
         }
         try {
         /*==控制台的输出==*/
-            System.out.println("==异常通知开始==");
-            System.out.println("异常代码" + e.getClass().getName());
-            System.out.println("异常信息" + (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));
-            System.out.println("方法描述" + getServiceMethodDescription(joinPoint));
-            System.out.println("请求人" + member.getMemberName());
-            System.out.println("请求人IP" + ip);
-            System.out.println("请求参数" + params);
+            logger.info("==异常通知开始==");
+            logger.info("异常代码{}",e.getClass().getName());
+            logger.info("异常信息{}" , (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));
+            logger.info("方法描述{}" , getServiceMethodDescription(joinPoint));
+            logger.info("请求人{}" ,member.getMemberName());
+            logger.info("请求人IP{}",ip);
+            logger.info("请求参数{}",params);
             /*数据库日志，下面是把数据报存到数据库的的动作*/
             OperationLog operationLog = new OperationLog();
             String userAgent = request.getHeader("user-agent");
@@ -180,7 +186,7 @@ public class SystemLogAspect {
             /*开始插入操作日志*/
             operationLogService.insert(operationLog);
 
-            System.out.println("===异常日志结束====");
+            logger.info("===异常日志结束====");
         } catch (ClassNotFoundException ex) {
             logger.error("==异常通知异常==");
             logger.error("异常信息:{}" + ex.getMessage());

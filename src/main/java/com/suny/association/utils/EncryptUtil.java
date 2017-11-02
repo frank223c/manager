@@ -1,5 +1,10 @@
 package com.suny.association.utils;
 
+import com.suny.association.exception.DecryptException;
+import com.suny.association.exception.EncryptException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -13,6 +18,12 @@ import java.security.NoSuchAlgorithmException;
  * Create Date: 2017/03/08 16:47
  */
 public class EncryptUtil {
+    private static Logger logger = LoggerFactory.getLogger(EncryptUtil.class);
+    private static final String AES="AES";
+    private static final String DES="DES";
+    private static final Integer SEVENTH_BIT =16;
+    private static final Integer EIGHT_BIT=8;
+    private static final Integer TWO=2;
 
     /**
      * 进行MD5加密
@@ -30,11 +41,10 @@ public class EncryptUtil {
             // 得到该摘要
             digesta = alga.digest();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         // 将摘要转为字符串
-        String rs = byte2hex(digesta);
-        return rs;
+        return byte2hex(digesta);
     }
 
     /**
@@ -53,23 +63,22 @@ public class EncryptUtil {
             // 得到该摘要
             digesta = alga.digest();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         // 将摘要转为字符串
-        String rs = byte2hex(digesta);
-        return rs;
+        return byte2hex(digesta);
     }
 
 
     /**
      * 根据一定的算法得到相应的key
-     * @param src
-     * @return
+     * @param src  对应的资源
+     * @return  加密后的值
      */
     public String getKey(String algorithm,String src){
-        if("AES".equals(algorithm)){
+        if(AES.equals(algorithm)){
             return src.substring(0, 16);
-        }else if("DES".equals(algorithm)){
+        }else if(DES.equals(algorithm)){
             return src.substring(0, 8);
         }else{
             return null;
@@ -77,16 +86,16 @@ public class EncryptUtil {
     }
     /**
      * 得到AES加密的key
-     * @param src
-     * @return
+     * @param src   加密的字符串
+     * @return  加密后的值
      */
     public String getAESKey(String src){
         return this.getKey("AES", src);
     }
     /**
      * 得到DES加密的key
-     * @param src
-     * @return
+     * @param src   加密的字符串
+     * @return  加密后的值
      */
     public String getDESKey(String src){
         return this.getKey("DES", src);
@@ -108,7 +117,7 @@ public class EncryptUtil {
             // 生成一个密钥
             deskey = keygen.generateKey();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         // 返回密匙
         return deskey;
@@ -116,7 +125,7 @@ public class EncryptUtil {
 
     /**
      * 创建一个AES的密钥
-     * @return
+     * @return   加密后的值
      */
     public SecretKey createSecretAESKey() {
         return createSecretKey("AES");
@@ -124,7 +133,7 @@ public class EncryptUtil {
 
     /**
      * 创建一个DES的密钥
-     * @return
+     * @return   加密后的值
      */
     public SecretKey createSecretDESKey() {
         return createSecretKey("DES");
@@ -133,9 +142,6 @@ public class EncryptUtil {
     /**
      * 根据相应的加密算法、密钥、源文件进行加密，返回加密后的文件
      * @param algorithm 加密算法:DES,AES
-     * @param key
-     * @param info
-     * @return
      */
     public String encrypt(String algorithm, SecretKey key, String info) {
         // 定义要生成的密文
@@ -149,7 +155,7 @@ public class EncryptUtil {
             // 对要加密的内容进行编码处理,
             cipherByte = c1.doFinal(info.getBytes());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         // 返回密文的十六进制形式
         return byte2hex(cipherByte);
@@ -157,10 +163,6 @@ public class EncryptUtil {
 
     /**
      * 根据相应的解密算法、密钥和需要解密的文本进行解密，返回解密后的文本内容
-     * @param algorithm
-     * @param key
-     * @param sInfo
-     * @return
      */
     public String decrypt(String algorithm, SecretKey key, String sInfo) {
         byte[] cipherByte = null;
@@ -172,7 +174,7 @@ public class EncryptUtil {
             // 对要解密的内容进行编码处理
             cipherByte = c1.doFinal(hex2byte(sInfo));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return new String(cipherByte);
     }
@@ -181,21 +183,20 @@ public class EncryptUtil {
      * 根据相应的解密算法、指定的密钥和需要解密的文本进行解密，返回解密后的文本内容
      * @param algorithm 加密算法:DES,AES
      * @param sKey 这个key可以由用户自己指定 注意AES的长度为16位,DES的长度为8位
-     * @return
      */
     public static String decrypt(String algorithm, String sSrc, String sKey) throws Exception {
         try {
             // 判断Key是否正确
             if (sKey == null) {
-                throw new Exception("Key为空null");
+                throw new DecryptException("Key为空null");
             }
             // 判断采用AES加解密方式的Key是否为16位
-            if ("AES".equals(algorithm) && sKey.length() != 16) {
-                throw new Exception("Key长度不是16位");
+            if (AES.equals(algorithm) && sKey.length() != SEVENTH_BIT) {
+                throw new DecryptException("Key长度不是16位");
             }
             // 判断采用DES加解密方式的Key是否为8位
-            if ("DES".equals(algorithm) && sKey.length() != 8) {
-                throw new Exception("Key长度不是8位");
+            if (DES.equals(algorithm) && sKey.length() != EIGHT_BIT) {
+                throw new DecryptException("Key长度不是8位");
             }
             byte[] raw = sKey.getBytes("ASCII");
             SecretKeySpec skeySpec = new SecretKeySpec(raw, algorithm);
@@ -204,13 +205,12 @@ public class EncryptUtil {
             byte[] encrypted1 = hex2byte(sSrc);
             try {
                 byte[] original = cipher.doFinal(encrypted1);
-                String originalString = new String(original);
-                return originalString;
+                return new String(original);
             } catch (Exception e) {
-                throw e;
+                throw new DecryptException("解密异常",e);
             }
         } catch (Exception ex) {
-            throw ex;
+            throw new DecryptException("解密异常",ex);
         }
     }
 
@@ -218,21 +218,19 @@ public class EncryptUtil {
      * 根据相应的加密算法、指定的密钥、源文件进行加密，返回加密后的文件
      * @param algorithm 加密算法:DES,AES
      * @param sKey 这个key可以由用户自己指定 注意AES的长度为16位,DES的长度为8位
-     * @param
-     * @return
      */
     public static String encrypt(String algorithm, String sSrc, String sKey) throws Exception {
         // 判断Key是否正确
         if (sKey == null) {
-            throw new Exception("Key为空null");
+            throw new EncryptException("Key为空null");
         }
         // 判断采用AES加解密方式的Key是否为16位
-        if ("AES".equals(algorithm) && sKey.length() != 16) {
-            throw new Exception("Key长度不是16位");
+        if (AES.equals(algorithm) && sKey.length() != SEVENTH_BIT) {
+            throw new EncryptException("Key长度不是16位");
         }
         // 判断采用DES加解密方式的Key是否为8位
-        if ("DES".equals(algorithm) && sKey.length() != 8) {
-            throw new Exception("Key长度不是8位");
+        if (DES.equals(algorithm) && sKey.length() != EIGHT_BIT) {
+            throw new EncryptException("Key长度不是8位");
         }
         byte[] raw = sKey.getBytes("ASCII");
         SecretKeySpec skeySpec = new SecretKeySpec(raw, algorithm);
@@ -244,9 +242,6 @@ public class EncryptUtil {
 
     /**
      * 采用DES随机生成的密钥进行加密
-     * @param key
-     * @param info
-     * @return
      */
     public String encryptToDES(SecretKey key, String info) {
         return encrypt("DES", key, info);
@@ -254,10 +249,6 @@ public class EncryptUtil {
 
     /**
      * 采用DES指定密钥的方式进行加密
-     * @param key
-     * @param info
-     * @return
-     * @throws Exception
      */
     public String encryptToDES(String key, String info) throws Exception {
         return encrypt("DES", info, key);
@@ -265,9 +256,6 @@ public class EncryptUtil {
 
     /**
      * 采用DES随机生成密钥的方式进行解密，密钥需要与加密的生成的密钥一样
-     * @param key
-     * @param sInfo
-     * @return
      */
     public String decryptByDES(SecretKey key, String sInfo) {
         return decrypt("DES", key, sInfo);
@@ -275,9 +263,6 @@ public class EncryptUtil {
 
     /**
      * 采用DES用户指定密钥的方式进行解密，密钥需要与加密时指定的密钥一样
-     * @param key
-     * @param sInfo
-     * @return
      */
     public String decryptByDES(String key, String sInfo) throws Exception {
         return decrypt("DES", sInfo, key);
@@ -285,19 +270,12 @@ public class EncryptUtil {
 
     /**
      * 采用AES随机生成的密钥进行加密
-     * @param key
-     * @param info
-     * @return
      */
     public String encryptToAES(SecretKey key, String info) {
         return encrypt("AES", key, info);
     }
     /**
      * 采用AES指定密钥的方式进行加密
-     * @param key
-     * @param info
-     * @return
-     * @throws Exception
      */
     public String encryptToAES(String key, String info) throws Exception {
         return encrypt("AES", info, key);
@@ -305,18 +283,12 @@ public class EncryptUtil {
 
     /**
      * 采用AES随机生成密钥的方式进行解密，密钥需要与加密的生成的密钥一样
-     * @param key
-     * @param sInfo
-     * @return
      */
     public String decryptByAES(SecretKey key, String sInfo) {
         return decrypt("AES", key, sInfo);
     }
     /**
      * 采用AES用户指定密钥的方式进行解密，密钥需要与加密时指定的密钥一样
-     * @param key
-     * @param sInfo
-     * @return
      */
     public String decryptByAES(String key, String sInfo) throws Exception {
         return decrypt("AES", sInfo, key);
@@ -324,20 +296,17 @@ public class EncryptUtil {
 
     /**
      * 十六进制字符串转化为2进制
-     *
-     * @param strhex
-     * @return
      */
     public static byte[] hex2byte(String strhex) {
         if (strhex == null) {
             return null;
         }
         int l = strhex.length();
-        if (l % 2 == 1) {
+        if (l % TWO == 1) {
             return null;
         }
         byte[] b = new byte[l / 2];
-        for (int i = 0; i != l / 2; i++) {
+        for (int i = 0; i != l / TWO; i++) {
             b[i] = (byte) Integer.parseInt(strhex.substring(i * 2, i * 2 + 2), 16);
         }
         return b;
@@ -352,10 +321,10 @@ public class EncryptUtil {
     public static String byte2hex(byte[] b) {
         StringBuilder hs =new StringBuilder();
         String stmp;
-        for (int n = 0; n < b.length; n++) {
-            stmp = (java.lang.Integer.toHexString(b[n] & 0XFF));
+        for (byte aB : b) {
+            stmp = (Integer.toHexString(aB & 0XFF));
             if (stmp.length() == 1) {
-                hs = hs.append("0").append(stmp.toString());
+                hs = hs.append("0").append(stmp);
             } else {
                 hs = hs.append(stmp);
             }
@@ -365,50 +334,48 @@ public class EncryptUtil {
 
     /**
      * 测试
-     *
-     * @param args
      */
     public static void main(String[] args) {
         EncryptUtil encryptUtils = new EncryptUtil();
         String source = "www.putiman.com";
-        System.out.println("Hello经过MD5:" + encryptToMD5(source));
-        System.out.println("Hello经过SHA:" + encryptUtils.encryptToSHA(source));
-        System.out.println("========随机生成Key进行加解密==============");
+        logger.info("Hello经过MD5:{}",encryptToMD5(source));
+        logger.info("Hello经过SHA:{}", encryptUtils.encryptToSHA(source));
+        logger.info("========随机生成Key进行加解密==============");
         // 生成一个DES算法的密匙
         SecretKey key = encryptUtils.createSecretDESKey();
         String str1 = encryptUtils.encryptToDES(key, source);
-        System.out.println("DES加密后为:" + str1);
+        logger.info("DES加密后为:{}" , str1);
         // 使用这个密匙解密
         String str2 = encryptUtils.decryptByDES(key, str1);
-        System.out.println("DES解密后为：" + str2);
+        logger.info("DES解密后为：{}" , str2);
 
         // 生成一个AES算法的密匙
         SecretKey key1 = encryptUtils.createSecretAESKey();
         String stra = encryptUtils.encryptToAES(key1, source);
-        System.out.println("AES加密后为:" + stra);
+        logger.info("AES加密后为:{}", stra);
         // 使用这个密匙解密
         String strb = encryptUtils.decryptByAES(key1, stra);
-        System.out.println("AES解密后为：" + strb);
-        System.out.println("========指定Key进行加解密==============");
+        logger.info("AES解密后为：{}",strb);
+        logger.info("========指定Key进行加解密==============");
         try {
             String aeskey = encryptUtils.getAESKey(encryptUtils.encryptToSHA(source));
             String deskey = encryptUtils.getDESKey(encryptUtils.encryptToSHA(source));
-            System.out.println(aeskey);
-            System.out.println(deskey);
+            logger.info(aeskey);
+            logger.info(deskey);
             String str11 = encryptUtils.encryptToDES(deskey, source);
-            System.out.println("DES加密后为:" + str11);
+            logger.info("DES加密后为:{}",str11);
             // 使用这个密匙解密
             String str12 = encryptUtils.decryptByDES(deskey, str11);
-            System.out.println("DES解密后为：" + str12);
+            logger.info("DES解密后为：{}" , str12);
 
             // 生成一个AES算法的密匙
             String strc = encryptUtils.encryptToAES(aeskey, source);
-            System.out.println("AES加密后为:" + strc);
+            logger.info("AES加密后为:{}", strc);
             // 使用这个密匙解密
-            String strd = encryptUtils.decryptByAES(aeskey, strc);
-            System.out.println("AES解密后为：" + strd);
+            String std = encryptUtils.decryptByAES(aeskey, strc);
+            logger.info("AES解密后为{}：" , std);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.info(e.getMessage(),e);
         }
     }
 }

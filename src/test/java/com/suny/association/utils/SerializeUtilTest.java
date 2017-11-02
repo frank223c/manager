@@ -2,20 +2,27 @@ package com.suny.association.utils;
 
 import com.suny.association.pojo.po.LoginTicket;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.time.LocalDateTime;
-
-import static org.junit.Assert.*;
+import java.util.Arrays;
 
 /**
  *
  * Created by 孙建荣 on 17-9-24.下午1:30
  */
 public class SerializeUtilTest {
+    private static Logger logger = LoggerFactory.getLogger(SerializeUtilTest.class);
 
     private JedisAdapter jedisAdapter;
+
+    public void setUp(){
+        ApplicationContext applicationContext=new ClassPathXmlApplicationContext("classpath*:Spring/applicationContext.xml");
+        jedisAdapter= (JedisAdapter) applicationContext.getBean("jedisAdapter");
+    }
 
 
     @Test
@@ -29,23 +36,23 @@ public class SerializeUtilTest {
         jedisAdapter.set((RedisKeyUtils.getLoginticket(loginTicket.getTicket())).getBytes(), SerializeUtil.serialize(loginTicket));
         byte[] bytes = jedisAdapter.get((RedisKeyUtils.getTicketKey(loginTicket.getTicket())).getBytes());
         if (bytes != null) {
-            System.out.println(bytes.toString());
+            logger.info(bytes.toString());
         } else {
-            System.out.println("没有取到值");
+            logger.info("没有取到值");
         }
 
     }
 
     @Test
-    public void unserialize() throws Exception {
+    public void unSerialize() throws Exception {
         byte[] bytes = jedisAdapter.get((RedisKeyUtils.getTicketKey("dsfdsafdsfds")).getBytes());
-        System.out.println(bytes.toString());
+        logger.info(Arrays.toString(bytes));
         Object o = SerializeUtil.unserialize(bytes);
         if (o != null) {
             LoginTicket loginTicket = (LoginTicket) o;
-            System.out.println(loginTicket.toString());
+            logger.info(loginTicket.toString());
         } else {
-            System.out.println("没有获取到实体信息");
+            logger.info("没有获取到实体信息");
         }
     }
 
