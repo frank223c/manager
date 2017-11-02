@@ -3,13 +3,10 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.suny.manager</groupId>
     <artifactId>Manager</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
-
-
     <properties>
         <java.version>1.8</java.version>
         <springframework.version>4.3.6.RELEASE</springframework.version>
@@ -54,7 +51,6 @@
             <artifactId>mybatis-spring</artifactId>
             <version>${mybatis-spring.version}</version>
         </dependency>
-
         <!--mybatis暂时对Java8的时间支持不是很完美，mybatis3.4以上可以直接使用，3.4以下的版本还要配置typeHandlers-->
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -70,15 +66,7 @@
             <version>5.1.39</version>
         </dependency>
 
-        <!--先导入hibernate验证组件，可能会使用到-->
-        <!--<dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>5.2.4.Final</version>
-        </dependency>-->
-
         <!--导入切面jar包-->
-        <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
@@ -86,7 +74,6 @@
         </dependency>
 
         <!--log4j-->
-        <!-- https://mvnrepository.com/artifact/log4j/log4j -->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -110,26 +97,16 @@
             <artifactId>jackson-core</artifactId>
             <version>2.9.2</version>
         </dependency>
-
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>2.9.2</version>
         </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.9.2</version>
         </dependency>
-
-       <!-- <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.32</version>
-        </dependency>
--->
 
         <!--junit组件-->
         <dependency>
@@ -138,9 +115,6 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-
-
-        <!--连接池-->
         <!--c3p0 连接池 -->
         <dependency>
             <groupId>c3p0</groupId>
@@ -169,15 +143,6 @@
             <artifactId>shiro-spring</artifactId>
             <version>1.2.1</version>
         </dependency>-->
-
-
-        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-       <!-- <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.2.4</version>
-        </dependency>-->
-
         <!--导入servlet依赖，部分tomcat下不存在这些jar包-->
         <dependency>
             <groupId>javax</groupId>

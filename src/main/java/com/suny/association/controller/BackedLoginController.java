@@ -111,8 +111,7 @@ public class BackedLoginController {
                 if (rememberMe) {
                     cookie.setMaxAge(3600 * 24 * 5);
                 }
-                // cookie的secure值为true时，在http中是无效的；在https中才有效。
-                cookie.setSecure(true);
+                // cookie.setSecure(true); cookie的secure值为true时，在http中是无效的；在https中才有效。请注意这里在HTTP连接中会导致无cookie传输
                 response.addCookie(cookie);
                 //    1.4.4   把一些进入主页面需要的数据先放进去
                 saveUser(request, response, username);
@@ -158,9 +157,7 @@ public class BackedLoginController {
         Member member = accountService.selectByName(username).getAccountMember();
         Account account = accountService.selectByName(username);
         Cookie nameCookie = new Cookie("account", account.getAccountName());
-        nameCookie.setSecure(true);
         Cookie accountCookie = new Cookie("member", member.getMemberName());
-        accountCookie.setSecure(true);
         response.addCookie(nameCookie);
         response.addCookie(accountCookie);
         request.getSession().setAttribute("account", account);

@@ -66,7 +66,6 @@ public class RequireLoginFilter implements Filter {
                 LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
                 // 3.2  如果查出来数据库里面没有这个ticket或者是已经过期了的话就让它重新登录
                 if (loginTicket == null || LoginTicketUtils.isExpired(loginTicket)) {
-                 //     request.getRequestDispatcher(PORTAL_LOGIN_URL).forward(request, response);
                     response.sendRedirect(((HttpServletRequest) req).getContextPath()+PORTAL_LOGIN_URL);
                     logger.warn("【RequireLoginFilter】ticket过期了或者是前端伪造的了,强制需要重新登录,重定向到登录页面");
                     req.setAttribute(EXECUTE_NEXT_FILTER, false);
