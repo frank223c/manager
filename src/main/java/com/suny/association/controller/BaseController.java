@@ -18,12 +18,12 @@ import java.util.Map;
 public abstract class BaseController {
     private final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
-    /**
+   /* *//**
      * 输出json数据
      *
      * @param map      封装数据集合
      * @param response 响应
-     */
+     *//*
     private void writeJson(Map<String, Object> map, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=utf-8");
@@ -35,7 +35,7 @@ public abstract class BaseController {
         }
 
 
-    }
+    }*/
 }
 
 

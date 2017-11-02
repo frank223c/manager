@@ -1,17 +1,17 @@
-package com.suny.association.utils;
+package com.suny.association.entity.dto;
 
 /**
  * Comments:   封装自己的返回JSON数据格式
  * @author :   孙建荣
  * Create Date: 2017/03/17 16:01
  */
-public class JsonResult {
+public class JsonResultDTO {
 
 
     /**
      *返回的状态
      */
-    private int status;
+    private Integer status;
 
     /**
      *给前端返回的内容
@@ -30,8 +30,8 @@ public class JsonResult {
      * @param resultData 返回的数据
      * @return 结果与及数据
      */
-    public static JsonResult successResultAndData(Object enumObject, Object resultData) {
-        JsonResult jsonResult = setStatusAndMessage(enumObject);
+    public static JsonResultDTO successResultAndData(Object enumObject, Object resultData) {
+        JsonResultDTO jsonResult = setStatusAndMessage(enumObject);
         jsonResult.setData(resultData);
         return jsonResult;
     }
@@ -42,7 +42,7 @@ public class JsonResult {
      * @param enumObject 传过来的枚举值
      * @return 仅仅只有成功的结果
      */
-    public static JsonResult successResult(Object enumObject) {
+    public static JsonResultDTO successResult(Object enumObject) {
         return setStatusAndMessage(enumObject);
     }
 
@@ -52,7 +52,7 @@ public class JsonResult {
      * @param enumObject 传过来的枚举值
      * @return 仅仅只有成功的结果
      */
-    public static JsonResult failResult(Object enumObject) {
+    public static JsonResultDTO failureResult(Object enumObject) {
         return setStatusAndMessage(enumObject);
     }
 
@@ -63,8 +63,8 @@ public class JsonResult {
      * @param enumObject 传过来的枚举值
      * @return JSONResponseUtil实体
      */
-    private static JsonResult setStatusAndMessage(Object enumObject) {
-        JsonResult jsonResult = new JsonResult();
+    private static JsonResultDTO setStatusAndMessage(Object enumObject) {
+        JsonResultDTO jsonResult = new JsonResultDTO();
         //获取枚举值的toString方法后的字符值
         String errorMessage = enumObject.toString();
 
@@ -81,15 +81,15 @@ public class JsonResult {
 
 
 
-    private JsonResult() {
+    private JsonResultDTO() {
     }
 
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -107,5 +107,14 @@ public class JsonResult {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "JsonResultDTO{" +
+                "status=" + status +
+                ", message='" + message + '\'' +
+                ", data=" + data +
+                '}';
     }
 }

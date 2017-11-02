@@ -2,7 +2,7 @@ package com.suny.association.service.impl.core;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.annotation.SystemServiceLog;
-import com.suny.association.enums.BaseEnum;
+import com.suny.association.enums.ResponseCodeEnum;
 import com.suny.association.exception.BusinessException;
 import com.suny.association.mapper.MemberMapper;
 import com.suny.association.mapper.PunchRecordMapper;
@@ -139,7 +139,7 @@ public class PunchRecordServiceImpl extends AbstractBaseServiceImpl<PunchRecord>
         try {
             successRow = punchRecordMapper.batchInsertsPunchRecord(punchList);
         } catch (Exception e) {
-            throw new BusinessException(BaseEnum.ADD_FAIL_ALL);
+            throw new BusinessException(ResponseCodeEnum.ADD_FAIL_ALL);
         }
         return successRow;
     }

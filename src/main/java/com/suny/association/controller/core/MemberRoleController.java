@@ -2,22 +2,19 @@ package com.suny.association.controller.core;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
-import com.suny.association.entity.dto.BootstrapTableResult;
+import com.suny.association.entity.dto.BootstrapTableResultDTO;
+import com.suny.association.entity.dto.JsonResultDTO;
 import com.suny.association.entity.po.MemberRoles;
 import com.suny.association.entity.vo.ConditionMap;
-import com.suny.association.enums.BaseEnum;
+import com.suny.association.enums.ResponseCodeEnum;
 import com.suny.association.service.interfaces.core.IMemberRolesService;
 import com.suny.association.service.interfaces.core.IMemberService;
-import com.suny.association.utils.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-
-import static com.suny.association.utils.JsonResult.failResult;
-import static com.suny.association.utils.JsonResult.successResult;
 
 /**
  * Comments:   协会角色管理
@@ -28,7 +25,6 @@ import static com.suny.association.utils.JsonResult.successResult;
 @RequestMapping("/member/role")
 public class MemberRoleController extends BaseController {
     private final IMemberRolesService memberRolesService;
-
     private final IMemberService memberService;
 
     @Autowired
@@ -40,28 +36,37 @@ public class MemberRoleController extends BaseController {
     @SystemControllerLog(description = "删除成员角色")
     @RequestMapping(value = "/delete.action/{memberRoleId}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResult delete(@PathVariable("memberRoleId") Integer memberRoleId) {
+    public JsonResultDTO delete(@PathVariable("memberRoleId") Integer memberRoleId) {
+        // 1.查询数据库中是否有这个角色
+        if (memberRolesService.selectById(memberRoleId) == null) {
+            return JsonResultDTO.failureResult(ResponseCodeEnum.DELETE_FAILURE);
+        }
+        // 2.判断数据库里面是不是有成员引用了这个角色,引用了就不能被删除
         if (!memberService.selectByMemberRoleId(memberRoleId).isEmpty()) {
-            return failResult(BaseEnum.HAVE_QUOTE);
-        } else if (memberRolesService.selectById(memberRoleId) == null) {
-            return failResult(BaseEnum.DELETE_FAILURE);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.HAVE_QUOTE);
         }
         memberRolesService.deleteById(memberRoleId);
-        return successResult(BaseEnum.DELETE_SUCCESS);
+        return JsonResultDTO.successResult(ResponseCodeEnum.DELETE_SUCCESS);
     }
 
     @SystemControllerLog(description = "更新成员角色")
     @ResponseBody
-    @RequestMapping(value = "/update.json", method = RequestMethod.POST)
-    public JsonResult update(@RequestBody MemberRoles memberRoles) {
+    @RequestMapping(value = "/update.action", method = RequestMethod.POST)
+    public JsonResultDTO update(@RequestBody MemberRoles memberRoles) {
+        // 1.首先检查数据库是否存在要更新的数据记录
         if (memberRoles.getMemberRoleId() == null || memberRolesService.selectById(memberRoles.getMemberRoleId()) == null) {
-            return failResult(BaseEnum.SELECT_FAILURE);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
         }
+        // 2.再检查角色名字是否有空值
         if ("".equals(memberRoles.getMemberRoleName()) || memberRoles.getMemberRoleName() == null) {
-            return failResult(BaseEnum.FIELD_NULL);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
+        }
+        // 3. 查询数据库中是否已经有存在的值了,如果存在则拒绝更新
+        if(memberRolesService.selectByName(memberRoles.getMemberRoleName()) != null){
+            return JsonResultDTO.failureResult(ResponseCodeEnum.REPEAT_ADD);
         }
         memberRolesService.update(memberRoles);
-        return successResult(BaseEnum.UPDATE_SUCCESS);
+        return JsonResultDTO.successResult(ResponseCodeEnum.UPDATE_SUCCESS);
     }
 
     @RequestMapping(value = "/update.html/{memberRoleId}", method = RequestMethod.GET)
@@ -88,15 +93,21 @@ public class MemberRoleController extends BaseController {
     @SystemControllerLog(description = "新增成员角色")
     @ResponseBody
     @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
-    public JsonResult insert(@RequestBody MemberRoles memberRoles) {
+    public JsonResultDTO insert(@RequestBody MemberRoles memberRoles) {
+        // 1.首先检查数据库是否存在要更新的数据记录
         if ("".equals(memberRoles.getMemberRoleName()) || memberRoles.getMemberRoleName() == null) {
-            return failResult(BaseEnum.FIELD_NULL);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
         }
+        // 2.再检查角色名字是否有空值
         if (memberRolesService.selectByName(memberRoles.getMemberRoleName()) != null) {
-            return failResult(BaseEnum.REPEAT_ADD);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.REPEAT_ADD);
+        }
+        // 3. 查询数据库中是否已经有存在的值了,如果存在则拒绝更新
+        if(memberRolesService.selectByName(memberRoles.getMemberRoleName()) != null){
+            return JsonResultDTO.failureResult(ResponseCodeEnum.REPEAT_ADD);
         }
         memberRolesService.insert(memberRoles);
-        return successResult(BaseEnum.ADD_SUCCESS);
+        return JsonResultDTO.successResult(ResponseCodeEnum.ADD_SUCCESS);
     }
 
     @RequestMapping(value = "/insert.html", method = RequestMethod.GET)
@@ -115,10 +126,10 @@ public class MemberRoleController extends BaseController {
     @SystemControllerLog(description = "查询成员角色")
     @RequestMapping(value = "/selectByParam.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResult selectByParam(@RequestParam(value = "memberRoleId",defaultValue = "")String memberRoleId,
-                                        @RequestParam(value = "memberRoleId",defaultValue = "") String memberRoleName,
-                                       @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
-                                       @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
+    public BootstrapTableResultDTO selectByParam(@RequestParam(value = "memberRoleId",defaultValue = "")String memberRoleId,
+                                                 @RequestParam(value = "memberRoleId",defaultValue = "") String memberRoleName,
+                                                 @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+                                                 @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         MemberRoles memberRoles=new MemberRoles();
             if(!"".equals(memberRoleId)){
                 memberRoles.setMemberRoleId(Integer.valueOf(memberRoleId));
@@ -129,7 +140,7 @@ public class MemberRoleController extends BaseController {
         ConditionMap<MemberRoles> conditionMap=new ConditionMap<>(memberRoles,offset,limit);
         List<MemberRoles> rolesList = memberRolesService.selectByParam(conditionMap);
         int totalCount = memberRolesService.selectCount();
-        return new BootstrapTableResult(totalCount, rolesList);
+        return new BootstrapTableResultDTO(totalCount, rolesList);
     }
 
     @SystemControllerLog(description = "查看成员角色页面")

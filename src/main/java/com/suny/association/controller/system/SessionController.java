@@ -2,7 +2,7 @@ package com.suny.association.controller.system;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
-import com.suny.association.entity.dto.BootstrapTableResult;
+import com.suny.association.entity.dto.BootstrapTableResultDTO;
 import com.suny.association.entity.po.LoginHistory;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.IAccountService;
@@ -35,12 +35,12 @@ public class SessionController extends BaseController {
 
     @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResult query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
-                                     @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        ConditionMap<LoginHistory> conditionMap=new ConditionMap<>(new LoginHistory(),0,10);
+    public BootstrapTableResultDTO query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
+        ConditionMap<LoginHistory> conditionMap=new ConditionMap<>(new LoginHistory(),offset,limit);
         List<LoginHistory> loginHistoryList = loginHistoryService.selectByParam(conditionMap);
         int total = loginHistoryService.selectCount();
-        return new BootstrapTableResult(total,loginHistoryList);
+        return new BootstrapTableResultDTO(total,loginHistoryList);
     }
 
     @SystemControllerLog(description = "查询指定账号登录记录")

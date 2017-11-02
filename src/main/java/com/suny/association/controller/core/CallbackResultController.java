@@ -2,11 +2,10 @@ package com.suny.association.controller.core;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
-import com.suny.association.entity.dto.BootstrapTableResult;
+import com.suny.association.entity.dto.BootstrapTableResultDTO;
 import com.suny.association.entity.po.CallbackResult;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.core.ICallbackResultService;
-import com.suny.association.utils.ConversionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Comments:   审批结果控制
@@ -42,12 +40,12 @@ public class CallbackResultController extends BaseController {
      */
     @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResult query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
-                                     @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        ConditionMap<CallbackResult> conditionMap=new ConditionMap<>(new CallbackResult(),0,10);
+    public BootstrapTableResultDTO query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
+        ConditionMap<CallbackResult> conditionMap=new ConditionMap<>(new CallbackResult(),offset,limit);
         List<CallbackResult> callbackResultList = callbackResultService.selectByParam(conditionMap);
         int total = callbackResultService.selectCount();
-        return new BootstrapTableResult(total, callbackResultList);
+        return new BootstrapTableResultDTO(total, callbackResultList);
     }
 
 

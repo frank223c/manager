@@ -1,23 +1,21 @@
 package com.suny.association.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
-import com.suny.association.entity.dto.BootstrapTableResult;
-import com.suny.association.enums.BaseEnum;
+import com.suny.association.entity.dto.BootstrapTableResultDTO;
+import com.suny.association.entity.dto.JsonResultDTO;
 import com.suny.association.entity.po.Roles;
 import com.suny.association.entity.vo.ConditionMap;
+import com.suny.association.enums.ResponseCodeEnum;
 import com.suny.association.service.interfaces.IRolesService;
-import com.suny.association.utils.ConversionUtil;
-import com.suny.association.utils.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Map;
 
-import static com.suny.association.utils.JsonResult.failResult;
-import static com.suny.association.utils.JsonResult.successResult;
+import static com.suny.association.entity.dto.JsonResultDTO.failureResult;
+import static com.suny.association.entity.dto.JsonResultDTO.successResult;
 
 /**
  * Comments:  账号角色控制器
@@ -38,28 +36,28 @@ public class RoleController extends BaseController {
     @SystemControllerLog(description = "删除账号角色")
     @RequestMapping(value = "/delete.action/{roleId}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResult delete(@PathVariable("roleId") Integer roleId) {
+    public JsonResultDTO delete(@PathVariable("roleId") Integer roleId) {
         if (rolesService.queryQuote(roleId).size() >= 1) {
-            return failResult(BaseEnum.HAVE_QUOTE);
+            return failureResult(ResponseCodeEnum.HAVE_QUOTE);
         } else if (rolesService.selectById(roleId) == null) {
-            return failResult(BaseEnum.DELETE_FAILURE);
+            return failureResult(ResponseCodeEnum.DELETE_FAILURE);
         }
         rolesService.deleteById(roleId);
-        return successResult(BaseEnum.DELETE_SUCCESS);
+        return successResult(ResponseCodeEnum.DELETE_SUCCESS);
     }
 
     @SystemControllerLog(description = "更新账号角色")
     @ResponseBody
     @RequestMapping(value = "/update.json", method = RequestMethod.POST)
-    public JsonResult update(@RequestBody Roles roles) {
+    public JsonResultDTO update(@RequestBody Roles roles) {
         if (roles.getRoleId() == null || rolesService.selectById(roles.getRoleId()) == null) {
-            return failResult(BaseEnum.SELECT_FAILURE);
+            return failureResult(ResponseCodeEnum.SELECT_FAILURE);
         }
         if ("".equals(roles.getDescription()) || roles.getDescription() == null) {
-            return failResult(BaseEnum.FIELD_NULL);
+            return failureResult(ResponseCodeEnum.FIELD_NULL);
         }
         rolesService.update(roles);
-        return successResult(BaseEnum.UPDATE_SUCCESS);
+        return successResult(ResponseCodeEnum.UPDATE_SUCCESS);
     }
 
     @RequestMapping(value = "/update.html/{roleId}", method = RequestMethod.GET)
@@ -87,15 +85,15 @@ public class RoleController extends BaseController {
     @SystemControllerLog(description = "新增账号角色")
     @ResponseBody
     @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
-    public JsonResult insert(@RequestBody Roles roles) {
+    public JsonResultDTO insert(@RequestBody Roles roles) {
         if ("".equals(roles.getDescription()) || roles.getDescription() == null) {
-            return failResult(BaseEnum.FIELD_NULL);
+            return failureResult(ResponseCodeEnum.FIELD_NULL);
         }
         if (rolesService.selectByName(roles.getDescription()) != null) {
-            return failResult(BaseEnum.REPEAT_ADD);
+            return failureResult(ResponseCodeEnum.REPEAT_ADD);
         }
         rolesService.insert(roles);
-        return successResult(BaseEnum.ADD_SUCCESS);
+        return successResult(ResponseCodeEnum.ADD_SUCCESS);
     }
 
     @RequestMapping(value = "/insert.html", method = RequestMethod.GET)
@@ -113,12 +111,12 @@ public class RoleController extends BaseController {
      */
     @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResult query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
-                                     @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
+    public BootstrapTableResultDTO query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         ConditionMap<Roles> conditionMap=new ConditionMap<>(new Roles(),0,10);
         List<Roles> rolesList = rolesService.selectByParam(conditionMap);
         int total = rolesService.selectCount();
-        return new BootstrapTableResult(total, rolesList);
+        return new BootstrapTableResultDTO(total, rolesList);
     }
 
     @SystemControllerLog(description = "查看账号角色页面")

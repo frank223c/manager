@@ -5,7 +5,7 @@ package com.suny.association.enums;
  * @author :   孙建荣
  * Create Date: 2017/03/08 18:10
  */
-public enum BaseEnum {
+public enum ResponseCodeEnum {
 
     LOGIN_FAILURE("001", "登陆验证失败，请检查用户名密码是否正确"),
     ADD_FAILURE("002", "添加失败"),
@@ -63,7 +63,7 @@ public enum BaseEnum {
     String value;
     String desc;
 
-    BaseEnum(String value, String desc) {
+    ResponseCodeEnum(String value, String desc) {
         this.value = value;
         this.desc = desc;
     }

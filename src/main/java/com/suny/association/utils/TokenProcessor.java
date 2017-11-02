@@ -29,7 +29,7 @@ public class TokenProcessor {
     }
 
     public String makeToken() {
-        String token = (System.currentTimeMillis() + new Random().nextInt(99999999)) + "";
+        String token = Long.toString(System.currentTimeMillis() + new Random().nextInt(99999999));
         //  加密下
         try {
             MessageDigest md = MessageDigest.getInstance("md5");

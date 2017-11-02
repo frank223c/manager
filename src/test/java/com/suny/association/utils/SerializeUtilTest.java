@@ -48,7 +48,7 @@ public class SerializeUtilTest {
     public void unSerialize() throws Exception {
         byte[] bytes = jedisAdapter.get((RedisKeyUtils.getTicketKey(RANDOM_KEY)).getBytes());
         logger.info(Arrays.toString(bytes));
-        Object o = SerializeUtil.unserialize(bytes);
+        Object o = SerializeUtil.unSerialize(bytes);
         if (o != null) {
             LoginTicket loginTicket = (LoginTicket) o;
             logger.info(loginTicket.toString());

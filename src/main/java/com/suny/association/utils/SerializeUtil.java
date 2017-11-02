@@ -29,7 +29,7 @@ public class SerializeUtil {
     }
 
 
-    public static Object unserialize(byte[] bytes) {
+    public static Object unSerialize(byte[] bytes) {
         ByteArrayInputStream byteArrayInputStream;
         try {
             byteArrayInputStream = new ByteArrayInputStream(bytes);

@@ -2,15 +2,14 @@ package com.suny.association.controller.core;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
-import com.suny.association.entity.dto.BootstrapTableResult;
-import com.suny.association.enums.BaseEnum;
+import com.suny.association.entity.dto.BootstrapTableResultDTO;
+import com.suny.association.entity.dto.JsonResultDTO;
 import com.suny.association.entity.po.Member;
 import com.suny.association.entity.po.PunchRecord;
 import com.suny.association.entity.vo.ConditionMap;
+import com.suny.association.enums.ResponseCodeEnum;
 import com.suny.association.service.interfaces.core.IMemberService;
 import com.suny.association.service.interfaces.core.IPunchRecordService;
-import com.suny.association.utils.ConversionUtil;
-import com.suny.association.utils.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -47,44 +45,44 @@ public class PunchRecordController extends BaseController {
     @SystemControllerLog(description = "考勤操作")
     @RequestMapping(value = "/update.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult update(HttpServletRequest request, @RequestParam("punchMemberId") Integer punchMemberId) {
+    public JsonResultDTO update(HttpServletRequest request, @RequestParam("punchMemberId") Integer punchMemberId) {
         /*   获取session中的Member信息，用来判断用户是否恶意操作   */
         Member member = (Member) request.getSession().getAttribute("member");
         if (member == null) {
             logger.error("987，没有登录，无法操作");
-            return JsonResult.failResult(BaseEnum.NO_LOGIN_IN);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.NO_LOGIN_IN);
         }
         if (!Objects.equals(member.getMemberId(), punchMemberId)) {
             logger.info("211,要操作的Member主键Id与Session中保存的Member主键Id不同，属于恶意操作");
-            return JsonResult.failResult(BaseEnum.MALICIOUS_OPERATION);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.MALICIOUS_OPERATION);
         } else {
             Member databaseMember = memberService.selectById(punchMemberId);
             if (databaseMember == null) {
                 logger.info("005，数据库没有查询考勤的成员Id，恶意操作");
-                return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
+                return JsonResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
             } else {
                 PunchRecord punchRecord = punchRecordService.queryByMemberIdAndDate(punchMemberId);
                 if (punchRecord != null) {
                     if (!punchRecord.getPunchTypeId().getPunchTypeId().equals(0)) {
                         logger.warn("212,{}今天已经签到过了", member.getMemberName());
-                        return JsonResult.failResult(BaseEnum.REPEAT_PUNCH);
+                        return JsonResultDTO.failureResult(ResponseCodeEnum.REPEAT_PUNCH);
                     } else {
                         logger.info("{}开始进行考勤", member.getMemberName());
                         int successRow = punchRecordService.updatePunch(punchMemberId, punchRecord.getPunchRecordId());
                         if (successRow == 0) {
                             logger.info("215,{}考勤失败", member.getMemberName());
-                            return JsonResult.successResult(BaseEnum.PUNCH_FAIL);
+                            return JsonResultDTO.successResult(ResponseCodeEnum.PUNCH_FAIL);
                         }
                     }
                 } else {
                         /*   系统设计是考勤当天首先由管理员开始考勤，然后系统自动给每一个成员添加一条缺勤记录   */
                     logger.warn("213,管理员还没有开启签到！");
-                    return JsonResult.failResult(BaseEnum.TIME_NOT_REACH);
+                    return JsonResultDTO.failureResult(ResponseCodeEnum.TIME_NOT_REACH);
                 }
             }
         }
         logger.info("214,{}考勤成功", member.getMemberName());
-        return JsonResult.successResult(BaseEnum.PUNCH_SUCCESS);
+        return JsonResultDTO.successResult(ResponseCodeEnum.PUNCH_SUCCESS);
     }
 
 
@@ -100,33 +98,33 @@ public class PunchRecordController extends BaseController {
     @SystemControllerLog(description = "管理员开启今日考勤操作")
     @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult insert(HttpServletRequest request, @RequestParam("memberId") Long memberId) {
+    public JsonResultDTO insert(HttpServletRequest request, @RequestParam("memberId") Long memberId) {
 
         Member sessionMember = (Member) request.getSession().getAttribute("member");
         if (sessionMember == null) {
             logger.warn("987,用户没有登录进行操作");
-            return JsonResult.failResult(BaseEnum.NO_LOGIN_IN);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.NO_LOGIN_IN);
         } else {
             Member dataBaseMember = memberService.selectById(memberId);
             if (dataBaseMember == null) {
                 logger.info("005，数据库没有查询到开启签到的管理员信息，恶意操作");
-                return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
+                return JsonResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
             } else if (!Objects.equals(dataBaseMember.getMemberId(), sessionMember.getMemberId())) {
                 logger.info("211,要操作的Member主键Id与Session中保存的Member主键Id不同，属于恶意操作");
-                return JsonResult.failResult(BaseEnum.MALICIOUS_OPERATION);
+                return JsonResultDTO.failureResult(ResponseCodeEnum.MALICIOUS_OPERATION);
             } else if (dataBaseMember.getMemberRoles().getMemberRoleId() <= 2) {
                 logger.warn("206,部门角色太低,没有权限进行开启签到功能");
-                return JsonResult.failResult(BaseEnum.LIMIT_MEMBER_MANAGER);
+                return JsonResultDTO.failureResult(ResponseCodeEnum.LIMIT_MEMBER_MANAGER);
             } else if (punchRecordService.queryByPunchDate().size() > 0) {
                 logger.warn("212,重复签到，今天已经开启签到过了");
-                return JsonResult.failResult(BaseEnum.REPEAT_PUNCH);
+                return JsonResultDTO.failureResult(ResponseCodeEnum.REPEAT_PUNCH);
             } else {
                 int successRow = punchRecordService.batchInsertsPunchRecord();
                 if (successRow == 0) {
                     logger.error("009,开启考勤失败");
-                    return JsonResult.failResult(BaseEnum.ADD_FAIL_ALL);
+                    return JsonResultDTO.failureResult(ResponseCodeEnum.ADD_FAIL_ALL);
                 }
-                return JsonResult.successResult(BaseEnum.ADD_SUCCESS_ALL);
+                return JsonResultDTO.successResult(ResponseCodeEnum.ADD_SUCCESS_ALL);
             }
         }
     }
@@ -134,12 +132,12 @@ public class PunchRecordController extends BaseController {
 
     @RequestMapping(value = "/list.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResult query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
-                     @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
+    public BootstrapTableResultDTO query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+                                         @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         ConditionMap<PunchRecord> conditionMap = new ConditionMap<>(new PunchRecord(), 0, 10);
         List<PunchRecord> punchRecordList = punchRecordService.selectByParam(conditionMap);
         int total = punchRecordService.selectCount();
-        return new BootstrapTableResult(total, punchRecordList);
+        return new BootstrapTableResultDTO(total, punchRecordList);
     }
 
     @SystemControllerLog(description = "查看考勤记录页面")

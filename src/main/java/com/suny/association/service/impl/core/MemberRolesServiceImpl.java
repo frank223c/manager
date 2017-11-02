@@ -30,8 +30,6 @@ public class MemberRolesServiceImpl extends AbstractBaseServiceImpl<MemberRoles>
         this.memberMapper = memberMapper;
     }
 
-    public MemberRolesServiceImpl() {
-    }
 
     /*    通过成员角色的id删除一条成员角色记录  */
     @SystemServiceLog(description = "删除一条成员角色记录失败")

@@ -1,7 +1,6 @@
 package com.suny.association.entity.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**************************************
@@ -10,22 +9,22 @@ import java.util.List;
  *  @date 17-11-2.下午5:27
  *  @version 1.0
  **************************************/
-public class BootstrapTableResult implements Serializable{
+public class BootstrapTableResultDTO implements Serializable{
 
     /**
      * 返回给BootstrapTable的数据总数
      */
-    private int total;
+    private Integer total;
 
     /**
      * 返回给BootstrapTable的数据
      */
-    private List  rows=new ArrayList(16);
+    private List  rows;
 
     /**
      * 禁止无参构造方法
      */
-    private  BootstrapTableResult() {
+    private BootstrapTableResultDTO() {
     }
 
     /**
@@ -33,16 +32,16 @@ public class BootstrapTableResult implements Serializable{
      * @param total  返回的数据总量
      * @param rows   返回的数据
      */
-    public BootstrapTableResult(int total, List rows) {
+    public BootstrapTableResultDTO(Integer total, List rows) {
         this.total = total;
         this.rows = rows;
     }
 
-    public int getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(Integer total) {
         this.total = total;
     }
 
@@ -52,5 +51,13 @@ public class BootstrapTableResult implements Serializable{
 
     public void setRows(List rows) {
         this.rows = rows;
+    }
+
+    @Override
+    public String toString() {
+        return "BootstrapTableResultDTO{" +
+                "total=" + total +
+                ", rows=" + rows +
+                '}';
     }
 }

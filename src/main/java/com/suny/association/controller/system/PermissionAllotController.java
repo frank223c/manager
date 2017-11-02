@@ -2,14 +2,14 @@ package com.suny.association.controller.system;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
-import com.suny.association.enums.BaseEnum;
+import com.suny.association.enums.ResponseCodeEnum;
 import com.suny.association.entity.po.Permission;
 import com.suny.association.entity.po.PermissionAllot;
 import com.suny.association.entity.po.Roles;
 import com.suny.association.service.interfaces.system.IPermissionAllotService;
 import com.suny.association.service.interfaces.system.IPermissionService;
 import com.suny.association.service.interfaces.IRolesService;
-import com.suny.association.utils.JsonResult;
+import com.suny.association.entity.dto.JsonResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +44,7 @@ public class PermissionAllotController extends BaseController {
     @SystemControllerLog(description = "【修改权限】删除权限后增加权限")
     @RequestMapping(value = "/update.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult update(@RequestParam(value = "permissionArray[]") Integer[] permissionArray, Integer roleId) {
+    public JsonResultDTO update(@RequestParam(value = "permissionArray[]") Integer[] permissionArray, Integer roleId) {
 
         if (rolesService.selectById(roleId) != null) {
             //  在修改权限之前先把角色所有的权限先清除
@@ -53,7 +53,7 @@ public class PermissionAllotController extends BaseController {
             }
             // 假如数组里面只有9999的话说明删除所有权限
             if (permissionArray[0] == 9999) {
-                return JsonResult.successResult(BaseEnum.UPDATE_SUCCESS);
+                return JsonResultDTO.successResult(ResponseCodeEnum.UPDATE_SUCCESS);
             }
             // 实例化一个【权限角色中间表】实体对象
             PermissionAllot pa = new PermissionAllot();
@@ -74,10 +74,10 @@ public class PermissionAllotController extends BaseController {
             // 把权限集合设置到【权限角色中间表】实体对象中
             pa.setPermissionArrayList(perList);
             permissionAllotService.insert(pa);
-            return JsonResult.successResult(BaseEnum.UPDATE_SUCCESS);
+            return JsonResultDTO.successResult(ResponseCodeEnum.UPDATE_SUCCESS);
 
         }
-        return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
+        return JsonResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
     }
 
     @SystemControllerLog(description = "指定角色权限分配")

@@ -2,7 +2,8 @@ package com.suny.association.controller.core;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
-import com.suny.association.enums.BaseEnum;
+import com.suny.association.entity.dto.JsonResultDTO;
+import com.suny.association.enums.ResponseCodeEnum;
 import com.suny.association.entity.po.Department;
 import com.suny.association.entity.po.Member;
 import com.suny.association.entity.po.MemberRoles;
@@ -34,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.suny.association.utils.JsonResult.successResult;
+import static com.suny.association.entity.dto.JsonResultDTO.successResult;
 
 /**
  * Comments:   成员信息管理类Controller
@@ -69,18 +70,18 @@ public class MemberController extends BaseController {
     @SystemControllerLog(description = "插入成员信息")
     @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult insert(@RequestBody Member member) {
+    public JsonResultDTO insert(@RequestBody Member member) {
         if (member.getMemberName() == null || "".equals(member.getMemberName())) {
-            return JsonResult.failResult(BaseEnum.FIELD_NULL);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
         }
         if ("".equals(member.getMemberClassName()) || member.getMemberClassName() == null) {
-            return JsonResult.failResult(BaseEnum.FIELD_NULL);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
         }
         if (!(ValidActionUtil.isContainChinese(member.getMemberName()))) {
-            return JsonResult.failResult(BaseEnum.MUST_CHINESE);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.MUST_CHINESE);
         }
         memberService.insert(member);
-        return successResult(BaseEnum.ADD_SUCCESS);
+        return successResult(ResponseCodeEnum.ADD_SUCCESS);
     }
 
 
@@ -113,7 +114,7 @@ public class MemberController extends BaseController {
     @SystemControllerLog(description = "通过Excel文件批量新增数据")
     @RequestMapping(value = "/uploadMemberInfo.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult uploadMemberInfo(@RequestParam("excelFile") MultipartFile excelFile) throws IOException {
+    public JsonResultDTO uploadMemberInfo(@RequestParam("excelFile") MultipartFile excelFile) throws IOException {
         String fileType = excelFile.getContentType();
         /*  获取上传文件名 */
         String fileName = ((CommonsMultipartFile) excelFile).getFileItem().getName();
@@ -125,15 +126,15 @@ public class MemberController extends BaseController {
         /* 获取文件名的后缀名，检查是否存在欺骗   */
         if (!ExcelUtils.parseExcelFileType(fileType, fileExtension)) {
             logger.warn("上传的文件貌似有点小问题，可能是后缀名欺骗");
-            return JsonResult.failResult(BaseEnum.FILE_EXTENSION_WARN);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.FILE_EXTENSION_WARN);
         }
         /* 查看成功插入的行数  */
         Map<String,List<Member>> listAtomicReference = memberService.insertBatchFormFile(file, fileExtension);
         int size = listAtomicReference.size();
         if (size == 0) {
-            return successResult(BaseEnum.ADD_SUCCESS_ALL);
+            return successResult(ResponseCodeEnum.ADD_SUCCESS_ALL);
         } else {
-            return JsonResult.successResultAndData(BaseEnum.ADD_SUCCESS_PART_OF, listAtomicReference);
+            return JsonResultDTO.successResultAndData(ResponseCodeEnum.ADD_SUCCESS_PART_OF, listAtomicReference);
         }
     }
 
@@ -170,29 +171,29 @@ public class MemberController extends BaseController {
     @SystemControllerLog(description = "删除成员信息")
     @RequestMapping(value = "/deleteById.action/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResult deleteById(@PathVariable("id") Long id) {
+    public JsonResultDTO deleteById(@PathVariable("id") Long id) {
         if (memberService.selectById(id) == null) {
-            return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
         }
         if (accountService.queryQuoteByMemberId(id) != null) {
-            return JsonResult.failResult(BaseEnum.HAVE_QUOTE);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.HAVE_QUOTE);
         }
         memberService.deleteById(id);
-        return successResult(BaseEnum.DELETE_SUCCESS);
+        return successResult(ResponseCodeEnum.DELETE_SUCCESS);
     }
 
     @SystemControllerLog(description = "更新协会成员信息")
     @RequestMapping(value = "/update.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult update(@RequestBody Member member) {
+    public JsonResultDTO update(@RequestBody Member member) {
         if (member.getMemberName() == null || "".equals(member.getMemberName())) {
-            return JsonResult.failResult(BaseEnum.FIELD_NULL);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
         }
         if (!member.getMemberStatus()) {
-            return JsonResult.failResult(BaseEnum.FIELD_NULL);
+            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
         }
         memberService.update(member);
-        return successResult(BaseEnum.UPDATE_SUCCESS);
+        return successResult(ResponseCodeEnum.UPDATE_SUCCESS);
     }
 
     @RequestMapping(value = "/update.html/{id}", method = RequestMethod.GET)
@@ -212,45 +213,45 @@ public class MemberController extends BaseController {
     @SystemControllerLog(description = "查询冻结的成员")
     @RequestMapping(value = "/selectFreezeMember.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult selectFreezeMember() {
+    public JsonResultDTO selectFreezeMember() {
         List<Member> memberList = memberService.selectFreezeMember();
         if (memberList != null) {
-            return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, memberList);
+            return JsonResultDTO.successResultAndData(ResponseCodeEnum.SELECT_SUCCESS, memberList);
         }
-        return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
+        return JsonResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
     }
 
     @SystemControllerLog(description = "查询冻结的管理员")
     @RequestMapping(value = "/selectFreezeManager.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult selectFreezeManager() {
+    public JsonResultDTO selectFreezeManager() {
         List<Member> memberList = memberService.selectFreezeManager();
         if (memberList != null) {
-            return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, memberList);
+            return JsonResultDTO.successResultAndData(ResponseCodeEnum.SELECT_SUCCESS, memberList);
         }
-        return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
+        return JsonResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
     }
 
     @SystemControllerLog(description = "查询正常的成员")
     @RequestMapping(value = "/selectNormalMember.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult selectNormalMember() {
+    public JsonResultDTO selectNormalMember() {
         List<Member> memberList = memberService.selectNormalMember();
         if (memberList != null) {
-            return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, memberList);
+            return JsonResultDTO.successResultAndData(ResponseCodeEnum.SELECT_SUCCESS, memberList);
         }
-        return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
+        return JsonResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
     }
 
     @SystemControllerLog(description = "查询正常的管理员")
     @RequestMapping(value = "/selectNormalManager.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult selectNormalManager() {
+    public JsonResultDTO selectNormalManager() {
         List<Member> memberList = memberService.selectNormalManager();
         if (memberList != null) {
-            return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, memberList);
+            return JsonResultDTO.successResultAndData(ResponseCodeEnum.SELECT_SUCCESS, memberList);
         }
-        return JsonResult.failResult(BaseEnum.SELECT_FAILURE);
+        return JsonResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
     }
 
     @RequestMapping(value = "/selectAll.action", method = RequestMethod.GET)
@@ -291,9 +292,9 @@ public class MemberController extends BaseController {
 
     @SystemControllerLog(description = "查询指定成员")
     @RequestMapping(value = "/selectById.action/{memberId}", method = RequestMethod.GET)
-    public JsonResult selectById(@PathVariable("memberId") Integer memberId) {
+    public JsonResultDTO selectById(@PathVariable("memberId") Integer memberId) {
         Member member = memberService.selectById(memberId);
-        return JsonResult.successResultAndData(BaseEnum.SELECT_SUCCESS, member);
+        return JsonResultDTO.successResultAndData(ResponseCodeEnum.SELECT_SUCCESS, member);
     }
 
     @SystemControllerLog(description = "查看成员管理页面")
