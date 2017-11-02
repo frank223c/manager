@@ -144,7 +144,7 @@ public class SystemLogAspect {
         if (joinPoint.getArgs() != null && joinPoint.getArgs().length > 0) {
             StringBuilder paramsBuilder = new StringBuilder();
             for (int i = 0; i < joinPoint.getArgs().length; i++) {
-                paramsBuilder.append(JackJsonUtil.processObjectToJson(joinPoint.getArgs()[i])).append(";");
+                paramsBuilder.append(JackJsonUtil.objectToJson(joinPoint.getArgs()[i])).append(";");
             }
             params = paramsBuilder.toString();
         }

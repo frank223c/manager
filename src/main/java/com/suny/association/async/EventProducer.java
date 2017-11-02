@@ -22,7 +22,7 @@ public class EventProducer {
 
     public boolean fireEvent(EventModel eventModel) {
         try {
-            String json = JackJsonUtil.processObjectToJson(eventModel);
+            String json = JackJsonUtil.objectToJson(eventModel);
             String key = RedisKeyUtils.getEventQueueKey();
             jedisAdapter.lpush(key, json);
             return true;

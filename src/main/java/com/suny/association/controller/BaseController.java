@@ -1,7 +1,6 @@
 package com.suny.association.controller;
 
 import com.suny.association.utils.JackJsonUtil;
-import com.suny.association.utils.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +29,7 @@ public abstract class BaseController {
         response.setContentType("application/json;charset=utf-8");
         try (PrintWriter printWriter = response.getWriter()) {
             assert printWriter != null;
-            printWriter.write(JackJsonUtil.processObjectToJson(map));
+            printWriter.write(JackJsonUtil.objectToJson(map));
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

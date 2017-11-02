@@ -16,6 +16,7 @@ import java.util.Arrays;
  */
 public class SerializeUtilTest {
     private static Logger logger = LoggerFactory.getLogger(SerializeUtilTest.class);
+    private static final String RANDOM_KEY="random_key";
 
     private JedisAdapter jedisAdapter;
 
@@ -32,11 +33,11 @@ public class SerializeUtilTest {
         loginTicket.setAccountId(4);
         loginTicket.setExpired(LocalDateTime.now());
         loginTicket.setStatus(0);
-        loginTicket.setTicket("dsfdsfs");
+        loginTicket.setTicket(RANDOM_KEY);
         jedisAdapter.set((RedisKeyUtils.getLoginticket(loginTicket.getTicket())).getBytes(), SerializeUtil.serialize(loginTicket));
         byte[] bytes = jedisAdapter.get((RedisKeyUtils.getTicketKey(loginTicket.getTicket())).getBytes());
         if (bytes != null) {
-            logger.info(bytes.toString());
+            logger.info(Arrays.toString(bytes));
         } else {
             logger.info("没有取到值");
         }
@@ -45,7 +46,7 @@ public class SerializeUtilTest {
 
     @Test
     public void unSerialize() throws Exception {
-        byte[] bytes = jedisAdapter.get((RedisKeyUtils.getTicketKey("dsfdsafdsfds")).getBytes());
+        byte[] bytes = jedisAdapter.get((RedisKeyUtils.getTicketKey(RANDOM_KEY)).getBytes());
         logger.info(Arrays.toString(bytes));
         Object o = SerializeUtil.unserialize(bytes);
         if (o != null) {

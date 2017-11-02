@@ -63,7 +63,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                         if (message.equals(key)) {
                             continue;
                         }
-                        EventModel eventModel = JackJsonUtil.processJsonToObject(message, EventModel.class);
+                        EventModel eventModel = JackJsonUtil.jsonToObject(message, EventModel.class);
                         if (!config.containsKey(eventModel.getType())) {
                             logger.error("不能识别的事件");
                             continue;

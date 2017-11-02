@@ -1,7 +1,6 @@
 package com.suny.association.exception;
 
 import com.suny.association.utils.JackJsonUtil;
-import com.suny.association.utils.JsonResult;
 import org.slf4j.Logger;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,7 +43,7 @@ public class SimpleMappingExceptionSolver implements HandlerExceptionResolver {
                 PrintWriter printWriter = response.getWriter();
                 //业务异常对前端可见，否则同意为系统异常
                 logger.warn("ajax请求异常，返回json异常数据");
-                printWriter.write(JackJsonUtil.processObjectToJson(objectMap));
+                printWriter.write(JackJsonUtil.objectToJson(objectMap));
                 printWriter.flush();
                 printWriter.close();
             } catch (IOException e) {

@@ -109,7 +109,7 @@ public class WebUtils {
     }
 
     private static IpInfo parseJsonDate(String jsonInfo){
-        ResponseInfo responseInfo = JackJsonUtil.processJsonToObject(jsonInfo, ResponseInfo.class);
+        ResponseInfo responseInfo = JackJsonUtil.jsonToObject(jsonInfo, ResponseInfo.class);
         if(responseInfo != null){
             if(responseInfo.getCode()== 1){
                 logger.error("淘宝返回的JSON状态码为1,查询失败");
