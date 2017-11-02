@@ -25,11 +25,6 @@ public class WebUtils {
      */
     private static final String UNKNOWN = "unknown";
     /**
-     * HTML页面的起始标签
-     */
-    private static final String HTML_ATTRIBUTE="<html>";
-    private static final String HTML_DOCTYPE_DECLARATION="<!DOCTYPE html>";
-    /**
      * 可能会出现的本地IP地址
      */
     private static final String LOCALHOST_IP_IPV4="127.0.0.1";
@@ -65,19 +60,19 @@ public class WebUtils {
      * @param ip ip地址
      * @return 百度普通定位地址
      */
-    public static IpInfo getRequestClientInfo(String ip) {
+    public static IpInfo getIpInfo(String ip) {
         if (LOCALHOST_IP_IPV4.equals(ip.trim())||LOCALHOST_IP_IPV6.equals(ip.trim())){
              return localhostIpInfo();
         }
         URL myUrl;
         String ipString = null;
-        StringBuilder responseJson = null;
+        StringBuilder responseJson = new StringBuilder("");
         try {
             ipString = URLEncoder.encode(ip, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             logger.warn("不支持的编码异常{}", e.getMessage());
         }
-        String url = String.format(TAOBAO_GET_IP_INFO_URL+"%s",ipString);
+        String url = TAOBAO_GET_IP_INFO_URL + ipString;
         URLConnection urlConnection = null;
         try {
             myUrl = new URL(url);
@@ -105,19 +100,28 @@ public class WebUtils {
     }
 
 
-    // TODO 这里我就写死在这里的一个本地信息
+    /**
+     * 拼接一个固定的本地网络连接的的信息
+     * @return  IP等信息
+     */
     private static IpInfo localhostIpInfo(){
         return new IpInfo("59.53.207.251","中国","华东","江西省","南昌市","南昌县","电信");
     }
 
     private static IpInfo parseJsonDate(String jsonInfo){
         ResponseInfo responseInfo = JackJsonUtil.processJsonToObject(jsonInfo, ResponseInfo.class);
-        // TODO 等待完善
-        if(responseInfo.getCode()== 1){
-            logger.error("查询地址失败");
-            return localhostIpInfo();
+        if(responseInfo != null){
+            if(responseInfo.getCode()== 1){
+                logger.error("淘宝返回的JSON状态码为1,查询失败");
+                return localhostIpInfo();
+            }
+            else{
+                logger.error("淘宝返回的JSON状态码为0,查询成功");
+                return responseInfo.getIpInfo();
+            }
         }
-            return responseInfo.getIpInfo();
+        logger.warn("由于未知的原因导致返回的IP查询信息为空");
+        return localhostIpInfo();
     }
 
 
@@ -179,7 +183,7 @@ public class WebUtils {
      * @param userAgent 浏览器userAgent标示
      * @return 模糊匹配操作系统版本
      */
-    public static String getOSVersion(String userAgent) {
+    public static String getClientOS(String userAgent) {
         if (Objects.equals(userAgent, "") || userAgent == null) {
             return UNKNOWN;
         }

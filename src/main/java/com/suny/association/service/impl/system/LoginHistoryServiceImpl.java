@@ -1,16 +1,12 @@
 package com.suny.association.service.impl.system;
 
 import com.suny.association.annotation.SystemServiceLog;
-import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.LoginHistoryMapper;
 import com.suny.association.pojo.po.LoginHistory;
-import com.suny.association.pojo.po.baidulocation.GeneralLocationResult;
 import com.suny.association.pojo.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
 import com.suny.association.utils.WebUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.suny.association.utils.WebUtils.getClientIpAdder;
-import static com.suny.association.utils.WebUtils.getOSVersion;
+import static com.suny.association.utils.WebUtils.getClientOS;
 
 /**
  * Comments:  登录历史记录业务逻辑
@@ -29,16 +25,11 @@ import static com.suny.association.utils.WebUtils.getOSVersion;
 @Service
 public class LoginHistoryServiceImpl extends AbstractBaseServiceImpl<LoginHistory> implements ILoginHistoryService {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginHistoryServiceImpl.class);
-
     private LoginHistoryMapper loginHistoryMapper;
 
-    private AccountMapper accountMapper;
-
     @Autowired
-    public LoginHistoryServiceImpl(LoginHistoryMapper loginHistoryMapper, AccountMapper accountMapper) {
+    public LoginHistoryServiceImpl(LoginHistoryMapper loginHistoryMapper) {
         this.loginHistoryMapper = loginHistoryMapper;
-        this.accountMapper = accountMapper;
     }
 
     public LoginHistoryServiceImpl() {
@@ -99,30 +90,36 @@ public class LoginHistoryServiceImpl extends AbstractBaseServiceImpl<LoginHistor
         //  6. 填充登录的浏览器信息
         loginHistory.setLoginBrowser(loginBrowser);
         //  7.  填充登录用户的浏览器版本
-        loginHistory.setLoginOsVersion(getOSVersion(userAgent));
+        loginHistory.setLoginOsVersion(getClientOS(userAgent));
         //  8. 填充用户登录验证账号密码的状态   true为认证成功   false则为认证失败
         loginHistory.setLoginStatus(authStatus);
         //  9.  通过登录的用户名查询触对应的一条账号信息
-//        Account account = accountMapper.selectByName(username);
+
         //  10. 填充 字段 登录用户
         loginHistory.setLoginName(username);
         //  11.通过ip地址去获取普通的定位地址
-//        GeneralLocationResult generalLocation = WebUtils.getRequestClientInfo(loginIp);
+        WebUtils.IpInfo ipInfo = WebUtils.getIpInfo(loginIp);
         //   11.1 判断是否得到了通过定位到的IP得到的地址
-//        if (generalLocation != null) {
-//            loginHistory.setLoginAddress(generalLocation.getStatus() == 0 ? generalLocation.getAddress() : "未知位置");
-//        } else {
-//                11.2   普通定位地址为空的话就给登录地址自动设置一个默认的值
-//            logger.warn("连接网络可能出了点问题，把操作位置默认设为未知位置");
-//            loginHistory.setLoginAddress("未知位置");
-//        }
+        if(ipInfo != null){
+            loginHistory.setLoginAddress(ipInfo.getCounty() + ipInfo.getArea() + ipInfo.getRegion() + ipInfo.getCity() + ipInfo.getIsp());
+        }else{
+            loginHistory.setLoginAddress("未知地址");
+        }
         insert(loginHistory);
     }
 
-    /*  通过成员的id去查询一条登录历史记录  */
-   /* @Transactional(propagation = Propagation.NOT_SUPPORTED)
+
+
+
+    /**
+     *  通过成员的id去查询一条登录历史记录
+     * @param memberId   协会成员的ID
+     * @return   登录信息
+     */
     @Override
-    public List<LoginHistory> queryByMemberId(int memberId) {
-        return loginHistoryMapper.queryByMemberId(memberId);
-    }*/
+    public List<LoginHistory> queryLoginLogByMemberId(int memberId) {
+        return loginHistoryMapper.queryLoginLogByMemberId(memberId);
+    }
+
+
 }

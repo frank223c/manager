@@ -56,6 +56,9 @@
         SELECT count(*)
         FROM login_history;
     </select>
+    <select id="queryLoginLogByMemberId" resultType="com.suny.association.pojo.po.LoginHistory">
+
+    </select>
 
 
 </mapper>

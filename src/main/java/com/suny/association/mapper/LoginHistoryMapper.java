@@ -12,5 +12,5 @@ import java.util.List;
  */
 
 public interface LoginHistoryMapper extends IMapper<LoginHistory> {
-//    List<LoginHistory> queryByMemberId(int memberId);
+    List<LoginHistory> queryLoginLogByMemberId(int memberId);
 }

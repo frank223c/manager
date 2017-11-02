@@ -86,7 +86,7 @@ public class SystemLogAspect {
              /*  操作浏览器  */
             operationLog.setOperationBrower(WebUtils.getBrowserInfo(userAgent));
              /*  操作系统 */
-            operationLog.setOperationOsVersion(WebUtils.getOSVersion(userAgent));
+            operationLog.setOperationOsVersion(WebUtils.getClientOS(userAgent));
              /*  userAgent  */
             operationLog.setOperationUserAgent(userAgent);
              /*   请求的地址 */
@@ -97,16 +97,14 @@ public class SystemLogAspect {
              /*  操作状态  */
             operationLog.setOperationStatus(true);
              /*   操作ip*/
-//            operationLog.setOperationIp(WebUtils.getClientIpAdder(request));
-//               没有网络时则注释从网络获取ip，直接固定一个ip写入数据库
-            operationLog.setOperationIp("182.85.141.54");
-             //  操作地址
-            //noinspection ConstantConditions
-//            operationLog.setOperationAddress(WebUtils.getRequestClientInfo(ip).getAddress());
-
-            //   没有网络时则注释从网络获取物理地址，直接固定一个物理地址写入数据库
-            operationLog.setOperationAddress("江西省南昌市南昌县创新二路");
-
+            String clientIpAdder = WebUtils.getClientIpAdder(WebUtils.getHttpServletRequest());
+            WebUtils.IpInfo ipInfo = WebUtils.getIpInfo(clientIpAdder);
+            if(ipInfo != null){
+                operationLog.setOperationAddress(ipInfo.getCounty() + ipInfo.getArea() + ipInfo.getRegion() + ipInfo.getCity() + ipInfo.getIsp());
+            }else{
+                operationLog.setOperationAddress("未知地址");
+            }
+            operationLog.setOperationIp(clientIpAdder);
             System.out.println("准备向数据库插入操作记录");
             // 开始插入操作日志
             operationLogService.insert(operationLog);
@@ -163,7 +161,7 @@ public class SystemLogAspect {
              /*  操作浏览器  */
             operationLog.setOperationBrower(WebUtils.getBrowserInfo(userAgent));
              /*  操作系统 */
-            operationLog.setOperationOsVersion(WebUtils.getOSVersion(userAgent));
+            operationLog.setOperationOsVersion(WebUtils.getClientOS(userAgent));
              /*  userAgent  */
             operationLog.setOperationUserAgent(userAgent);
              /*   请求的地址 */
@@ -177,7 +175,7 @@ public class SystemLogAspect {
             operationLog.setOperationIp(WebUtils.getClientIpAdder(request));
              /*  操作地址 */
             //noinspection ConstantConditions
-            operationLog.setOperationAddress(WebUtils.getRequestClientInfo(ip).toString());
+            operationLog.setOperationAddress(WebUtils.getIpInfo(ip).toString());
 
             /*开始插入操作日志*/
             operationLogService.insert(operationLog);
