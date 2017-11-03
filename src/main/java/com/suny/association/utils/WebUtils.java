@@ -1,5 +1,6 @@
 package com.suny.association.utils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -28,8 +29,9 @@ public class WebUtils {
      * 可能会出现的本地IP地址
      */
     private static final String LOCALHOST_IP_IPV4="127.0.0.1";
+    private static final String LOCALHOST_IP_IPV4_2="127.0.1.1";
     private static final String LOCALHOST_IP_IPV6="0:0:0:0:0:0:0:1";
-    private static final String TAOBAO_GET_IP_INFO_URL="http://ip.taobao.com/service/getIpInfo.php?ip=";
+    private static final String TAOBAO_GET_IP_INFO_URL="http://ip.taobao.com/service/getData.php?ip=";
 
 
     /**
@@ -63,6 +65,9 @@ public class WebUtils {
     public static IpInfo getIpInfo(String ip) {
         if (LOCALHOST_IP_IPV4.equals(ip.trim())||LOCALHOST_IP_IPV6.equals(ip.trim())){
              return localhostIpInfo();
+        }
+        if (LOCALHOST_IP_IPV4_2.equals(ip.trim())||LOCALHOST_IP_IPV4_2.equals(ip.trim())){
+            return localhostIpInfo();
         }
         URL myUrl;
         String ipString = null;
@@ -117,7 +122,7 @@ public class WebUtils {
             }
             else{
                 logger.error("淘宝返回的JSON状态码为0,查询成功");
-                return responseInfo.getIpInfo();
+                return responseInfo.getData();
             }
         }
         logger.warn("由于未知的原因导致返回的IP查询信息为空");
@@ -330,7 +335,12 @@ public class WebUtils {
         /**
          * 返回的查询数据
          */
-        private IpInfo ipInfo;
+        private IpInfo data;
+
+        public ResponseInfo(int code, IpInfo data) {
+            this.code = code;
+            this.data = data;
+        }
 
         public int getCode() {
             return code;
@@ -340,12 +350,12 @@ public class WebUtils {
             this.code = code;
         }
 
-        public IpInfo getIpInfo() {
-            return ipInfo;
+        public IpInfo getData() {
+            return data;
         }
 
-        public void setIpInfo(IpInfo ipInfo) {
-            this.ipInfo = ipInfo;
+        public void setData(IpInfo data) {
+            this.data = data;
         }
     }
 
@@ -380,12 +390,17 @@ public class WebUtils {
          */
         private String isp;
 
-
+        @JsonProperty("country_id")
         private String countryId;
+        @JsonProperty("area_id")
         private String areaId;
+        @JsonProperty("region_id")
         private String regionId;
+        @JsonProperty("city_id")
         private String cityId;
+        @JsonProperty("county_id")
         private String countyId;
+        @JsonProperty("isp_id")
         private String ispId;
 
         /**
@@ -413,6 +428,39 @@ public class WebUtils {
             this.city = city;
             this.county = county;
             this.isp = isp;
+        }
+
+
+        /**
+         * 完整的构造函数,用于网络查询返回封装的构造函数
+         * @param ip  ip地址
+         * @param country  国家
+         * @param area  地区
+         * @param region  省
+         * @param city   市
+         * @param county  县
+         * @param isp   宽带服务商
+         * @param countryId  国家ID
+         * @param areaId   地区ID
+         * @param regionId  省ID
+         * @param cityId   市ID
+         * @param countyId  县ID
+         * @param ispId  宽带商ID
+         */
+        public IpInfo(String ip, String country, String area, String region, String city, String county, String isp, String countryId, String areaId, String regionId, String cityId, String countyId, String ispId) {
+            this.ip = ip;
+            this.country = country;
+            this.area = area;
+            this.region = region;
+            this.city = city;
+            this.county = county;
+            this.isp = isp;
+            this.countryId = countryId;
+            this.areaId = areaId;
+            this.regionId = regionId;
+            this.cityId = cityId;
+            this.countyId = countyId;
+            this.ispId = ispId;
         }
 
         public String getIp() {

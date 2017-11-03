@@ -34,10 +34,10 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Controller
 public class BackedLoginController {
-
     private static Logger logger = LoggerFactory.getLogger(BackedLoginController.class);
     private static final String TICKET = "ticket";
-
+    private static final String ACCOUNT_ATTRIBUTE="account";
+    private static final String MEMBER_ATTRIBUTE="member";
     private final IAccountService accountService;
 
 
@@ -154,13 +154,14 @@ public class BackedLoginController {
      * @param username 登录的用户名
      */
     private void saveUser(HttpServletRequest request, HttpServletResponse response, String username) {
-        Member member = accountService.selectByName(username).getAccountMember();
         Account account = accountService.selectByName(username);
-        Cookie nameCookie = new Cookie("account", account.getAccountName());
-        Cookie accountCookie = new Cookie("member", member.getMemberName());
-        response.addCookie(nameCookie);
-        response.addCookie(accountCookie);
-        request.getSession().setAttribute("account", account);
+        Member member = account.getAccountMember();
+//        Cookie nameCookie = new Cookie(ACCOUNT_ATTRIBUTE, account.getAccountName());
+//        Cookie accountCookie = new Cookie(MEMBER_ATTRIBUTE, member.getMemberName());
+//        response.addCookie(nameCookie);
+//        response.addCookie(accountCookie);
+        request.getSession().setAttribute(ACCOUNT_ATTRIBUTE, account);
+        request.getSession().setAttribute(MEMBER_ATTRIBUTE, member);
     }
 
 
@@ -187,11 +188,11 @@ public class BackedLoginController {
         // 防止自动创建session，传入false阻止自动创建
         HttpSession session = request.getSession(false);
         if (session != null) {
-            session.removeAttribute("account");
-            session.removeAttribute("member");
+            session.removeAttribute(ACCOUNT_ATTRIBUTE);
+            session.removeAttribute(MEMBER_ATTRIBUTE);
             return JsonResultDTO.successResult(ResponseCodeEnum.LOGOUT_SUCCESS);
         }
-        request.getSession().removeAttribute("ticket");
+        request.getSession().removeAttribute(TICKET);
         return JsonResultDTO.failureResult(ResponseCodeEnum.LOGOUT_FAIL);
     }
 

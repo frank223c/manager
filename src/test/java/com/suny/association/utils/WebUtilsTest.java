@@ -16,7 +16,7 @@ public class WebUtilsTest {
     private static Logger logger = LoggerFactory.getLogger(WebUtilsTest.class);
     @Test
     public void getRequestClientInfo() throws Exception {
-//        WebUtils.IpInfo ipInfo = WebUtils.getIpInfo("127.0.0.1");
+//        WebUtils.IpInfo ipInfo = WebUtils.getData("127.0.0.1");
 //        logger.info("{}",ipInfo);
     }
 
