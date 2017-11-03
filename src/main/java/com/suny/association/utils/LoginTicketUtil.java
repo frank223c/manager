@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
  * @author 孙建荣
  * @date 17-9-22
  */
-public class LoginTicketUtils {
-    private static Logger logger = LoggerFactory.getLogger(LoginTicketUtils.class);
+public class LoginTicketUtil {
+    private static Logger logger = LoggerFactory.getLogger(LoginTicketUtil.class);
 
-    private LoginTicketUtils() {
+    private LoginTicketUtil() {
     }
 
     /**

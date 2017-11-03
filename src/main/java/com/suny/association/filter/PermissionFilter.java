@@ -6,7 +6,7 @@ import com.suny.association.mapper.LoginTicketMapper;
 import com.suny.association.entity.po.*;
 import com.suny.association.service.interfaces.system.IAccessPermissionService;
 import com.suny.association.service.interfaces.system.IPermissionAllotService;
-import com.suny.association.utils.LoginTicketUtils;
+import com.suny.association.utils.LoginTicketUtil;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -65,7 +65,7 @@ public class PermissionFilter implements Filter {
         } else {
             String reqURI = request.getRequestURI();
             //   【1】. 如果可以在本地线程变量里面取到Account信息,根据URL判断是否有对应的操作权限,否则就要求登录
-            String ticket = LoginTicketUtils.getTicket(request);
+            String ticket = LoginTicketUtil.getTicket(request);
             // 3.判断登录标记是否过期,不过期就自动登录,过期就需要重新登录
             // 3.1  根据ticket字符串去数据库里面查询是否有这个,防止客户端伪造ticket
             LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);

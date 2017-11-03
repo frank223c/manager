@@ -3,7 +3,7 @@ package com.suny.association.filter;
 import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.LoginTicketMapper;
 import com.suny.association.entity.po.LoginTicket;
-import com.suny.association.utils.LoginTicketUtils;
+import com.suny.association.utils.LoginTicketUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -59,13 +59,13 @@ public class RequireLoginFilter implements Filter {
             chain.doFilter(request, response);
         } else {
             // 2.   判断是否有登录标记ticket,ticket是从Cookie中进行获取,循环遍历验证室友存在ticket值
-            String ticket = LoginTicketUtils.getTicket(request);
+            String ticket = LoginTicketUtil.getTicket(request);
             // 3.判断登录标记是否过期,不过期就自动登录,过期就需要重新登录
             if (ticket != null) {
                 // 3.1  根据ticket字符串去数据库里面查询是否有这个,防止客户端伪造ticket
                 LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
                 // 3.2  如果查出来数据库里面没有这个ticket或者是已经过期了的话就让它重新登录
-                if (loginTicket == null || LoginTicketUtils.isExpired(loginTicket)) {
+                if (loginTicket == null || LoginTicketUtil.isExpired(loginTicket)) {
                     response.sendRedirect(((HttpServletRequest) req).getContextPath()+PORTAL_LOGIN_URL);
                     logger.warn("【RequireLoginFilter】ticket过期了或者是前端伪造的了,强制需要重新登录,重定向到登录页面");
                     req.setAttribute(EXECUTE_NEXT_FILTER, false);
