@@ -24,6 +24,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/member/role")
 public class MemberRoleController extends BaseController {
+    private static final Integer ROLE_NAME_MAX_LENGTH=20;
     private final IMemberRolesService memberRolesService;
     private final IMemberService memberService;
 
@@ -94,6 +95,9 @@ public class MemberRoleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     public JsonResultDTO insert(@RequestBody MemberRoles memberRoles) {
+        if(memberRoles.getMemberRoleName().length()>ROLE_NAME_MAX_LENGTH){
+            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+        }
         // 1.首先检查数据库是否存在要更新的数据记录
         if ("".equals(memberRoles.getMemberRoleName()) || memberRoles.getMemberRoleName() == null) {
             return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
@@ -131,12 +135,12 @@ public class MemberRoleController extends BaseController {
                                                  @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                                  @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         MemberRoles memberRoles=new MemberRoles();
-            if(!"".equals(memberRoleId)){
-                memberRoles.setMemberRoleId(Integer.valueOf(memberRoleId));
-            }
-            if (!"".equals(memberRoleName)){
-                memberRoles.setMemberRoleName(memberRoleName);
-            }
+        if(!"".equals(memberRoleId)){
+            memberRoles.setMemberRoleId(Integer.valueOf(memberRoleId));
+        }
+        if (!"".equals(memberRoleName)){
+            memberRoles.setMemberRoleName(memberRoleName);
+        }
         ConditionMap<MemberRoles> conditionMap=new ConditionMap<>(memberRoles,offset,limit);
         List<MemberRoles> rolesList = memberRolesService.selectByParam(conditionMap);
         int totalCount = memberRolesService.selectCount();

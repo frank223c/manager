@@ -59,7 +59,7 @@
 <script>
     $(document).on('click', '#submit', function () {
         var memberRoleNameVal = $("#memberRoleName").val();
-        if (memberRoleNameVal == '' || memberRoleNameVal == null) {
+        if (memberRoleNameVal === '' || memberRoleNameVal === null) {
             layer.msg('角色名字不能为空', {icon: 5});
             return false;
         }
@@ -67,24 +67,17 @@
             type: 'post',
             contentType: "application/json",
             url: '${pageContext.request.contextPath}/member/role/insert.action',
-            data: JSON.stringify({
-                memberRoleName: memberRoleNameVal
-            }),
+            data: JSON.stringify({memberRoleName: memberRoleNameVal}),
             success: function (result) {
-                if (result.status == 102) {
+                if (result.status === 102) {
                     window.parent.layer.alert('添加成功', {icon: 6});
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);  //再执行关闭
                 }
-                else if (result.status == 006) {
-                    window.parent.layer.msg('重复添加角色');
-                }
-                else if (result.status == 0x2) {
-                    window.parent.layer.msg('失败了，检查下哪里错了', {icon: 5});
-                }
-                else {
-                    window.parent.layer.msg('服务器异常，请重试', function () {
-                    });
+                else if (result.status === 006) {window.parent.layer.msg('重复添加角色');}
+                else if (result.status === 0x2) { window.parent.layer.msg('失败了，检查下哪里错了', {icon: 5});}
+                else if (result.status === 207) {window.parent.layer.msg('填写的名字太长了。', {icon: 5});}
+                else {window.parent.layer.msg('服务器异常，请重试', function () {});
                 }
             },
             error: function () {
