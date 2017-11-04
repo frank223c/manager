@@ -17,6 +17,8 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+
+
     <!--排除指定URL过滤器-->
     <filter>
         <filter-name>LimitFilter</filter-name>
@@ -27,6 +29,7 @@
         <url-pattern>*.action</url-pattern>
         <url-pattern>*.html</url-pattern>
     </filter-mapping>
+
     <!--XSS过滤器-->
     <filter>
         <filter-name>XssFilter</filter-name>
@@ -34,9 +37,8 @@
     </filter>
     <filter-mapping>
         <filter-name>XssFilter</filter-name>
-        <url-pattern>*.action</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
-
 
     <filter>
         <filter-name>RequireLoginFilter</filter-name>

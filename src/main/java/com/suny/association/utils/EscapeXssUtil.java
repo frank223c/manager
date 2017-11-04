@@ -1,5 +1,8 @@
 package com.suny.association.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -12,6 +15,7 @@ import java.util.regex.Pattern;
  *  @version 1.0
  **************************************/
 public class EscapeXssUtil {
+    private static Logger logger = LoggerFactory.getLogger(EscapeXssUtil.class);
     private EscapeXssUtil() {
         // 禁止实例化
     }
@@ -63,6 +67,7 @@ public class EscapeXssUtil {
 
             value = value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
         }
+        logger.info("过滤后的值是======={}",value);
         return value;
     }
 

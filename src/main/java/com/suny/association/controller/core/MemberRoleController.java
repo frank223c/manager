@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.tags.HtmlEscapeTag;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
@@ -24,7 +26,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/member/role")
 public class MemberRoleController extends BaseController {
-    private static final Integer ROLE_NAME_MAX_LENGTH=20;
+    private static final Integer ROLE_NAME_MAX_LENGTH=50;
     private final IMemberRolesService memberRolesService;
     private final IMemberService memberService;
 
@@ -95,21 +97,23 @@ public class MemberRoleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     public JsonResultDTO insert(@RequestBody MemberRoles memberRoles) {
-        if(memberRoles.getMemberRoleName().length()>ROLE_NAME_MAX_LENGTH){
+        String escapeName=HtmlUtils.htmlEscape(memberRoles.getMemberRoleName());
+        if(escapeName.length()>ROLE_NAME_MAX_LENGTH){
             return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
         }
         // 1.首先检查数据库是否存在要更新的数据记录
-        if ("".equals(memberRoles.getMemberRoleName()) || memberRoles.getMemberRoleName() == null) {
+        if ("".equals(escapeName)) {
             return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
         }
         // 2.再检查角色名字是否有空值
-        if (memberRolesService.selectByName(memberRoles.getMemberRoleName()) != null) {
+        if (memberRolesService.selectByName(escapeName) != null) {
             return JsonResultDTO.failureResult(ResponseCodeEnum.REPEAT_ADD);
         }
         // 3. 查询数据库中是否已经有存在的值了,如果存在则拒绝更新
-        if(memberRolesService.selectByName(memberRoles.getMemberRoleName()) != null){
+        if(memberRolesService.selectByName(escapeName) != null){
             return JsonResultDTO.failureResult(ResponseCodeEnum.REPEAT_ADD);
         }
+        memberRoles.setMemberRoleName(escapeName);
         memberRolesService.insert(memberRoles);
         return JsonResultDTO.successResult(ResponseCodeEnum.ADD_SUCCESS);
     }
@@ -131,7 +135,7 @@ public class MemberRoleController extends BaseController {
     @RequestMapping(value = "/selectByParam.action", method = RequestMethod.GET)
     @ResponseBody
     public BootstrapTableResultDTO selectByParam(@RequestParam(value = "memberRoleId",defaultValue = "")String memberRoleId,
-                                                 @RequestParam(value = "memberRoleId",defaultValue = "") String memberRoleName,
+                                                 @RequestParam(value = "memberRoleName",defaultValue = "") String memberRoleName,
                                                  @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                                  @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         MemberRoles memberRoles=new MemberRoles();
