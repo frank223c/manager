@@ -1,7 +1,5 @@
 package com.suny.association.filter;
 
-import com.suny.association.utils.EscapeXssUtil;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
@@ -12,7 +10,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
  *  @version 1.0
  **************************************/
 public class XssRequestWrapper extends HttpServletRequestWrapper {
-    private HttpServletRequest orgRequest = null;
 
     public XssRequestWrapper(HttpServletRequest request) {
         super(request);
@@ -109,25 +106,6 @@ public class XssRequestWrapper extends HttpServletRequestWrapper {
             }
         }
         sb.append(s.charAt(index));
-    }
-    /**
-     * 获取最原始的request
-     *
-     * @return
-     */
-    public HttpServletRequest getOrgRequest() {
-        return orgRequest;
-    }
-    /**
-     * 获取最原始的request的静态方法
-     *
-     * @return
-     */
-    public static HttpServletRequest getOrgRequest(HttpServletRequest req) {
-        if (req instanceof XssRequestWrapper) {
-            return ((XssRequestWrapper) req).getOrgRequest();
-        }
-        return req;
     }
 
 

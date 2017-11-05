@@ -73,34 +73,25 @@
 <script src="${basePath}/plugins/layer/layer.js"></script>
 
 <script>
-
-    function refresh() {
-        $("#table").bootstrapTable("refresh");
-    }
+    function refresh() {$("#table").bootstrapTable("refresh");}
     $(function () {
-
         //1.初始化Table
         var oTable = new TableInit();
         oTable.Init();
-
         //2.初始化Button的点击事件
         var oButtonInit = new ButtonInit();
         oButtonInit.Init();
-
         //根据窗口调整表格高度
         $(window).resize(function () {
             $('#table').bootstrapTable('resetView', {
                 height: tableHeight()
             })
         });
-
-
     });
 
     function tableHeight() {
         return $(window).height() - 20;
     }
-
     var TableInit = function () {
         var oTableInit = {};
         //初始化Table
@@ -142,15 +133,9 @@
                 rowStyle: function (row, index) {
                     //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                     var strclass = "";
-                    if (row.memberStatus == false) {
-                        strclass = 'danger';//还有一个active
-                    }
-                    else if (row.memberName == "已删除") {
-                        strclass = 'danger';
-                    }
-                    else {
-                        return {};
-                    }
+                    if (row.memberStatus === false) {strclass = 'danger';}
+                    else if (row.memberName === "已删除") {strclass = 'danger';}
+                    else { return {};}
                     return {classes: strclass}
                 },
                 columns: [
@@ -214,10 +199,7 @@
      */
     function update(memberRoleId) {
         //iframe层-父子操作
-        layer.open({
-            type: 2,
-            area: ['300px', '530px'],
-            fixed: true, //不固定
+        layer.open({type: 2,area: ['300px', '530px'],fixed: true, //不固定
             maxmin: true,
             content: '${pageContext.request.contextPath}/member/role/update.html/' + memberRoleId
         });
@@ -237,7 +219,7 @@
             }, function () {
                 layer.msg('准备删除了', {icon: 1});
                 var memberRoleId = selectedRadio[0].memberRoleId;
-                delectation(memberRoleId);
+                delete_action(memberRoleId);
             }, function () {
                 layer.msg('已经取消了', {
                     time: 20000 //20s后自动关闭
@@ -250,26 +232,21 @@
     /**
      * 提交删除表格操作
      * */
-    function delectation(memberRoleId) {
+    function delete_action(memberRoleId) {
         $.ajax({
                     type: "get",
                     url: "${basePath}/member/role/delete.action/" + memberRoleId,
                     success: function (result) {
-                        if (result.status == 103) {
+                        if (result.status === 103) {
                             layer.msg("删除成功，请刷新查看效果", {icon: 1});
                             layer.load(0, {shade: false, time: 1000});
                             $("#table").bootstrapTable("refresh");
                         }
-                        else if (result.status == 204) {
-                            layer.msg("此角色被引用，无法被删除", {icon: 4});
-                        }
-                        else {
-                            layer.msg("删除失败", {icon: 4});
-                        }
+                        else if (result.status === 204) {layer.msg("此角色被引用，无法被删除", {icon: 4});
+                        }else if (result.status === 207) {window.parent.layer.msg('填写的名字太长了。', {icon: 5});}
+                        else {layer.msg("删除失败", {icon: 4});}
                     },
-                    error: function () {
-                        layer.msg('出错了,请重试', {icon: 1});
-                    }
+                    error: function () {layer.msg('出错了,请重试', {icon: 1});}
                 }
         )
     }
@@ -280,11 +257,8 @@
      */
     var ButtonInit = function () {
         var oInit = {};
-
-        oInit.Init = function () {
-            //初始化页面上面的按钮事件
-        };
-
+        oInit.Init = function () { //初始化页面上面的按钮事件
+            };
         return oInit;
     };
 </script>

@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**************************************
- *  Description  
+ *  Description  过滤XSS注入相关特殊字符
  *  @author 孙建荣
  *  @date 17-11-2.下午10:06
  *  @version 1.0

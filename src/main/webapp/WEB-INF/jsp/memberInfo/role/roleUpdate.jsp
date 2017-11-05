@@ -56,11 +56,11 @@
     $(document).on('click', '#submit', function () {
         var roleNameVal = $("#roleName_new").val();
         var memberRoleIdVal = $("#memberRoleId").val();
-        if (memberRoleIdVal == '' || memberRoleIdVal == null) {
+        if (memberRoleIdVal === '' || memberRoleIdVal === null) {
             layer.msg('恶意篡改数据', {icon: 5});
             return false;
         }
-        if (roleNameVal == '' || roleNameVal == null) {
+        if (roleNameVal === '' || roleNameVal === null) {
             layer.msg('角色名字不能为空', {icon: 5});
             return false;
         }
@@ -73,26 +73,22 @@
                 memberRoleName: roleNameVal
             }),
             success: function (result) {
-                if (result.status == 104) {
+                if (result.status === 104) {
                     window.parent.layer.alert('修改成功', {icon: 6});
                     //noinspection JSDuplicatedDeclaration
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);  //再执行关闭
                 }
-                else if (result.status == 5) {
+                else if (result.status === 5) {
                     window.parent.layer.alert('恶意篡改数据，不存在角色id', {icon: 5});
                     //noinspection JSDuplicatedDeclaration
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);  //再执行关闭
                 }
-                else if (result.status == 4) {
-                    window.parent.layer.msg('失败了，检查下哪里错了', {icon: 5});
-                }
-                else if (result.status == 202) {
-                    window.parent.layer.msg('必要字段为空,请检查您的输入', {icon: 5});
-                }
-                else {
-                    window.parent.layer.msg('服务器异常，请重试', function () {
+                else if (result.status === 4) {window.parent.layer.msg('失败了，检查下哪里错了', {icon: 5});}
+                else if (result.status === 202) {window.parent.layer.msg('必要字段为空,请检查您的输入', {icon: 5});
+                }else if (result.status === 207) {window.parent.layer.msg('填写的名字太长了。', {icon: 5});}
+                else {window.parent.layer.msg('服务器异常，请重试', function () {
                     });
                 }
             },

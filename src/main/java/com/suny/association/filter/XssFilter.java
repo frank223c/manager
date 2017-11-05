@@ -15,13 +15,11 @@ import java.io.IOException;
  **************************************/
 public class XssFilter implements Filter{
     private static Logger logger = LoggerFactory.getLogger(XssFilter.class);
-     private FilterConfig filterConfig=null;
 
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.filterConfig=filterConfig;
-       logger.info("XSS攻击过滤器开始初始化");
+        logger.info("XSS攻击过滤器开始初始化");
     }
 
 
@@ -33,7 +31,6 @@ public class XssFilter implements Filter{
 
     @Override
     public void destroy() {
-        this.filterConfig = null;
         logger.info("XSS攻击过滤器销毁");
     }
 
