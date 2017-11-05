@@ -12,5 +12,12 @@ import java.util.List;
  */
 
 public interface LoginHistoryMapper extends IMapper<LoginHistory> {
+    /**
+     * 根据条件查询数据库里面的登录记录条数
+     * @param loginHistory  实体类查询条件
+     * @return   查询条件查询出来的记录
+     */
+    int selectCountByParam(LoginHistory loginHistory);
+
     List<LoginHistory> queryLoginLogByMemberId(int memberId);
 }

@@ -40,15 +40,23 @@
         </trim>
     </insert>
 
-    <sql id="selectFields">
-        login_history_id, login_name, login_ip, login_address, login_time, login_browser, login_os_version, login_user_agent, login_status
-    </sql>
 
     <select id="selectByParam" parameterType="hashmap" resultType="com.suny.association.entity.po.LoginHistory">
         SELECT
-        <include refid="selectFields"/>
+            login_history_id, login_name, login_ip, login_address, login_time, login_browser, login_os_version, login_user_agent, login_status
         FROM login_history
-        ORDER BY last_login_time DESC
+            <where>
+                1=1
+                <if test="entity.loginHistoryId != null ">AND login_history_id =#{entity.loginHistoryId   } </if>
+                <if test="entity.loginName != null ">AND login_name =#{entity.loginName   } </if>
+                <if test="entity.loginIp != null ">AND login_ip =#{entity.loginIp   } </if>
+                <if test="entity.loginAddress != null ">AND login_address LIKE "%" #{entity.loginAddress   } "%"</if>
+                <if test="entity.loginBrowser != null ">AND login_browser LIKE "%" =#{entity.loginBrowser   } "%"</if>
+                <if test="entity.loginOsVersion != null ">AND  LIKE "%" login_os_version =#{entity.loginOsVersion   } "%"</if>
+                <if test="entity.loginUserAgent != null ">AND  LIKE "%" login_user_agent =#{entity.loginUserAgent   } "%"</if>
+                <if test="entity.loginTime != null ">AND login_time > #{entity.loginTime   } </if>
+            </where>
+        ORDER BY login_time DESC
         LIMIT #{offset}, #{limit}
     </select>
 
@@ -56,9 +64,26 @@
         SELECT count(*)
         FROM login_history;
     </select>
-    <select id="queryLoginLogByMemberId" resultType="com.suny.association.entity.po.LoginHistory">
+    <select id="queryLoginLogByMemberId"  resultType="com.suny.association.entity.po.LoginHistory">
 
     </select>
+    <select id="selectCountByParam" parameterType="com.suny.association.entity.po.LoginHistory" resultType="java.lang.Integer">
+        SELECT COUNT(
+        login_history_id)
+        FROM login_history
+        <where>
+            1=1
+            <if test="loginHistoryId != null ">AND login_history_id =#{loginHistoryId   } </if>
+            <if test="loginName != null ">AND login_name =#{loginName   } </if>
+            <if test="loginIp != null ">AND login_ip =#{loginIp   } </if>
+            <if test="loginAddress != null ">AND login_address LIKE "%" #{loginAddress   } "%"</if>
+            <if test="loginBrowser != null ">AND login_browser LIKE "%" =#{loginBrowser   } "%"</if>
+            <if test="loginOsVersion != null ">AND  LIKE "%" login_os_version =#{loginOsVersion   } "%"</if>
+            <if test="loginUserAgent != null ">AND  LIKE "%" login_user_agent =#{loginUserAgent   } "%"</if>
+            <if test="loginTime != null ">AND login_time > #{loginTime   } </if>
+        </where>
+    </select>
+
 
 
 </mapper>

@@ -67,6 +67,17 @@ public class LoginHistoryServiceImpl extends AbstractBaseServiceImpl<LoginHistor
     }
 
     /**
+     * 根据条件查询数据库里面的登录记录条数
+     *
+     * @param loginHistory 实体类查询条件
+     * @return 查询条件查询出来的记录
+     */
+    @Override
+    public int selectCountByParam(LoginHistory loginHistory) {
+        return loginHistoryMapper.selectCountByParam(loginHistory);
+    }
+
+    /**
      * 收集用户登录信息
      *
      * @param username  登录的用户名

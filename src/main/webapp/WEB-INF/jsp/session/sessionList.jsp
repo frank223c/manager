@@ -114,32 +114,20 @@
                 rowStyle: function (row, index) {
                     //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                     var strclass = "";
-                    if (row.memberStatus == false) {
-                        strclass = 'danger';//还有一个active
-                    }
-                    else if (row.memberName == "已删除") {
-                        strclass = 'danger';
-                    }
-                    else {
-                        return {};
-                    }
+                    if (row.memberStatus === false) {strclass = 'danger';}
+                    else if (row.memberName === "已删除") { strclass = 'danger';}
+                    else {return {};}
                     return {classes: strclass}
                 },
                 columns: [
-                    {
-                        field: 'historyAccountId',
-                        title: '登录账号名',
-                        sortable: true,
-                        align: 'center',
-                        formatter: 'accountFormat'
-                    },
+                    {field: 'loginName',title: '登录账号名',sortable: true,align: 'center',formatter: 'account_name_format'},
                     {field: 'loginBrowser', title: '浏览器', sortable: true, align: 'center'},
-                    {field: 'lastLoginTime', title: '最后访问时间', formatter: 'dateFormat'},
+                    {field: 'loginTime', title: '最后访问时间', formatter: 'date_format'},
                     {field: 'loginOsVersion', title: '操作系统', align: 'center'},
-                    {field: 'lastLoginIp', title: '登录IP', align: 'center'},
+                    {field: 'loginIp', title: '登录IP', align: 'center'},
                     {field: 'loginAddress', title: '登录地址', align: 'center'},
                     {field: 'loginUserAgent', title: 'UA标识', align: 'center'},
-                    {field: 'loginStatus', title: '状态', align: 'center', formatter: 'statusFormatter'}
+                    {field: 'loginStatus', title: '状态', align: 'center', formatter: 'status_formatter'}
                 ],
                 onClickRow: function (row, $element) {
                     //$element是当前tr的jquery对象
@@ -159,8 +147,8 @@
         //得到查询的参数
         oTableInit.queryParams = function (params) {
             var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-                limit: params.limit,   //页面大小
-                offset: params.offset,  //页码
+                offset: params.offset,  //起始查询坐标
+                limit: params.limit,   //终结坐标
                 departmentname: $("#txt_search_departmentname").val(),
                 status: $("#txt_search_status").val()
             };
@@ -169,12 +157,12 @@
         return oTableInit;
     };
 
-    function accountFormat(value, row, index) {
-        return row.historyAccountId.accountName;
+    function account_name_format(value, row, index) {
+        return row.loginName;
     }
 
-    function dateFormat(value, row, index) {
-        var date = row.lastLoginTime;
+    function date_format(value, row, index) {
+        var date = row.loginTime;
         var Y = date.year + '-';
         var M = date.monthValue + '-';
         var D = date.dayOfMonth + ' ';
@@ -186,14 +174,14 @@
 
 
     // 格式化状态
-    function statusFormatter(value, row, index) {
-        if (value == '1') {
+    function status_formatter(value, row, index) {
+        if (value === '1') {
             return '<span class="label label-success">成功</span>';
         }
-        if (value == '0') {
+        if (value === '0') {
             return '<span class="label label-default">失败</span>';
         }
-        if (value == 'force_logout') {
+        if (value === 'force_logout') {
             return '<span class="label label-danger">踢离</span>';
         }
     }

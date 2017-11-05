@@ -33,13 +33,23 @@ public class SessionController extends BaseController {
         this.loginHistoryService = loginHistoryService;
     }
 
-    @RequestMapping(value = "/list.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectByParam.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResultDTO query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResultDTO selectByParam(LoginHistory loginHistory,
+                                         @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                          @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        ConditionMap<LoginHistory> conditionMap=new ConditionMap<>(new LoginHistory(),offset,limit);
-        List<LoginHistory> loginHistoryList = loginHistoryService.selectByParam(conditionMap);
-        int total = loginHistoryService.selectCount();
+        List<LoginHistory> loginHistoryList;
+        int total;
+        if(loginHistory==null){
+            LoginHistory history = new LoginHistory();
+            ConditionMap<LoginHistory> conditionMap=new ConditionMap<>(history,offset,limit);
+             loginHistoryList = loginHistoryService.selectByParam(conditionMap);
+             total = loginHistoryService.selectCountByParam(history);
+        }else{
+            ConditionMap<LoginHistory> conditionMap=new ConditionMap<>(loginHistory,offset,limit);
+            loginHistoryList = loginHistoryService.selectByParam(conditionMap);
+            total = loginHistoryService.selectCountByParam(loginHistory);
+        }
         return new BootstrapTableResultDTO(total,loginHistoryList);
     }
 
