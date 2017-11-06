@@ -127,7 +127,7 @@
                 <ul class="hi-menu">
                     <!-- 搜索 -->
                     <li class="dropdown">
-                        <a class="waves-effect waves-light" data-toggle="dropdown" href="javascript:;">
+                        <a class="waves-effect waves-light" data-toggle="dropdown" href="javascript:">
                             <i class="him-icon zmdi zmdi-search"></i>
                         </a>
                         <ul class="dropdown-menu dm-icon pull-right">
@@ -144,7 +144,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a class="waves-effect waves-light" data-toggle="dropdown" href="javascript:;">
+                        <a class="waves-effect waves-light" data-toggle="dropdown" href="javascript:">
                             <i class="him-icon zmdi zmdi-dropbox"></i>
                         </a>
                         <ul class="dropdown-menu dm-icon pull-right">
@@ -153,7 +153,7 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a class="waves-effect switch-systems" href="javascript:;" systemid="1"
+                                <a class="waves-effect switch-systems" href="javascript:" systemid="1"
                                    systemname="zheng-upms-server" systemtitle="协会管理系统"><i
                                         class="zmdi zmdi-shield-security"></i>江西现代技术学院软件技术协会管理系统</a>
                             </li>
@@ -186,7 +186,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a class="waves-effect waves-light" data-toggle="dropdown" href="javascript:;">
+                        <a class="waves-effect waves-light" data-toggle="dropdown" href="javascript:">
                             <i class="him-icon zmdi zmdi-more-vert"></i>
                         </a>
                         <ul class="dropdown-menu dm-icon pull-right">
@@ -195,17 +195,17 @@
                                         class="zmdi zmdi-fullscreen"></i> 全屏模式</a>
                             </li>
                             <li>
-                                <a class="waves-effect" data-ma-action="clear-localstorage" href="javascript:;"><i
+                                <a class="waves-effect" data-ma-action="clear-localstorage" href="javascript:"><i
                                         class="zmdi zmdi-delete"></i> 清除缓存</a>
                             </li>
                             <li>
-                                <a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-face"></i> 隐私管理</a>
+                                <a class="waves-effect" href="javascript:"><i class="zmdi zmdi-face"></i> 隐私管理</a>
                             </li>
                             <li>
-                                <a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-settings"></i> 系统设置</a>
+                                <a class="waves-effect" href="javascript:"><i class="zmdi zmdi-settings"></i> 系统设置</a>
                             </li>
                             <li>
-                                <a class="waves-effect" href="javascript:;" onclick="clickLogout()"><i
+                                <a class="waves-effect" href="javascript:" onclick="clickLogout()"><i
                                         class="zmdi zmdi-run"></i> 退出登录</a>
                             </li>
                         </ul>
@@ -219,7 +219,7 @@
         <aside id="sidebar">
             <!-- 个人资料区 -->
             <div class="s-profile">
-                <a class="waves-effect waves-light" href="javascript:;">
+                <a class="waves-effect waves-light" href="javascript:">
                     <div class="sp-pic">
                         <img src="${basePath}/images/avatar.jpg"/>
                     </div>
@@ -227,7 +227,7 @@
                         <%--<shiro:principal/>--%>
                         <%--<shiro:user></shiro:user>--%>
                         <%--【${member.memberRoles.memberRoleName}】 ${member.memberName}，您好！--%>
-                        【${cookie.account.value}】 ${cookie.member.value}，您好！
+                        【${sessionScope.account.accountRoles.description}】 ${sessionScope.member.memberName}，您好！
                         <i class="zmdi zmdi-caret-down"></i>
                     </div>
                 </a>
@@ -265,7 +265,7 @@
                         首页</a>
                 </li>
                 <li class="sub-menu system_menus system_1 0">
-                    <a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-accounts-list"></i> 协会信息管理</a>
+                    <a class="waves-effect" href="javascript:"><i class="zmdi zmdi-accounts-list"></i> 协会信息管理</a>
                     <ul>
                         <li><a class="waves-effect"
                                href="javascript:Tab.addTab('协会成员信息', '${basePath}/member/memberManager.html');">协会成员信息</a>
@@ -287,7 +287,7 @@
                     </ul>
                 </li>
                 <li class="sub-menu system_menus system_1 0">
-                    <a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-accounts-list"></i> 系统组织管理</a>
+                    <a class="waves-effect" href="javascript:"><i class="zmdi zmdi-accounts-list"></i> 系统组织管理</a>
                     <%-- <ul>
                          <li><a class="waves-effect"
                                 href="javascript:Tab.addTab('系统管理', '${basePath}/systemConfig.html');">系统管理</a>
@@ -298,7 +298,7 @@
                      </ul>--%>
                 </li>
                 <li class="sub-menu system_menus system_1 3">
-                    <a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-accounts"></i> 账号信息管理</a>
+                    <a class="waves-effect" href="javascript:"><i class="zmdi zmdi-accounts"></i> 账号信息管理</a>
                     <ul>
                         <li><a class="waves-effect"
                                href="javascript:Tab.addTab('账号角色管理', '${basePath}/account/role/index.html');">账号角色管理</a>
@@ -309,7 +309,7 @@
                     </ul>
                 </li>
                 <li class="sub-menu system_menus system_1 6">
-                    <a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-lock-outline"></i> 权限资源管理</a>
+                    <a class="waves-effect" href="javascript:"><i class="zmdi zmdi-lock-outline"></i> 权限资源管理</a>
                     <ul>
                         <li><a class="waves-effect"
                                href="javascript:Tab.addTab('权限管理', '${basePath}/system/permission/index.html');">角色权限管理</a>
@@ -322,7 +322,7 @@
                     </ul>
                 </li>
                 <li class="sub-menu system_menus system_1 7">
-                    <a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-more"></i> 其他数据管理</a>
+                    <a class="waves-effect" href="javascript:"><i class="zmdi zmdi-more"></i> 其他数据管理</a>
                     <ul>
                         <%-- <li><a class="waves-effect"
                                 href="javascript:Tab.addTab('公共码表', '${basePath}/manage/coder/index');">公共码表</a>
@@ -373,10 +373,10 @@
         <section id="content">
             <div class="content_tab">
                 <div class="tab_left">
-                    <a class="waves-effect waves-light" href="javascript:;"><i class="zmdi zmdi-chevron-left"></i></a>
+                    <a class="waves-effect waves-light" href="javascript:"><i class="zmdi zmdi-chevron-left"></i></a>
                 </div>
                 <div class="tab_right">
-                    <a class="waves-effect waves-light" href="javascript:;"><i class="zmdi zmdi-chevron-right"></i></a>
+                    <a class="waves-effect waves-light" href="javascript:"><i class="zmdi zmdi-chevron-right"></i></a>
                 </div>
                 <ul id="tabs" class="tabs">
                     <li id="tab_home" data-index="home" data-closeable="false" class="cur">
@@ -470,19 +470,19 @@
             url: "${basePath}/punchLog/update.action",
             success: function (result) {
                 var status = result.status;
-                if (status == 987) {
+                if (status === 987) {
                     layer.alert("没有登录你还签到！查看下是不是会话过期了，重新登录下吧");
-                } else if (status == 211) {
+                } else if (status === 211) {
                     layer.alert("请不要恶意操作他人账号！");
-                } else if (status == 5) {
+                } else if (status === 5) {
                     layer.alert("没有你这个要签到的账号！恶意操作");
-                } else if (status == 212) {
+                } else if (status === 212) {
                     layer.alert("今天已经签到成功啦，不要重复签到！");
-                } else if (status == 215) {
+                } else if (status === 215) {
                     layer.alert("考勤失败啦，再等等吧！");
-                } else if (status == 213) {
+                } else if (status === 213) {
                     layer.alert("再等等啦，还没有到签到时间！");
-                } else if (status == 214) {
+                } else if (status === 214) {
                     layer.alert("恭喜你签到成功啦！");
                 } else {
                     layer.alert("服务器除了点小问题，可能执行到Bug了");
@@ -502,12 +502,12 @@
         console.log("原密码" + passwordVal);
         console.log("新密码" + newPasswordVal);
         console.log("重复密码" + repeatPasswordVal);
-        if (passwordVal == null || passwordVal == "") {
+        if (passwordVal === null || passwordVal === "") {
             layer.alert("原密码不能为空");
             return false;
         }
-        if (newPasswordVal == null || newPasswordVal == "" || newPasswordVal.length < 9) {
-            if (newPasswordVal == "") {
+        if (newPasswordVal === null || newPasswordVal === "" || newPasswordVal.length < 9) {
+            if (newPasswordVal === "") {
                 layer.alert("新密码不能为空");
                 return false;
             }
@@ -516,8 +516,8 @@
                 return false;
             }
         }
-        if (repeatPasswordVal == null || repeatPasswordVal == "" || repeatPasswordVal.length < 9) {
-            if (repeatPasswordVal == "") {
+        if (repeatPasswordVal === null || repeatPasswordVal === "" || repeatPasswordVal.length < 9) {
+            if (repeatPasswordVal === "") {
                 layer.alert("重复新密码不能为空");
                 return false;
             }
@@ -526,7 +526,7 @@
                 return false;
             }
         }
-        if (repeatPasswordVal != newPasswordVal) {
+        if (repeatPasswordVal !== newPasswordVal) {
             layer.alert("新密码跟重复密码必须要填写一样，证明您记住了新密码");
             return false;
         }
@@ -540,15 +540,15 @@
             },
             success: function (result) {
                 var status = result.status;
-                if (status == 201) {
+                if (status === 201) {
                     layer.alert("密码不能为空！");
-                } else if (status == 207) {
+                } else if (status === 207) {
                     layer.alert("请检查新密码长度不能小于9位！");
-                } else if (status == 5) {
+                } else if (status === 5) {
                     layer.alert("没有你要修改密码的账号！");
-                } else if (status == 208) {
+                } else if (status === 208) {
                     layer.alert("老密码填写错误，请重新检查您的老密码！");
-                } else if (status == 104) {
+                } else if (status === 104) {
                     layer.alert("更新密码成功，请重新用新密码登录！");
                     layer.confirm('密码更新成功了！', {
                         btn: ['我知道了'] //按钮
@@ -557,9 +557,9 @@
                         setTimeout(login(), 5000);
                     });
 
-                } else if (status == 4) {
+                } else if (status === 4) {
                     layer.alert("服务器更新密码出了点小问题，请重试！");
-                } else if (status == 211) {
+                } else if (status === 211) {
                     layer.alert("恶意修改他人密码！");
                 } else {
                     layer.alert("出了点未知的小问题！");

@@ -42,7 +42,7 @@ public class OperationLogController extends BaseController {
     @ResponseBody
     public BootstrapTableResultDTO query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                          @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        ConditionMap<OperationLog> conditionMap=new ConditionMap<>(new OperationLog(),0,10);
+        ConditionMap<OperationLog> conditionMap=new ConditionMap<>(new OperationLog(),offset,limit);
         List<OperationLog> operationLogList = operationLogService.selectByParam(conditionMap);
         int total = operationLogService.selectCount();
         return new BootstrapTableResultDTO(total,operationLogList);

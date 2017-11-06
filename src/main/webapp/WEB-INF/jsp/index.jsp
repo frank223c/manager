@@ -29,7 +29,7 @@
     <div class="topPart">
         <h2>登陆入口</h2>
         <div id="toolbar">
-            <a class="waves-effect waves-button" href="javascript:;" onclick="logoutAction()"><i
+            <a class="waves-effect waves-button" href="javascript:" onclick="logoutAction()"><i
                     class="zmdi zmdi-run"></i> 强制退出</a>
         </div>
         <%--<a id="goBack" href="javascript:;" onclick="logoutAction()"><i class="zmdi zmdi-run"></i> 强制退出</a></a>--%>
@@ -161,20 +161,20 @@
         passWordValue = passWord.val();
         codeValue = code.val();
 
-        if (userNameValue == '') {
+        if (userNameValue === '') {
             error3.text('请填写用户名');
             userName.focus();
             userName.css('border', '2px solid red');
             return false;
         }
 
-        if (passWordValue == '') {
+        if (passWordValue === '') {
             error1.text('请填写密码');
             passWord.focus();
             passWord.css('border', '2px solid red');
             return false;
         }
-        if (codeValue == '') {
+        if (codeValue === '') {
             error2.text('请填写验证码');
             code.focus();
             code.css('border', '2px solid red');
@@ -201,7 +201,7 @@
                     loginBtn.text("登录验证中");
                 },
                 success: function (result) {
-                    if (result.status == 991) {
+                    if (result.status === 991) {
                         layer.msg('验证码错了。。', {icon: 5});
                         error2.text('验证码错误');
                         emptyInputValue(code);
@@ -251,7 +251,7 @@
                 },
                 success: function (result) {
                     var statusCode = result.status;
-                    if (statusCode == 995) {
+                    if (statusCode === 995) {
                         flag = 0;
                         loginBtn.attr("disabled", "true");
                         //登录成功
@@ -262,18 +262,18 @@
                             });
                             goAdminPage();
                         });
-                    } else if (statusCode == 996 || statusCode == 1) {
+                    } else if (statusCode === 996 || statusCode === 1) {
                         layer.msg('用户名或者密码错误。。', {icon: 5});
                         error1.text('用户名或密码错误');
                         emptyInputValue(code);
                         redStyleWarn(userName);
                         redStyleWarn(passWord);
                         refresh();
-                    } else if (statusCode == 998) {
+                    } else if (statusCode === 998) {
                         layer.alert('您已经登录过了，请不要重复登录,点击强制退出清除您的会话');
-                    } else if (statusCode == 988) {
+                    } else if (statusCode === 988) {
                         layer.alert('重复提交表单，速度太快了。。。。。刷新页面后再尝试登陆');
-                    } else if (statusCode == 991) {
+                    } else if (statusCode === 991) {
                         layer.msg('验证码错误', {icon: 5});
                     }
                     else {

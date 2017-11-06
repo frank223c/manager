@@ -156,10 +156,6 @@ public class BackedLoginController {
     private void saveUser(HttpServletRequest request, HttpServletResponse response, String username) {
         Account account = accountService.selectByName(username);
         Member member = account.getAccountMember();
-//        Cookie nameCookie = new Cookie(ACCOUNT_ATTRIBUTE, account.getAccountName());
-//        Cookie accountCookie = new Cookie(MEMBER_ATTRIBUTE, member.getMemberName());
-//        response.addCookie(nameCookie);
-//        response.addCookie(accountCookie);
         request.getSession().setAttribute(ACCOUNT_ATTRIBUTE, account);
         request.getSession().setAttribute(MEMBER_ATTRIBUTE, member);
     }
