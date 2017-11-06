@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
@@ -26,8 +27,10 @@ import static com.suny.association.entity.dto.JsonResultDTO.successResult;
 @Controller
 @RequestMapping("/account/role")
 public class RoleController extends BaseController {
-
     private final IRolesService rolesService;
+    private static final Integer ACCOUNT_ROLE_ID_LENGTH=2;
+    private static final Integer ACCOUNT_ROLE_NAME_LENGTH=10;
+    private static final Integer ACCOUNT_ROLE_DESCRIPTION_LENGTH=200;
 
     @Autowired
     public RoleController(IRolesService rolesService) {
@@ -38,12 +41,16 @@ public class RoleController extends BaseController {
     @RequestMapping(value = "/delete.action/{roleId}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResultDTO delete(@PathVariable("roleId") Integer roleId) {
+        Integer escapeId = Integer.valueOf(HtmlUtils.htmlEscape(String.valueOf(roleId)));
+        if ( escapeId.toString().length() > ACCOUNT_ROLE_ID_LENGTH) {
+            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+        }
         if (!rolesService.queryQuote(roleId).isEmpty()) {
             return failureResult(ResponseCodeEnum.HAVE_QUOTE);
         } else if (rolesService.selectById(roleId) == null) {
             return failureResult(ResponseCodeEnum.DELETE_FAILURE);
         }
-        rolesService.deleteById(roleId);
+        rolesService.deleteById(escapeId);
         return successResult(ResponseCodeEnum.DELETE_SUCCESS);
     }
 
@@ -51,12 +58,22 @@ public class RoleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/update.json", method = RequestMethod.POST)
     public JsonResultDTO update(@RequestBody Roles roles) {
+        // 过滤特殊字符，防止XSS注入
+        String escapeName = HtmlUtils.htmlEscape(roles.getRoleName());
+        String escapeDescription = HtmlUtils.htmlEscape(roles.getDescription());
+        Integer escapeId = Integer.valueOf(HtmlUtils.htmlEscape(String.valueOf(roles.getRoleId())));
         if (roles.getRoleId() == null || rolesService.selectById(roles.getRoleId()) == null) {
             return failureResult(ResponseCodeEnum.SELECT_FAILURE);
+        }
+        if (escapeName.length() > ACCOUNT_ROLE_NAME_LENGTH || escapeId.toString().length() > ACCOUNT_ROLE_ID_LENGTH||escapeDescription.length()>ACCOUNT_ROLE_DESCRIPTION_LENGTH) {
+            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
         }
         if ("".equals(roles.getDescription()) || roles.getDescription() == null) {
             return failureResult(ResponseCodeEnum.FIELD_NULL);
         }
+        roles.setRoleId(escapeId);
+        roles.setRoleName(escapeName);
+        roles.setDescription(escapeDescription);
         rolesService.update(roles);
         return successResult(ResponseCodeEnum.UPDATE_SUCCESS);
     }
@@ -87,12 +104,22 @@ public class RoleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     public JsonResultDTO insert(@RequestBody Roles roles) {
-        if ("".equals(roles.getDescription()) || roles.getDescription() == null) {
+        // 过滤特殊字符，防止XSS注入
+        String escapeName = HtmlUtils.htmlEscape(roles.getRoleName());
+        String escapeDescription = HtmlUtils.htmlEscape(roles.getDescription());
+        Integer escapeId = Integer.valueOf(HtmlUtils.htmlEscape(String.valueOf(roles.getRoleId())));
+        if ("".equals(escapeDescription) || escapeDescription == null) {
             return failureResult(ResponseCodeEnum.FIELD_NULL);
         }
-        if (rolesService.selectByName(roles.getDescription()) != null) {
+        if (escapeName.length() > ACCOUNT_ROLE_NAME_LENGTH || escapeId.toString().length() > ACCOUNT_ROLE_ID_LENGTH||escapeDescription.length()>ACCOUNT_ROLE_DESCRIPTION_LENGTH) {
+            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+        }
+        if (rolesService.selectByName(escapeDescription) != null) {
             return failureResult(ResponseCodeEnum.REPEAT_ADD);
         }
+        roles.setRoleId(escapeId);
+        roles.setRoleName(escapeName);
+        roles.setDescription(escapeDescription);
         rolesService.insert(roles);
         return successResult(ResponseCodeEnum.ADD_SUCCESS);
     }
