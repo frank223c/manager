@@ -40,9 +40,7 @@
     <insert id="insert" parameterType="com.suny.association.entity.po.OperationLog">
         INSERT INTO operation
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="  operationId != null">
-                operation_id ,
-            </if>
+            <if test="  operationId != null">operation_id ,</if>
             <if test=" operationMessage != null">
                 operation_message ,
             </if>

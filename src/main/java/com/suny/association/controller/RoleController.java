@@ -3,6 +3,7 @@ package com.suny.association.controller;
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.entity.dto.BootstrapTableResultDTO;
 import com.suny.association.entity.dto.JsonResultDTO;
+import com.suny.association.entity.po.OperationLog;
 import com.suny.association.entity.po.Roles;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.enums.ResponseCodeEnum;
@@ -37,7 +38,7 @@ public class RoleController extends BaseController {
     @RequestMapping(value = "/delete.action/{roleId}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResultDTO delete(@PathVariable("roleId") Integer roleId) {
-        if (rolesService.queryQuote(roleId).size() >= 1) {
+        if (!rolesService.queryQuote(roleId).isEmpty()) {
             return failureResult(ResponseCodeEnum.HAVE_QUOTE);
         } else if (rolesService.selectById(roleId) == null) {
             return failureResult(ResponseCodeEnum.DELETE_FAILURE);
@@ -109,14 +110,24 @@ public class RoleController extends BaseController {
      * @param limit  查询几条数据
      * @return 带查询条件的数据
      */
-    @RequestMapping(value = "/list.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectByParam.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResultDTO query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResultDTO selectByParam(Roles roles,
+                                         @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                          @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        ConditionMap<Roles> conditionMap=new ConditionMap<>(new Roles(),0,10);
-        List<Roles> rolesList = rolesService.selectByParam(conditionMap);
-        int total = rolesService.selectCount();
-        return new BootstrapTableResultDTO(total, rolesList);
+        List<Roles> rolesList;
+        int total;
+        if(roles==null){
+            Roles roles1 = new Roles();
+            ConditionMap<Roles> conditionMap=new ConditionMap<>(roles1,offset,limit);
+            rolesList = rolesService.selectByParam(conditionMap);
+            total = rolesService.selectCountByParam(roles1);
+        }else{
+            ConditionMap<Roles> conditionMap=new ConditionMap<>(roles,offset,limit);
+            rolesList = rolesService.selectByParam(conditionMap);
+            total = rolesService.selectCountByParam(roles);
+        }
+        return new BootstrapTableResultDTO(total,rolesList);
     }
 
     @SystemControllerLog(description = "查看账号角色页面")

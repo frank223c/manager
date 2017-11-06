@@ -3,7 +3,6 @@ package com.suny.association.controller.system;
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
 import com.suny.association.entity.dto.BootstrapTableResultDTO;
-import com.suny.association.entity.po.LoginHistory;
 import com.suny.association.entity.po.OperationLog;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.system.IOperationLogService;
@@ -47,10 +46,10 @@ public class OperationLogController extends BaseController {
         List<OperationLog> operationLogList;
         int total;
         if(operationLog==null){
-            OperationLog history = new OperationLog();
-            ConditionMap<OperationLog> conditionMap=new ConditionMap<>(history,offset,limit);
+            OperationLog log = new OperationLog();
+            ConditionMap<OperationLog> conditionMap=new ConditionMap<>(log,offset,limit);
             operationLogList = operationLogService.selectByParam(conditionMap);
-            total = operationLogService.selectCountByParam(history);
+            total = operationLogService.selectCountByParam(log);
         }else{
             ConditionMap<OperationLog> conditionMap=new ConditionMap<>(operationLog,offset,limit);
             operationLogList = operationLogService.selectByParam(conditionMap);

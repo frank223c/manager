@@ -1,6 +1,5 @@
 package com.suny.association.service.interfaces.system;
 
-import com.suny.association.entity.po.LoginHistory;
 import com.suny.association.entity.po.OperationLog;
 import com.suny.association.service.IBaseService;
 

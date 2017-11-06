@@ -79,6 +79,17 @@ public class RolesServiceImpl extends AbstractBaseServiceImpl<Roles> implements 
         return rolesMapper.selectCount();
     }
 
+    /**
+     * 根据查询条件查询操作记录
+     *
+     * @param roles 操作日志实体
+     * @return 条件查询出来的账号
+     */
+    @Override
+    public int selectCountByParam(Roles roles) {
+        return rolesMapper.selectCountByParam(roles);
+    }
+
     /* 查询触引用该角色的所有账号信息     */
     @Override
     public List<Account> queryQuote(Integer roleId) {
