@@ -12,4 +12,10 @@ import com.suny.association.entity.po.OperationLog;
 
 public interface OperationLogMapper extends IMapper<OperationLog> {
 
+    /**
+     * 根据查询条件查询操作记录
+     * @param operationLog   操作日志实体
+     * @return   条件查询出来的账号
+     */
+    int selectCountByParam(OperationLog operationLog);
 }

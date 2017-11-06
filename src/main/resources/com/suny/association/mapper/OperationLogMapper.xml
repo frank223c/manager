@@ -133,15 +133,35 @@
             o.operation_address,
             o.operation_status
         FROM operation AS o
+            <where>
+                1=1
+                <if test="entity.operationMessage != null"> = AND operation_message like "%" #{entity.operationMessage} "%" </if>
+                <if test="entity.operationMemberName !=null">AND  operation_member_name =#{entity.operationMemberName}   </if>
+                <if test="entity.operationIp !=null">AND  operation_ip = #{entity.operationIp}   </if>
+                <if test="entity.operationAddress !=null">AND  operation_address like "%" #{entity.operationAddress} "%"   </if>
+                <if test="entity.operationAccountId !=null">AND operation_account_id  =#{entity.operationAccountId}   </if>
+            </where>
         ORDER BY o.operation_time DESC
         LIMIT
             #{offset},
             #{limit}
     </select>
 
-    <select id="selectCount" resultType="int">
+    <select id="selectCount" parameterType="hashmap" resultType="int">
         SELECT count(*)
-        FROM operation;
+        FROM operation
+    </select>
+    <select id="selectCountByParam" parameterType="com.suny.association.entity.po.OperationLog" resultType="int">
+        SELECT count(*)
+        FROM operation
+        <where>
+            1=1
+            <if test="operationMessage != null"> = AND operation_message like "%" #{operationMessage} "%" </if>
+            <if test="operationMemberName !=null">AND  operation_member_name =#{operationMemberName}   </if>
+            <if test="operationIp !=null">AND  operation_ip = #{operationIp}   </if>
+            <if test="operationAddress !=null">AND  operation_address like "%" #{operationAddress} "%"   </if>
+            <if test="operationAccountId !=null">AND operation_account_id  =#{operationAccountId}   </if>
+        </where>
     </select>
 
 </mapper>

@@ -3,6 +3,7 @@ package com.suny.association.controller.system;
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
 import com.suny.association.entity.dto.BootstrapTableResultDTO;
+import com.suny.association.entity.po.LoginHistory;
 import com.suny.association.entity.po.OperationLog;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.system.IOperationLogService;
@@ -38,13 +39,23 @@ public class OperationLogController extends BaseController {
      * @param limit  查几个数据
      * @return 带查询条件的数据
      */
-    @RequestMapping(value = "/list.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectByParam.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResultDTO query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResultDTO selectByParam(OperationLog operationLog,
+                                         @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                          @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        ConditionMap<OperationLog> conditionMap=new ConditionMap<>(new OperationLog(),offset,limit);
-        List<OperationLog> operationLogList = operationLogService.selectByParam(conditionMap);
-        int total = operationLogService.selectCount();
+        List<OperationLog> operationLogList;
+        int total;
+        if(operationLog==null){
+            OperationLog history = new OperationLog();
+            ConditionMap<OperationLog> conditionMap=new ConditionMap<>(history,offset,limit);
+            operationLogList = operationLogService.selectByParam(conditionMap);
+            total = operationLogService.selectCountByParam(history);
+        }else{
+            ConditionMap<OperationLog> conditionMap=new ConditionMap<>(operationLog,offset,limit);
+            operationLogList = operationLogService.selectByParam(conditionMap);
+            total = operationLogService.selectCountByParam(operationLog);
+        }
         return new BootstrapTableResultDTO(total,operationLogList);
     }
 
