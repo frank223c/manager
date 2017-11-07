@@ -107,17 +107,15 @@ public class RoleController extends BaseController {
         // 过滤特殊字符，防止XSS注入
         String escapeName = HtmlUtils.htmlEscape(roles.getRoleName());
         String escapeDescription = HtmlUtils.htmlEscape(roles.getDescription());
-        Integer escapeId = Integer.valueOf(HtmlUtils.htmlEscape(String.valueOf(roles.getRoleId())));
         if ("".equals(escapeDescription) || escapeDescription == null) {
             return failureResult(ResponseCodeEnum.FIELD_NULL);
         }
-        if (escapeName.length() > ACCOUNT_ROLE_NAME_LENGTH || escapeId.toString().length() > ACCOUNT_ROLE_ID_LENGTH||escapeDescription.length()>ACCOUNT_ROLE_DESCRIPTION_LENGTH) {
+        if (escapeName.length() > ACCOUNT_ROLE_NAME_LENGTH ||escapeDescription.length()>ACCOUNT_ROLE_DESCRIPTION_LENGTH) {
             return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
         }
         if (rolesService.selectByName(escapeDescription) != null) {
             return failureResult(ResponseCodeEnum.REPEAT_ADD);
         }
-        roles.setRoleId(escapeId);
         roles.setRoleName(escapeName);
         roles.setDescription(escapeDescription);
         rolesService.insert(roles);

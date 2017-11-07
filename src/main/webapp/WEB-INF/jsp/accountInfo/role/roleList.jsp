@@ -204,7 +204,7 @@
         layer.open({
             type: 2,
             content: '${pageContext.request.contextPath}/account/role/insert.html',
-            area: ['320px', '300px'],
+            area: ['320px', '400px'],
             fixed: true,
             maxmin: true
         });

@@ -44,8 +44,12 @@
             <input id="roleId" type="text" class="form-control" value="角色ID由系统自动生成" disabled>
         </div>
         <div class="form-group">
-            <label for="roleName1">角色名字</label>
-            <input id="roleName1" type="text" class="form-control">
+            <label for="description">角色中文名字</label>
+            <input id="description" type="text" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="roleName">角色英文名字</label>
+            <input id="roleName" type="text" class="form-control">
         </div>
         <button type="button" class="btn btn-warning btn-block" id="submit">点击新增</button>
     </form>
@@ -58,9 +62,14 @@
 <script src="${basePath}/plugins/layer/layer.js"></script>
 <script>
     $(document).on('click', '#submit', function () {
-        var roleNameVal = $("#roleName1").val();
-        if (roleNameVal == '' || roleNameVal == null) {
-            layer.msg('角色名字不能为空', {icon: 5});
+        var descriptionVal = $("#description").val();
+        if (descriptionVal === '' || descriptionVal === null) {
+            layer.msg('角色中文名字不能为空', {icon: 5});
+            return false;
+        }
+        var roleNameVal = $("#roleName").val();
+        if (roleNameVal === '' || roleNameVal === null) {
+            layer.msg('角色英文名字不能为空', {icon: 5});
             return false;
         }
         $.ajax({
@@ -68,18 +77,19 @@
             contentType: "application/json",
             url: '${pageContext.request.contextPath}/account/role/insert.action',
             data: JSON.stringify({
-                description: roleNameVal
+                roleName:roleNameVal,
+                description: descriptionVal
             }),
             success: function (result) {
-                if (result.status == 102) {
+                if (result.status === 102) {
                     window.parent.layer.alert('添加成功', {icon: 6});
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);  //再执行关闭
                 }
-                else if (result.status == 006) {
+                else if (result.status === 006) {
                     window.parent.layer.msg('重复添加角色');
                 }
-                else if (result.status == 0x2) {
+                else if (result.status === 0x2) {
                     window.parent.layer.msg('失败了，检查下哪里错了', {icon: 5});
                 }
                 else {

@@ -23,9 +23,9 @@
 
     <insert id="insert" parameterType="com.suny.association.entity.po.Roles">
         INSERT INTO roles
-        (role_name)
+        (role_name,role_description)
         VALUES
-        (#{description})
+        (#{roleName},#{description})
     </insert>
 
     <delete id="deleteById" parameterType="int">
