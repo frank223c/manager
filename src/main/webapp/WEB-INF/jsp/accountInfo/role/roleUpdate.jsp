@@ -30,20 +30,31 @@
 <!-- 新增 -->
 <div id="createDialog" class="crudDialog">
     <form>
-        <div>角色ID</div>
+        <div hidden>角色ID</div>
         <div class="form-group">
             <label for="roleId"></label>
-            <input id="roleId" type="text" class="form-control" value="${role.roleId}" disabled>
+            <input id="roleId" type="hidden" class="form-control" value="${role.roleId}" disabled>
         </div>
-        <div>当前角色名字</div>
+        <div>当前角色英文名字</div>
         <div class="form-group">
             <label for="roleName_old"></label>
-            <input id="roleName_old" type="text" class="form-control" value="${role.description}" disabled>
+            <input id="roleName_old" type="text" class="form-control" value="${role.roleName}" disabled>
         </div>
         <div class="form-group">
-            <label for="roleName_new">修改角色名字</label>
-            <input id="roleName_new" type="text" class="form-control" >
+            <label for="roleName_new">修改角色英文名字</label>
+            <input id="roleName_new" type="text" class="form-control" value="${role.roleName}">
         </div>
+
+        <div>当前角色中文名字</div>
+        <div class="form-group">
+            <label for="description_old"></label>
+            <input id="description_old" type="text" class="form-control" value="${role.description}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="description_new">修改角色中文名字</label>
+            <input id="description_new" type="text" class="form-control" value="${role.description}">
+        </div>
+
         <button type="button" class="btn btn-warning btn-block" id="submit">点击修改</button>
     </form>
 </div>
@@ -55,13 +66,18 @@
 <script>
     $(document).on('click','#submit',function () {
         var roleNameVal=$("#roleName_new").val();
+        var descriptionVal=$("#description_new").val();
         var roleIdVal=$("#roleId").val();
-        if(roleIdVal == '' || roleIdVal == null){
+        if(roleIdVal === '' || roleIdVal === null || roleIdVal.length > 5){
             layer.msg('恶意篡改数据',{icon:5});
             return false;
         }
-        if(roleNameVal == '' || roleNameVal == null){
-            layer.msg('角色名字不能为空',{icon:5});
+        if(roleNameVal === '' || roleNameVal === null || roleNameVal.length > 20){
+            layer.msg('角色英文名字不能为空,长度小于20位',{icon:5});
+            return false;
+        }
+        if(descriptionVal === '' || descriptionVal === null || descriptionVal.length > 10){
+            layer.msg('角色中文名字不能为空,长度小于10位',{icon:5});
             return false;
         }
         $.ajax({
@@ -70,25 +86,26 @@
             url: '${basePath}/account/role/update.action',
             data:JSON.stringify({
                 roleId:roleIdVal,
-                description: roleNameVal
+                roleName:roleNameVal,
+                description: descriptionVal
             }),
             success :function(result){
-                if(result.status == 104){
+                if(result.status === 104){
                     window.parent.layer.alert('修改成功', {icon: 6});
                     //noinspection JSDuplicatedDeclaration
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);  //再执行关闭
                 }
-                else if (result.status == 5) {
+                else if (result.status === 5) {
                     window.parent.layer.alert('恶意篡改数据，不存在角色id', {icon: 5});
                     //noinspection JSDuplicatedDeclaration
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);  //再执行关闭
                 }
-                else if (result.status == 4) {
+                else if (result.status === 4) {
                     window.parent.layer.msg('失败了，检查下哪里错了', {icon: 5});
                 }
-                else if(result.status == 202){
+                else if(result.status === 202){
                     window.parent.layer.msg('必要字段为空,请检查您的输入', {icon: 5});
                 }
                 else {

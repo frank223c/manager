@@ -56,7 +56,7 @@ public class RoleController extends BaseController {
 
     @SystemControllerLog(description = "更新账号角色")
     @ResponseBody
-    @RequestMapping(value = "/update.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/update.action", method = RequestMethod.POST)
     public JsonResultDTO update(@RequestBody Roles roles) {
         // 过滤特殊字符，防止XSS注入
         String escapeName = HtmlUtils.htmlEscape(roles.getRoleName());

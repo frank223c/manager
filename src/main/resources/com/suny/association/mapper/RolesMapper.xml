@@ -28,7 +28,7 @@
         (#{roleName},#{description})
     </insert>
 
-    <delete id="deleteById" parameterType="int">
+    <delete id="deleteById" parameterType="long">
         DELETE FROM roles
         WHERE role_id = #{roleId}
     </delete>
@@ -51,7 +51,7 @@
         FROM roles AS r
     </select>
 
-    <select id="selectById" parameterType="Integer" resultMap="BaseResultMap">
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
         SELECT
         r.role_id,
         r.role_name,

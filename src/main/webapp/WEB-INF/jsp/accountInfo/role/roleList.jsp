@@ -143,10 +143,10 @@
                 rowStyle: function (row, index) {
                     //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                     var strclass = "";
-                    if (row.memberStatus == false) {
+                    if (row.memberStatus === false) {
                         strclass = 'danger';//还有一个active
                     }
-                    else if (row.memberName == "已删除") {
+                    else if (row.memberName === "已删除") {
                         strclass = 'danger';
                     }
                     else {
@@ -267,12 +267,12 @@
                     type: "get",
                     url: "${basePath}/account/role/delete.action/" + roleId,
                     success: function (result) {
-                        if (result.status == 103) {
+                        if (result.status === 103) {
                             layer.msg("删除成功，请刷新查看效果", {icon: 1});
                             layer.load(0, {shade: false, time: 1000});
                             $("#table").bootstrapTable("refresh");
                         }
-                        else if (result.status == 204) {
+                        else if (result.status === 204) {
                             layer.msg("此角色被引用，无法被删除", {icon: 4});
                         }
                         else {
