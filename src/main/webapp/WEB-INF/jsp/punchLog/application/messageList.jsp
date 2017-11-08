@@ -79,7 +79,7 @@
         oTableInit.Init = function () {
             layer.load(0, {shade: false, time: 1000}); //0代表加载的风格，支持0-2
             $('#tabs').bootstrapTable({
-                url: '${basePath}/punchLog/applicationMessage/selectAll.action',         //请求后台的URL（*）
+                url: '${basePath}/punchLog/applicationMessage/selectByParam.action',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
@@ -114,10 +114,10 @@
                 rowStyle: function (row, index) {
                     //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                     var strclass = "";
-                    if (row.memberStatus == false) {
+                    if (row.memberStatus === false) {
                         strclass = 'danger';//还有一个active
                     }
-                    else if (row.memberName == "已删除") {
+                    else if (row.memberName === "已删除") {
                         strclass = 'danger';
                     }
                     else {
@@ -281,21 +281,21 @@
                         },
                         success: function (result) {
                             var statusCode = result.status;
-                            if (statusCode == 104) {
+                            if (statusCode === 104) {
                                 layer.msg("审批成功，请刷新后查看效果", {icon: 1});
                                 layer.load(0, {shade: false, time: 1000});
                                 $("#tabs").bootstrapTable("refresh");
                             }
-                            else if (statusCode == 202) {
+                            else if (statusCode === 202) {
                                 layer.msg("缺少参数！", {icon: 4});
                             }
-                            else if (statusCode == 206) {
+                            else if (statusCode === 206) {
                                 layer.msg("您在部门的角色不能执行此操作", {icon: 4});
                             }
-                            else if (statusCode == 5) {
+                            else if (statusCode === 5) {
                                 layer.msg("没有你要操作的记录", {icon: 4});
                             }
-                            else if (statusCode == 6) {
+                            else if (statusCode === 6) {
                                 layer.msg("重复处理记录，该记录已被处理完成!", {icon: 4});
                             }
                         },

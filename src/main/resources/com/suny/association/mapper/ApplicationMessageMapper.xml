@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suny.association.mapper.ApplicationMessageMapper">
     <resultMap id="BaseResultMap" type="com.suny.association.entity.po.ApplicationMessage">
-        <id property="applicationId" column="application_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <id property="applicationId" column="application_id" jdbcType="INTEGER" javaType="int"/>
         <result property="applicationReason" column="application_reason" jdbcType="VARCHAR"
                 javaType="java.lang.String"/>
         <result property="applyForTime" column="apply_for_time" jdbcType="TIMESTAMP"
@@ -166,7 +166,7 @@
 
     <!--别的地方调用mapper查询，非本mapper调用-->
     <resultMap id="queryApplicationMap" type="com.suny.association.entity.po.ApplicationMessage">
-        <id property="applicationId" column="application_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <id property="applicationId" column="application_id"/>
     </resultMap>
     <select id="queryApplication" parameterType="int" resultMap="queryApplicationMap">
         SELECT a.application_id
@@ -183,7 +183,7 @@
             cr.callback_reason,
             cr.callback_time
         FROM callback_result AS cr
-        WHERE cr.application_message_id = #{applicationResult.applicationMessageId.applicationId,jdbcType=INTEGER}
+        WHERE cr.application_message_id = #{applicationResult.applicationMessageId.applicationId}
     </select>
 
     <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
@@ -207,7 +207,7 @@
     </select>
 
 
-    <select id="selectById" parameterType="int" resultMap="BaseResultMap">
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
         SELECT
             a.application_id,
             a.punch_type_id,
@@ -218,6 +218,10 @@
             a.application_result
         FROM application_message AS a
         WHERE application_id = #{applicationId}
+    </select>
+    <select id="selectCountByParam" resultType="java.lang.Integer">
+        select count(*)
+        from application_message;
     </select>
 
     <update id="update" parameterType="com.suny.association.entity.po.ApplicationMessage">

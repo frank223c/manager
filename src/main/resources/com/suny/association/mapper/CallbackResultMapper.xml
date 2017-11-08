@@ -223,7 +223,7 @@
         </trim>
     </insert>
 
-    <select id="selectById" parameterType="int" resultMap="BaseResultMap">
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
         SELECT cr.application_message_id
         FROM callback_result AS cr
         WHERE cr.application_message_id = #{applicationMessageId}

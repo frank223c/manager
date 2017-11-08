@@ -89,6 +89,17 @@ public class ApplicationMessageServiceImpl extends AbstractBaseServiceImpl<Appli
 
 
     /**
+     * 根据查询条件查询总记录
+     *
+     * @param applicationMessage 考勤记录实体
+     * @return 条件查询出来的记录
+     */
+    @Override
+    public int selectCountByParam(ApplicationMessage applicationMessage) {
+        return applicationMessageMapper.selectCountByParam(applicationMessage);
+    }
+
+    /**
      * 更新异议考勤申请数据中的结果
      *
      * @param applicationMessage 要更新的一条数据

@@ -55,8 +55,8 @@ public class ApplicationController extends BaseController {
     @SystemControllerLog(description = "审批异议考勤记录")
     @RequestMapping(value = "/setResult.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResultDTO setResult(@RequestParam(value = "memberId") int memberId,
-                                   @RequestParam(value = "applicationId") int applicationId,
+    public JsonResultDTO setResult(@RequestParam(value = "memberId") Integer memberId,
+                                   @RequestParam(value = "applicationId") Integer applicationId,
                                    @RequestParam(value = "result") Boolean resultStatus) {
         if (memberId == 0 || applicationId == 0 || resultStatus == null) {
             return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
@@ -101,14 +101,14 @@ public class ApplicationController extends BaseController {
      * @param limit  查询几条记录数
      * @return 查询出来的数据
      */
-    @RequestMapping(value = "/queryAll.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectByParam.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResultDTO query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResultDTO selectByParam(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                          @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        ConditionMap<ApplicationMessage> conditionMap=new ConditionMap<>(new ApplicationMessage(),0,10);
-//        Map<Object, Object> criteriaMap = convertToCriteriaMap(offset, limit);
+        ApplicationMessage applicationMessage = new ApplicationMessage();
+        ConditionMap<ApplicationMessage> conditionMap=new ConditionMap<>(applicationMessage,offset,limit);
         List<ApplicationMessage> punchRecordList = applicationMessageService.selectByParam(conditionMap);
-        int total = applicationMessageService.selectCount();
+        int total = applicationMessageService.selectCountByParam(applicationMessage);
         return new BootstrapTableResultDTO(total, punchRecordList);
     }
 
