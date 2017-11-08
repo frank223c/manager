@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ public class AccountController extends BaseController {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
     private static final String STATUS ="status";
     private static final String RESULT="result";
+    private static final Integer PASSWORD_MIN_LENGTH =9;
     private final IAccountService accountService;
     private final IMemberService memberService;
     private final IRolesService rolesService;
@@ -142,6 +144,11 @@ public class AccountController extends BaseController {
             return resultMap;
         }
         resultMap.put(STATUS, Boolean.TRUE);
+        account.setAccountId(Long.valueOf(HtmlUtils.htmlEscape(String.valueOf(account.getAccountId()))));
+        account.setAccountName(HtmlUtils.htmlEscape(account.getAccountName()));
+        account.setAccountPhone(Long.valueOf(HtmlUtils.htmlEscape(String.valueOf(account.getAccountPhone()))));
+        account.setAccountEmail(HtmlUtils.htmlEscape(account.getAccountEmail()));
+        resultMap.put("account",account);
         return resultMap;
     }
 
@@ -164,7 +171,7 @@ public class AccountController extends BaseController {
         if (!(Boolean) resultMap.get(STATUS)) {
             return (JsonResultDTO) resultMap.get(RESULT);
         }
-        accountService.update(account);
+        accountService.update((Account) resultMap.get("account"));
         return successResult(ResponseCodeEnum.UPDATE_SUCCESS);
     }
 
@@ -177,7 +184,7 @@ public class AccountController extends BaseController {
      */
     @RequestMapping(value = "/update.html/{id}", method = RequestMethod.GET)
     public ModelAndView updatePage(@PathVariable("id") Integer id, ModelAndView modelAndView) {
-        System.out.println("有【account:read 读取账号信息页面】这个权限");
+        logger.info("有【account:read 读取账号信息页面】这个权限");
               /*         这里是项目的代码，非测试代码             */
         Account account = accountService.selectById(id);
         List<Member> memberList = memberService.selectAll();
@@ -239,7 +246,7 @@ public class AccountController extends BaseController {
                 logger.warn("两个密码不能为空，必须都有值");
                 return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
             }
-            if (newPassword.length() < 9) {
+            if (newPassword.length() < PASSWORD_MIN_LENGTH) {
                 logger.warn("207字段的长度有错误，密码强制性必须大于9位");
                 return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
             }

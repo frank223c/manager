@@ -167,15 +167,15 @@
     <update id="update" parameterType="com.suny.association.entity.po.Account">
         UPDATE account
         <trim prefix="set" suffixOverrides=",">
-            <if test="accountName != null">account_name =#{accountName,jdbcType=VARCHAR},</if>
-            <if test="accountPassword != null">account_password=#{accountPassword,jdbcType=VARCHAR},</if>
-            <if test="accountPhone != null">account_phone =#{accountPhone,jdbcType=BIGINT},</if>
-            <if test="accountEmail != null">account_email =#{accountEmail,jdbcType=VARCHAR},</if>
-            <if test="accountStatus != null">account_status =#{accountStatus,jdbcType=BOOLEAN},</if>
-            <if test="accountMember != null">account_member_id =#{accountMember.memberId,jdbcType=BIGINT},</if>
-            <if test="accountRoles != null">account_role_id =#{accountRoles.roleId,jdbcType=INTEGER},</if>
+            <if test="accountName != null">account_name =#{accountName},</if>
+            <if test="accountPassword != null">account_password=#{accountPassword},</if>
+            <if test="accountPhone != null">account_phone =#{accountPhone},</if>
+            <if test="accountEmail != null">account_email =#{accountEmail},</if>
+            <if test="accountStatus != null">account_status =#{accountStatus},</if>
+            <if test="accountMember != null">account_member_id =#{accountMember.memberId},</if>
+            <if test="accountRoles != null">account_role_id =#{accountRoles.roleId},</if>
         </trim>
-        WHERE a.account_id = #{accountId,jdbcType=BIGINT}
+        WHERE account_id = #{accountId}
     </update>
 
     <update id="changePassword">
