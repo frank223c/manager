@@ -1,6 +1,7 @@
 package com.suny.association.service.impl;
 
 import com.suny.association.annotation.SystemServiceLog;
+import com.suny.association.entity.po.Roles;
 import com.suny.association.enums.ResponseCodeEnum;
 import com.suny.association.exception.BusinessException;
 import com.suny.association.mapper.AccountMapper;
@@ -178,8 +179,20 @@ public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> impleme
      *
      * @param conditionMap 自己封装的查询条件
      */
+    @Override
     public List<Account> selectByParam(ConditionMap<Account> conditionMap) {
         return accountMapper.selectByParam(conditionMap);
+    }
+
+    /**
+     * 根据查询条件查询操作记录
+     *
+     * @param account 操作日志实体
+     * @return 条件查询出来的账号
+     */
+    @Override
+    public int selectCountByParam(Account account) {
+        return accountMapper.selectCountByParam(account);
     }
 
     /**

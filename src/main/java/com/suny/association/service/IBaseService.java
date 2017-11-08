@@ -1,5 +1,7 @@
 package com.suny.association.service;
 
+import com.suny.association.entity.po.Account;
+import com.suny.association.entity.po.Roles;
 import com.suny.association.entity.vo.ConditionMap;
 
 import java.util.List;
@@ -60,4 +62,6 @@ public interface IBaseService<T> {
      * @return  条件查询出来的记录
      */
     List<T> selectByParam(ConditionMap<T> conditionMap);
+
+
 }

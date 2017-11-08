@@ -134,7 +134,7 @@ public class PunchRecordController extends BaseController {
     @ResponseBody
     public BootstrapTableResultDTO selectByParam(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                          @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        ConditionMap<PunchRecord> conditionMap = new ConditionMap<>(new PunchRecord(), 0, 10);
+        ConditionMap<PunchRecord> conditionMap = new ConditionMap<>(new PunchRecord(), offset, limit);
         List<PunchRecord> punchRecordList = punchRecordService.selectByParam(conditionMap);
         int total = punchRecordService.selectCount();
         return new BootstrapTableResultDTO(total, punchRecordList);

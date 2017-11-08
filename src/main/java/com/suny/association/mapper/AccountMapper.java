@@ -1,5 +1,6 @@
 package com.suny.association.mapper;
 
+import com.suny.association.entity.po.Roles;
 import com.suny.association.mapper.interfaces.IMapper;
 import com.suny.association.entity.po.Account;
 import org.apache.ibatis.annotations.Param;
@@ -29,6 +30,13 @@ public interface AccountMapper extends IMapper<Account> {
      * @return 绑定的用户账号信息
      */
     Account selectMemberReference(int memberId);
+
+    /**
+     * 根据查询条件查询操作记录
+     * @param account   操作日志实体
+     * @return   条件查询出来的账号
+     */
+    int selectCountByParam(Account account);
 
     Account queryByPhone(Long phoneNumber);
 

@@ -10,6 +10,12 @@ import com.suny.association.service.IBaseService;
  */
 
 public interface IAccountService extends IBaseService<Account> {
+    /**
+     * 根据查询条件查询操作记录
+     * @param account   操作日志实体
+     * @return   条件查询出来的账号
+     */
+    int selectCountByParam(Account account);
 
     Account queryByPhone(Long phoneNumber);
 

@@ -88,7 +88,7 @@
         oTableInit.Init = function () {
             layer.load(0, {shade: false, time: 1000}); //0代表加载的风格，支持0-2
             $('#mable').bootstrapTable({
-                url: '${basePath}/account/selectAll.action',         //请求后台的URL（*）
+                url: '${basePath}/account/selectByParam.action',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
@@ -123,10 +123,10 @@
                 rowStyle: function (row, index) {
                     //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                     var subclass = "";
-                    if (row.accountStatus == false) {
+                    if (row.accountStatus === false) {
                         subclass = 'danger';//还有一个active
                     }
-                    else if (row.accountName == "已删除") {
+                    else if (row.accountName === "已删除") {
                         subclass = 'danger';
                     }
                     else {
@@ -187,24 +187,24 @@
     };
 
     function accountStatusFormatter(value, row, index) {
-        if (value == true) {
+        if (value === true) {
             return '<span class="label label-success account-status">正常</span>';
         }
-        if (value == false) {
+        if (value === false) {
             return '<span class="label label-default account-status">冻结</span>';
         }
     }
 
     function accountMember(value, row, index) {
         //noinspection JSUnresolvedVariable
-        if (row.accountMember == null)return '<p class="btn btn-primary">暂无绑定成员</p>';
+        if (row.accountMember === null)return '<p class="btn btn-primary">暂无绑定成员</p>';
         return row.accountMember.memberName;
     }
 
 
     function memberFormatter(value, row, index) {
         //noinspection JSUnresolvedVariable
-        if (!(row.accountMember.memberName == null)) {
+        if (!(row.accountMember.memberName === null)) {
             return row.accountMember.memberName;
         }
         else {

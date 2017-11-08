@@ -205,13 +205,13 @@ public class AccountController extends BaseController {
      * @return 带查询条件的结果集
      */
     @SystemControllerLog(description = "查询账号信息")
-    @RequestMapping(value = "/queryAll.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectByParam.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResultDTO queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResultDTO selectByParam(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                             @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
                                             @RequestParam(value = "status", required = false, defaultValue = "3") int status) {
         ConditionMap<Account> conditionMap=new ConditionMap<>(new Account(),offset,limit);
-        int totalCount = accountService.selectCount();
+        int totalCount = accountService.selectCountByParam(new Account());
         List<Account> accountList = accountService.selectByParam(conditionMap);
         return new BootstrapTableResultDTO(totalCount, accountList);
     }

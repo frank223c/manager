@@ -118,10 +118,10 @@
                 rowStyle: function (row, index) {
                     //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                     var strclass = "";
-                    if (row.memberStatus == false) {
+                    if (row.memberStatus === false) {
                         strclass = 'danger';//还有一个active
                     }
-                    else if (row.memberName == "已删除") {
+                    else if (row.memberName === "已删除") {
                         strclass = 'danger';
                     }
                     else {
@@ -182,7 +182,7 @@
     function timeFormat(value, row, index) {
         var date;
         date = row.punchDatetime;
-        if (date == null) {
+        if (date === null) {
             return "没有签到";
         } else {
             var Y = date.year + '-';
@@ -198,7 +198,7 @@
 
     function punchTypeStatusFormat(value, row, index) {
         //noinspection JSUnresolvedVariable
-        if (1 == row.punchIsCome) {
+        if (1 === row.punchIsCome) {
             return '<span class="label label-success">考勤</span>';
         } else {
             return '<span class="label label-default">缺勤</span>';
@@ -242,19 +242,19 @@
                 memberId: parseInt(${sessionScope.member.memberId})
             }, success: function (result) {
                 var status = result.status;
-                if (status == 987) {
+                if (status === 987) {
                     layer.alert("没有登录你还开启签到！查看下是不是会话过期了或者你不是协会成员，重新登录下吧");
-                } else if (status == 211) {
+                } else if (status === 211) {
                     layer.alert("请不要恶意操作他人账号！");
-                } else if (status == 5) {
+                } else if (status === 5) {
                     layer.alert("没有你这个要开启签到的账号！恶意操作");
-                } else if (status == 212) {
+                } else if (status === 212) {
                     layer.alert("今天已经开启签到成功啦，不要重复开启！");
-                } else if (status == 0) {
+                } else if (status === 0) {
                     layer.alert("考勤失败啦，再等等吧！");
-                } else if (status == 206) {
+                } else if (status === 206) {
                     layer.alert("你的角色暂时不能使用开启签到功能！");
-                } else if (status == 110) {
+                } else if (status === 110) {
                     layer.alert("恭喜你开启签到成功啦！");
                 } else {
                     layer.alert("服务器除了点小问题，可能执行到Bug了");

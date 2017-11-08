@@ -244,9 +244,9 @@
     </select>
 
 
-    <delete id="deleteById" parameterType="java.lang.Integer">
+    <delete id="deleteById" parameterType="long">
         DELETE FROM account
-        WHERE account_id = #{accountId,jdbcType=BIGINT}
+        WHERE account_id = #{accountId}
     </delete>
 
 
@@ -297,7 +297,7 @@
     </select>
 
 
-    <select id="selectAll" resultMap="BaseResultMap">
+    <select id="selectAll"  resultMap="BaseResultMap">
         SELECT
             a.account_id,
             a.account_name,
@@ -314,6 +314,8 @@
             JOIN roles r ON a.account_role_id = r.role_id
             JOIN member m ON a.account_member_id = m.member_id
     </select>
+
+
     <select id="selectByParam" parameterType="hashmap" resultMap="BaseResultMap">
         SELECT
         a.account_id,
@@ -332,11 +334,34 @@
         JOIN member m ON a.account_member_id = m.member_id
         <where>
             1=1
-            <if test="status != null">
-                and account_status =#{status}
+            <if test="entity.accountName != null">
+                and account_name =#{entity.accountName}
+            </if>
+            <if test="entity.accountPhone != null">
+                and account_phone =#{entity.accountPhone}
+            </if>
+            <if test="entity.accountEmail != null">
+                and account_email =#{entity.accountEmail}
             </if>
         </where>
         LIMIT #{offset},#{limit}
+    </select>
+    <select id="selectCountByParam" parameterType="hashmap" resultType="int">
+        SELECT
+         count(*)
+        FROM account a
+        <where>
+            1=1
+            <if test="accountName != null">
+                and account_name =#{accountName}
+            </if>
+            <if test="accountPhone != null">
+                and account_phone =#{accountPhone}
+            </if>
+            <if test="accountEmail != null">
+                and account_email =#{accountEmail}
+            </if>
+        </where>
     </select>
 
     <select id="selectCount" resultType="int">
