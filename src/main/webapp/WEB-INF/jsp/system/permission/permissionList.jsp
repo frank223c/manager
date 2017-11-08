@@ -81,7 +81,7 @@
         oTableInit.Init = function () {
             layer.load(0, {shade: false, time: 1000}); //0代表加载的风格，支持0-2
             $('#mable').bootstrapTable({
-                url: '${basePath}/system/permission/selectAll.action',         //请求后台的URL（*）
+                url: '${basePath}/system/permission/selectByParam.action',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
@@ -116,10 +116,10 @@
                 rowStyle: function (row, index) {
                     //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                     var subclass = "";
-                    if (row.accountStatus == false) {
+                    if (row.accountStatus === false) {
                         subclass = 'danger';//还有一个active
                     }
-                    else if (row.accountName == "已删除") {
+                    else if (row.accountName === "已删除") {
                         subclass = 'danger';
                     }
                     else {
@@ -184,16 +184,16 @@
     };
 
     function permissionStatusFormatter(value, row, index) {
-        if (value == true) {
+        if (value === true) {
             return '<span class="label label-success account-status">正常</span>';
         }
-        if (value == false) {
+        if (value === false) {
             return '<span class="label label-default account-status">冻结</span>';
         }
     }
 
     function dateFormat(value, row, index) {
-        var date = new Date(row.createTime);
+        var date = row.createTime;
         var Y = date.year + '-';
         var M = date.monthValue + '-';
         var D = date.dayOfMonth + ' ';

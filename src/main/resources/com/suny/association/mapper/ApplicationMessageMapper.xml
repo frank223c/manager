@@ -221,7 +221,8 @@
     </select>
     <select id="selectCountByParam" resultType="java.lang.Integer">
         select count(*)
-        from application_message;
+        from application_message
+        WHERE application_result IS NULL
     </select>
 
     <update id="update" parameterType="com.suny.association.entity.po.ApplicationMessage">

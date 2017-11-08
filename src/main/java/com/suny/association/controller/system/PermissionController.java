@@ -76,7 +76,7 @@ public class PermissionController extends BaseController {
     @RequestMapping(value = "/deleteById.action/{permissionId}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResultDTO deleteById(@PathVariable("permissionId") int permissionId) {
-        if (permissionService.queryPermissionQuote(permissionId).size() > 0) {
+        if (!permissionService.queryPermissionQuote(permissionId).isEmpty()) {
             return failureResult(ResponseCodeEnum.HAVE_QUOTE);
         }
         if (permissionService.selectById(permissionId) == null) {
@@ -132,9 +132,9 @@ public class PermissionController extends BaseController {
      * @return 带查询条件的结果集
      */
     @SystemControllerLog(description = "查询所有的权限信息")
-    @RequestMapping(value = "/queryAll.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectByParam.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResultDTO queryAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResultDTO selectByParam(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                             @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
                                             @RequestParam(value = "status", required = false, defaultValue = "3") int status) {
         ConditionMap<Permission> conditionMap=new ConditionMap<>(new Permission(),offset,limit);
