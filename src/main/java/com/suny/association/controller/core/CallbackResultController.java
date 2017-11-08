@@ -38,13 +38,13 @@ public class CallbackResultController extends BaseController {
      * @param limit  查看几条
      * @return 分页的结果
      */
-    @RequestMapping(value = "/list.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectByParam.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResultDTO query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResultDTO selectByParam(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                          @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         ConditionMap<CallbackResult> conditionMap=new ConditionMap<>(new CallbackResult(),offset,limit);
         List<CallbackResult> callbackResultList = callbackResultService.selectByParam(conditionMap);
-        int total = callbackResultService.selectCount();
+        int total = callbackResultService.selectCountByParam(new CallbackResult());
         return new BootstrapTableResultDTO(total, callbackResultList);
     }
 

@@ -244,5 +244,28 @@
         SELECT COUNT(*)
         FROM callback_result;
     </select>
+    <select id="selectCountByParam" parameterType="com.suny.association.entity.po.CallbackResult" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM callback_result AS cr
+        WHERE
+          1=1
+    </select>
 
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

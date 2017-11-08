@@ -38,6 +38,17 @@ public class CallbackResultServiceImpl extends AbstractBaseServiceImpl<CallbackR
     }
 
     /**
+     * 根据查询条件查询操作记录
+     *
+     * @param callbackResult 考勤结果数量
+     * @return 条件查询出来的考勤结果数量
+     */
+    @Override
+    public int selectCountByParam(CallbackResult callbackResult) {
+        return callbackResultMapper.selectCountByParam(callbackResult);
+    }
+
+    /**
      * 组成一条审批结果
      *
      * @param applicationMessage 一条异议申请记录
