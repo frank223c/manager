@@ -19,6 +19,10 @@ public interface IPunchRecordService extends IBaseService<PunchRecord> {
 
     PunchRecord queryByMemberIdAndDate(Integer memberId);
 
+    /**
+     * 批量插入未考勤记录
+     * @return   成功插入的数据
+     */
     int batchInsertsPunchRecord();
 
     List<PunchRecord> queryByPunchDate();

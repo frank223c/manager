@@ -115,7 +115,7 @@ public class PunchRecordController extends BaseController {
             } else if (dataBaseMember.getMemberRoles().getMemberRoleId() <= 2) {
                 logger.warn("206,部门角色太低,没有权限进行开启签到功能");
                 return JsonResultDTO.failureResult(ResponseCodeEnum.LIMIT_MEMBER_MANAGER);
-            } else if (punchRecordService.queryByPunchDate().size() > 0) {
+            } else if (!punchRecordService.queryByPunchDate().isEmpty()) {
                 logger.warn("212,重复签到，今天已经开启签到过了");
                 return JsonResultDTO.failureResult(ResponseCodeEnum.REPEAT_PUNCH);
             } else {
@@ -130,9 +130,9 @@ public class PunchRecordController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/list.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectByParam.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResultDTO query(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+    public BootstrapTableResultDTO selectByParam(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                          @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         ConditionMap<PunchRecord> conditionMap = new ConditionMap<>(new PunchRecord(), 0, 10);
         List<PunchRecord> punchRecordList = punchRecordService.selectByParam(conditionMap);
