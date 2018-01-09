@@ -5,7 +5,7 @@ package com.suny.association.entity.dto;
  * @author :   孙建荣
  * Create Date: 2017/03/17 16:01
  */
-public class JsonResultDTO {
+public class ResultDTO {
 
 
     /**
@@ -30,8 +30,8 @@ public class JsonResultDTO {
      * @param resultData 返回的数据
      * @return 结果与及数据
      */
-    public static JsonResultDTO successResultAndData(Object enumObject, Object resultData) {
-        JsonResultDTO jsonResult = setStatusAndMessage(enumObject);
+    public static ResultDTO successResultAndData(Object enumObject, Object resultData) {
+        ResultDTO jsonResult = setStatusAndMessage(enumObject);
         jsonResult.setData(resultData);
         return jsonResult;
     }
@@ -42,7 +42,7 @@ public class JsonResultDTO {
      * @param enumObject 传过来的枚举值
      * @return 仅仅只有成功的结果
      */
-    public static JsonResultDTO successResult(Object enumObject) {
+    public static ResultDTO successResult(Object enumObject) {
         return setStatusAndMessage(enumObject);
     }
 
@@ -52,7 +52,7 @@ public class JsonResultDTO {
      * @param enumObject 传过来的枚举值
      * @return 仅仅只有成功的结果
      */
-    public static JsonResultDTO failureResult(Object enumObject) {
+    public static ResultDTO failureResult(Object enumObject) {
         return setStatusAndMessage(enumObject);
     }
 
@@ -63,8 +63,8 @@ public class JsonResultDTO {
      * @param enumObject 传过来的枚举值
      * @return JSONResponseUtil实体
      */
-    private static JsonResultDTO setStatusAndMessage(Object enumObject) {
-        JsonResultDTO jsonResult = new JsonResultDTO();
+    private static ResultDTO setStatusAndMessage(Object enumObject) {
+        ResultDTO jsonResult = new ResultDTO();
         //获取枚举值的toString方法后的字符值
         String errorMessage = enumObject.toString();
 
@@ -81,7 +81,7 @@ public class JsonResultDTO {
 
 
 
-    private JsonResultDTO() {
+    private ResultDTO() {
     }
 
 
@@ -111,7 +111,7 @@ public class JsonResultDTO {
 
     @Override
     public String toString() {
-        return "JsonResultDTO{" +
+        return "ResultDTO{" +
                 "status=" + status +
                 ", message='" + message + '\'' +
                 ", data=" + data +

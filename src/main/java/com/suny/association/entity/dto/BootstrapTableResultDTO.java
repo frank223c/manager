@@ -22,12 +22,6 @@ public class BootstrapTableResultDTO implements Serializable{
     private List  rows;
 
     /**
-     * 禁止无参构造方法
-     */
-    private BootstrapTableResultDTO() {
-    }
-
-    /**
      * 有参数的构造方法,不允许无参构造,必须要有结果
      * @param total  返回的数据总量
      * @param rows   返回的数据
@@ -43,14 +37,6 @@ public class BootstrapTableResultDTO implements Serializable{
 
     public void setTotal(Integer total) {
         this.total = total;
-    }
-
-    public List getRows() {
-        return rows;
-    }
-
-    public void setRows(List rows) {
-        this.rows = rows;
     }
 
     @Override

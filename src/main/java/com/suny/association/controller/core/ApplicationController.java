@@ -3,7 +3,7 @@ package com.suny.association.controller.core;
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
 import com.suny.association.entity.dto.BootstrapTableResultDTO;
-import com.suny.association.entity.dto.JsonResultDTO;
+import com.suny.association.entity.dto.ResultDTO;
 import com.suny.association.entity.po.ApplicationMessage;
 import com.suny.association.entity.po.CallbackResult;
 import com.suny.association.entity.vo.ConditionMap;
@@ -55,25 +55,25 @@ public class ApplicationController extends BaseController {
     @SystemControllerLog(description = "审批异议考勤记录")
     @RequestMapping(value = "/setResult.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResultDTO setResult(@RequestParam(value = "memberId") Integer memberId,
-                                   @RequestParam(value = "applicationId") Integer applicationId,
-                                   @RequestParam(value = "result") Boolean resultStatus) {
+    public ResultDTO setResult(@RequestParam(value = "memberId") Integer memberId,
+                               @RequestParam(value = "applicationId") Integer applicationId,
+                               @RequestParam(value = "result") Boolean resultStatus) {
         if (memberId == 0 || applicationId == 0 || resultStatus == null) {
-            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
+            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
         }
         // 这里判断是否有这个管理员，再判断这个管理员的角色是否大于一个可以操作考勤的角色
         if (memberService.selectById(memberId) == null && memberService.selectById(memberId).getMemberRoles().getMemberRoleId() < 3) {
-            return JsonResultDTO.failureResult(ResponseCodeEnum.LIMIT_MEMBER_MANAGER);
+            return ResultDTO.failureResult(ResponseCodeEnum.LIMIT_MEMBER_MANAGER);
         }
         // 检查是否有要审批的异议考勤记录，再判断这条异议考勤记录是否已经有了结果
         if (applicationMessageService.selectById(applicationId) == null || applicationMessageService.selectById(applicationId).getApplicationResult() != null) {
-            return JsonResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
+            return ResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
         }
         // 获取对应的那条异议申请记录
         ApplicationMessage applicationMessage = applicationMessageService.selectById(applicationId);
         // 判断审批结果表里面是否有这条异议考勤的结果，如果有就说明已经审批过了
         if (callbackResultService.selectById(applicationMessage.getApplicationId()) != null) {
-            return JsonResultDTO.successResult(ResponseCodeEnum.REPEAT_ADD);
+            return ResultDTO.successResult(ResponseCodeEnum.REPEAT_ADD);
         }
         if (!resultStatus) {
             // 插入一条失败的反馈结果
@@ -81,7 +81,7 @@ public class ApplicationController extends BaseController {
             callbackResultService.insert(falseResult);
             // 设置申请表中的审批结果
             applicationMessageService.updateApplyForResult(applicationMessage, falseResult);
-            return JsonResultDTO.successResult(ResponseCodeEnum.UPDATE_SUCCESS);
+            return ResultDTO.successResult(ResponseCodeEnum.UPDATE_SUCCESS);
         }
         // 新增一条成功反馈结果记录
         CallbackResult trueResult = callbackResultService.makeUpCallBackResult(applicationMessage, memberId, true);
@@ -90,7 +90,7 @@ public class ApplicationController extends BaseController {
         punchRecordService.updatePunchType(applicationMessage.getPunchRecordId(), applicationMessage.getChangePunchType());
         // 给申请记录设置申请结果
         applicationMessageService.updateApplyForResult(applicationMessage, trueResult);
-        return JsonResultDTO.successResult(ResponseCodeEnum.UPDATE_SUCCESS);
+        return ResultDTO.successResult(ResponseCodeEnum.UPDATE_SUCCESS);
     }
 
 

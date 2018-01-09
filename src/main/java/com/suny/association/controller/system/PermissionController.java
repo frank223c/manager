@@ -7,7 +7,7 @@ import com.suny.association.entity.po.Permission;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.enums.ResponseCodeEnum;
 import com.suny.association.service.interfaces.system.IPermissionService;
-import com.suny.association.entity.dto.JsonResultDTO;
+import com.suny.association.entity.dto.ResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-import static com.suny.association.entity.dto.JsonResultDTO.failureResult;
-import static com.suny.association.entity.dto.JsonResultDTO.successResult;
+import static com.suny.association.entity.dto.ResultDTO.failureResult;
+import static com.suny.association.entity.dto.ResultDTO.successResult;
 
 /**
  * Comments:   权限具体的管理，不含权限的分配
@@ -43,11 +43,11 @@ public class PermissionController extends BaseController {
     @SystemControllerLog(description = "插入权限信息")
     @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResultDTO insert(@RequestBody Permission permission) {
+    public ResultDTO insert(@RequestBody Permission permission) {
         if ("".equals(permission.getpermissionName()) || permission.getpermissionName() == null) {
-            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
+            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
         } else if (permissionService.selectByName(permission.getpermissionName()) != null) {
-            return JsonResultDTO.failureResult(ResponseCodeEnum.REPEAT_ADD);
+            return ResultDTO.failureResult(ResponseCodeEnum.REPEAT_ADD);
         }
         permissionService.insert(permission);
         return successResult(ResponseCodeEnum.ADD_SUCCESS);
@@ -75,7 +75,7 @@ public class PermissionController extends BaseController {
     @SystemControllerLog(description = "删除权限信息")
     @RequestMapping(value = "/deleteById.action/{permissionId}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResultDTO deleteById(@PathVariable("permissionId") int permissionId) {
+    public ResultDTO deleteById(@PathVariable("permissionId") int permissionId) {
         if (!permissionService.queryPermissionQuote(permissionId).isEmpty()) {
             return failureResult(ResponseCodeEnum.HAVE_QUOTE);
         }
@@ -98,7 +98,7 @@ public class PermissionController extends BaseController {
     @SystemControllerLog(description = "更新权限信息")
     @RequestMapping(value = "/update.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResultDTO update(@RequestBody Permission permission) {
+    public ResultDTO update(@RequestBody Permission permission) {
         if (permission.getpermissionId() < 37) {
             return failureResult(ResponseCodeEnum.SYSTEM_LIMIT);
         }

@@ -2,6 +2,7 @@ package com.suny.association.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.entity.dto.BootstrapTableResultDTO;
+import com.suny.association.entity.dto.ResultDTO;
 import com.suny.association.entity.po.Account;
 import com.suny.association.entity.po.Member;
 import com.suny.association.entity.po.Roles;
@@ -10,7 +11,6 @@ import com.suny.association.enums.ResponseCodeEnum;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.IRolesService;
 import com.suny.association.service.interfaces.core.IMemberService;
-import com.suny.association.entity.dto.JsonResultDTO;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.suny.association.entity.dto.JsonResultDTO.failureResult;
-import static com.suny.association.entity.dto.JsonResultDTO.successResult;
+import static com.suny.association.entity.dto.ResultDTO.failureResult;
+import static com.suny.association.entity.dto.ResultDTO.successResult;
 
 /**
  * Comments:   账号控制器
@@ -59,10 +59,10 @@ public class AccountController extends BaseController {
     @SystemControllerLog(description = "插入账号信息")
     @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResultDTO insert(@RequestBody Account account) {
+    public ResultDTO insert(@RequestBody Account account) {
         Map resultMap = updateOrInsert(account);
         if (!(Boolean) resultMap.get(STATUS)) {
-            return (JsonResultDTO) resultMap.get("result");
+            return (ResultDTO) resultMap.get("result");
         }
         if ("".equals(account.getAccountPassword())) {
             account.setAccountPassword(null);
@@ -100,7 +100,7 @@ public class AccountController extends BaseController {
     @SystemControllerLog(description = "删除账号信息")
     @RequestMapping(value = "/deleteById.action/{accountId}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResultDTO deleteById(@PathVariable("accountId") Long accountId) {
+    public ResultDTO deleteById(@PathVariable("accountId") Long accountId) {
         Account accountQuote = accountService.queryQuoteByAccountId(accountId);
         if (accountQuote != null && (null != accountQuote.getAccountMember())) {
             return failureResult(ResponseCodeEnum.HAVE_QUOTE);
@@ -162,14 +162,14 @@ public class AccountController extends BaseController {
     @SystemControllerLog(description = "更新账号信息")
     @RequestMapping(value = "/update.action", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResultDTO update(@RequestBody Account account) {
+    public ResultDTO update(@RequestBody Account account) {
         Map resultMap = updateOrInsert(account);
         Account byIdResult = accountService.selectById(account.getAccountId());
         if (byIdResult == null) {
             return failureResult(ResponseCodeEnum.SELECT_FAILURE);
         }
         if (!(Boolean) resultMap.get(STATUS)) {
-            return (JsonResultDTO) resultMap.get(RESULT);
+            return (ResultDTO) resultMap.get(RESULT);
         }
         accountService.update((Account) resultMap.get("account"));
         return successResult(ResponseCodeEnum.UPDATE_SUCCESS);
@@ -236,45 +236,45 @@ public class AccountController extends BaseController {
     @SystemControllerLog(description = "修改用户密码操作")
     @RequestMapping("/changePassword.action")
     @ResponseBody
-    public JsonResultDTO changePassword(HttpServletRequest request,
-                                        @RequestParam("accountId") Long accountId,
-                                        @RequestParam("passWord") String passWord,
-                                        @RequestParam("newPassword") String newPassword) {
+    public ResultDTO changePassword(HttpServletRequest request,
+                                    @RequestParam("accountId") Long accountId,
+                                    @RequestParam("passWord") String passWord,
+                                    @RequestParam("newPassword") String newPassword) {
         Account account = (Account) request.getSession().getAttribute("account");
         if (account.getAccountId().equals(accountId)) {
             if ("".equals(passWord) || "".equals(newPassword)) {
                 logger.warn("两个密码不能为空，必须都有值");
-                return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
+                return ResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
             }
             if (newPassword.length() < PASSWORD_MIN_LENGTH) {
                 logger.warn("207字段的长度有错误，密码强制性必须大于9位");
-                return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+                return ResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
             }
             Account databaseAccount = accountService.selectById(accountId);
             if (databaseAccount == null) {
                 logger.error("数据库不存在要更改密码的账号,可能存在用户恶意修改密码风险");
-                return JsonResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
+                return ResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
             } else {
                 if (!databaseAccount.getAccountPassword().equals(passWord)) {
                     logger.warn("208, 输入的原密码跟数据库的原密码不一致");
-                    return JsonResultDTO.failureResult(ResponseCodeEnum.OLD_PASSWORD_WRONG);
+                    return ResultDTO.failureResult(ResponseCodeEnum.OLD_PASSWORD_WRONG);
                 } else if (passWord.equals(newPassword)) {
                     logger.warn("209,两次密码一样");
-                    return JsonResultDTO.failureResult(ResponseCodeEnum.TWICE_PASSWORD_EQUALS);
+                    return ResultDTO.failureResult(ResponseCodeEnum.TWICE_PASSWORD_EQUALS);
                 } else {
                     int successNum = accountService.changePassword(accountId, newPassword);
                     if (successNum == 1) {
                         logger.info("更新密码成功");
                         request.getSession().removeAttribute("account");
-                        return JsonResultDTO.successResult(ResponseCodeEnum.UPDATE_SUCCESS);
+                        return ResultDTO.successResult(ResponseCodeEnum.UPDATE_SUCCESS);
                     }
                     logger.warn("更新密码失败");
-                    return JsonResultDTO.successResult(ResponseCodeEnum.UPDATE_FAILURE);
+                    return ResultDTO.successResult(ResponseCodeEnum.UPDATE_FAILURE);
                 }
             }
         }
         logger.info("session中的账号跟要修改的账号ID不一样，恶意修改密码");
-        return JsonResultDTO.failureResult(ResponseCodeEnum.MALICIOUS_OPERATION);
+        return ResultDTO.failureResult(ResponseCodeEnum.MALICIOUS_OPERATION);
     }
 
 

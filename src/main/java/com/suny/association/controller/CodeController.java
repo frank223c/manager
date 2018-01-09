@@ -1,7 +1,7 @@
 package com.suny.association.controller;
 
+import com.suny.association.entity.dto.ResultDTO;
 import com.suny.association.enums.ResponseCodeEnum;
-import com.suny.association.entity.dto.JsonResultDTO;
 import com.suny.association.utils.ValidActionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,13 +127,13 @@ public class CodeController {
      */
     @RequestMapping("/checkCode")
     @ResponseBody
-    public JsonResultDTO checkCode(HttpServletRequest request,
-                                   @RequestParam String formCode) {
+    public ResultDTO checkCode(HttpServletRequest request,
+                               @RequestParam String formCode) {
         String sessionCode = (String) request.getSession().getAttribute("code");
         if (ValidActionUtil.matchCode(formCode, sessionCode)) {
-            return JsonResultDTO.successResult(ResponseCodeEnum.VALIDATE_CODE_SUCCESS);
+            return ResultDTO.successResult(ResponseCodeEnum.VALIDATE_CODE_SUCCESS);
         }
-        return JsonResultDTO.failureResult(ResponseCodeEnum.VALIDATE_CODE_ERROR);
+        return ResultDTO.failureResult(ResponseCodeEnum.VALIDATE_CODE_ERROR);
     }
 
 

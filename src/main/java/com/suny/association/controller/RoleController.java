@@ -2,8 +2,7 @@ package com.suny.association.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.entity.dto.BootstrapTableResultDTO;
-import com.suny.association.entity.dto.JsonResultDTO;
-import com.suny.association.entity.po.OperationLog;
+import com.suny.association.entity.dto.ResultDTO;
 import com.suny.association.entity.po.Roles;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.enums.ResponseCodeEnum;
@@ -16,8 +15,8 @@ import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
-import static com.suny.association.entity.dto.JsonResultDTO.failureResult;
-import static com.suny.association.entity.dto.JsonResultDTO.successResult;
+import static com.suny.association.entity.dto.ResultDTO.failureResult;
+import static com.suny.association.entity.dto.ResultDTO.successResult;
 
 /**
  * Comments:  账号角色控制器
@@ -40,10 +39,10 @@ public class RoleController extends BaseController {
     @SystemControllerLog(description = "删除账号角色")
     @RequestMapping(value = "/delete.action/{roleId}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResultDTO delete(@PathVariable("roleId") Integer roleId) {
+    public ResultDTO delete(@PathVariable("roleId") Integer roleId) {
         Integer escapeId = Integer.valueOf(HtmlUtils.htmlEscape(String.valueOf(roleId)));
         if ( escapeId.toString().length() > ACCOUNT_ROLE_ID_LENGTH) {
-            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
         }
         if (!rolesService.queryQuote(roleId).isEmpty()) {
             return failureResult(ResponseCodeEnum.HAVE_QUOTE);
@@ -57,7 +56,7 @@ public class RoleController extends BaseController {
     @SystemControllerLog(description = "更新账号角色")
     @ResponseBody
     @RequestMapping(value = "/update.action", method = RequestMethod.POST)
-    public JsonResultDTO update(@RequestBody Roles roles) {
+    public ResultDTO update(@RequestBody Roles roles) {
         // 过滤特殊字符，防止XSS注入
         String escapeName = HtmlUtils.htmlEscape(roles.getRoleName());
         String escapeDescription = HtmlUtils.htmlEscape(roles.getDescription());
@@ -66,7 +65,7 @@ public class RoleController extends BaseController {
             return failureResult(ResponseCodeEnum.SELECT_FAILURE);
         }
         if (escapeName.length() > ACCOUNT_ROLE_NAME_LENGTH || escapeId.toString().length() > ACCOUNT_ROLE_ID_LENGTH||escapeDescription.length()>ACCOUNT_ROLE_DESCRIPTION_LENGTH) {
-            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
         }
         if ("".equals(roles.getDescription()) || roles.getDescription() == null) {
             return failureResult(ResponseCodeEnum.FIELD_NULL);
@@ -103,7 +102,7 @@ public class RoleController extends BaseController {
     @SystemControllerLog(description = "新增账号角色")
     @ResponseBody
     @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
-    public JsonResultDTO insert(@RequestBody Roles roles) {
+    public ResultDTO insert(@RequestBody Roles roles) {
         // 过滤特殊字符，防止XSS注入
         String escapeName = HtmlUtils.htmlEscape(roles.getRoleName());
         String escapeDescription = HtmlUtils.htmlEscape(roles.getDescription());
@@ -111,7 +110,7 @@ public class RoleController extends BaseController {
             return failureResult(ResponseCodeEnum.FIELD_NULL);
         }
         if (escapeName.length() > ACCOUNT_ROLE_NAME_LENGTH ||escapeDescription.length()>ACCOUNT_ROLE_DESCRIPTION_LENGTH) {
-            return JsonResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
         }
         if (rolesService.selectByName(escapeDescription) != null) {
             return failureResult(ResponseCodeEnum.REPEAT_ADD);
