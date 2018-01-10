@@ -22,7 +22,7 @@
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>
-                        <code>application/json;charset=UTF-8</code>
+                        <value>application/json;charset=UTF-8</value>
                     </list>
                 </property>
             </bean>
@@ -32,8 +32,8 @@
 
     <bean id="InternalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <!--<propeparametername="viewClacodealue="org.springframework.web.servlet.view.JstlView"/>-->
-        <property name="prefix" code="/WEB-INF/jsp/"/>
-        <property name="suffix" code=".jsp"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
     </bean>
 
     <!-- 框架自定义异常处理Handler -->
@@ -52,8 +52,8 @@
           class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
         <property name="supportedMediaTypes">
             <list>
-                <code>text/html;charset=UTF-8</code>
-                <code>application/json;charset=utf-8</code>
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json;charset=utf-8</value>
             </list>
         </property>
     </bean>
@@ -66,7 +66,7 @@
 
     <!--配置文件上传 10M-->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSize" code="10485760"/>
+        <property name="maxUploadSize" value="10485760"/>
     </bean>
 
 
