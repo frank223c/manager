@@ -29,29 +29,29 @@
 <div class="container">
     <form class="form-horizontal" role="form" style="padding: 25px; text-align: center">
         <label>
-            <input name="memberId" value="${member.memberId}" hidden>
+            <input name="memberId" code="${member.memberId}" hidden>
         </label>
         <div class="form-group">
             <label for="member-name" class="col-sm-2 control-label">姓名<strong class="strongText">(必填)</strong></label>
-            <input class="form-control " value="" id="member-name" name="member-name" placeholder="请在这里输入成员姓名">
+            <input class="form-control " code="" id="member-name" name="member-name" placeholder="请在这里输入成员姓名">
         </div>
         <div class="form-group">
             <label for="member-class" class="col-sm-2 control-label">班级<strong class="strongText">(必填)</strong></label>
-            <input class="form-control " value="" id="member-class" name="member-class" placeholder="请在这里输入成员的班级">
+            <input class="form-control " code="" id="member-class" name="member-class" placeholder="请在这里输入成员的班级">
         </div>
         <div class="form-group">
             <label for="member-sex" class="col-sm-2 control-label">性别</label>
             <select class="form-control" id="member-sex" name="member-sex">
-                <option name="sex" value="1">男</option>
-                <option name="sex" value="0">女</option>
+                <option name="sex" code="1">男</option>
+                <option name="sex" code="0">女</option>
             </select>
         </div>
         <div class="form-group">
             <label for="selectMemberGradeOption" class="col-sm-2 control-label">年级</label>
             <select class="form-control" id="selectMemberGradeOption" name="memberGradeNumber">
                 <c:forEach items="${memberGradeList}" var="memberGrade">
-                    <option name="" value="${memberGrade}">
-                        <c:out value="${memberGrade}届"/>
+                    <option name="" code="${memberGrade}">
+                        <c:out code="${memberGrade}届"/>
                     </option>
                 </c:forEach>
             </select>
@@ -61,10 +61,10 @@
         <div class="form-group">
             <label for="selectMemberManagerOption" class="col-sm-2 control-label">管理员</label>
             <select class="form-control" id="selectMemberManagerOption" name="memberManagerId">
-                <option value="">自己就是管理</option>
+                <option code="">自己就是管理</option>
                 <c:forEach items="${managerList}" var="manager">
-                    <option value="${manager.memberId}" name="memberManagerOption">
-                        <c:out value="${manager.memberName}"/>
+                    <option code="${manager.memberId}" name="memberManagerOption">
+                        <c:out code="${manager.memberName}"/>
                     </option>
                 </c:forEach>
             </select>
@@ -73,8 +73,8 @@
             <label for="selectDepartmentOption" class="col-sm-2 control-label">部门</label>
             <select class="form-control" id="selectDepartmentOption" name="memberDepartmentId">
                 <c:forEach items="${departmentList}" var="role">
-                    <option value="${role.departmentId}" name="departmentOption">
-                        <c:out value="${role.departmentName}"/>
+                    <option code="${role.departmentId}" name="departmentOption">
+                        <c:out code="${role.departmentName}"/>
                     </option>
                 </c:forEach>
             </select>
@@ -82,8 +82,8 @@
         <div class="form-group">
             <label for="selectMemberStatusOption" class="col-sm-2 control-label">状态</label>
             <select class="form-control" id="selectMemberStatusOption" name="memberStatus">
-                <option value="1">正常</option>
-                <option value="0">冻结</option>
+                <option code="1">正常</option>
+                <option code="0">冻结</option>
 
             </select>
         </div>
@@ -91,8 +91,8 @@
             <label for="selectMemberRoleOption" class="col-sm-2 control-label">角色</label>
             <select class="form-control" id="selectMemberRoleOption" name="memberRoleId">
                 <c:forEach items="${memberRolesList}" var="memberRole">
-                    <option value="${memberRole.memberRoleId}">
-                        <c:out value="${memberRole.memberRoleName}"/></option>
+                    <option code="${memberRole.memberRoleId}">
+                        <c:out code="${memberRole.memberRoleName}"/></option>
                 </c:forEach>
 
 

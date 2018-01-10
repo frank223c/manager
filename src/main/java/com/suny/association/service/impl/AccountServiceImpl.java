@@ -1,8 +1,7 @@
 package com.suny.association.service.impl;
 
 import com.suny.association.annotation.SystemServiceLog;
-import com.suny.association.entity.po.Roles;
-import com.suny.association.enums.ResponseCodeEnum;
+import com.suny.association.enums.CommonEnum;
 import com.suny.association.exception.BusinessException;
 import com.suny.association.mapper.AccountMapper;
 import com.suny.association.entity.po.Account;
@@ -44,7 +43,7 @@ public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> impleme
     @Override
     public void insert(Account account) {
         if (account == null) {
-            throw new BusinessException(ResponseCodeEnum.ADD_FAILURE);
+            throw new BusinessException(CommonEnum.ADD_FAILURE);
         }
         try {
             accountMapper.insert(account);

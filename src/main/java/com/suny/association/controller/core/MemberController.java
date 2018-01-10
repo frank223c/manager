@@ -3,11 +3,13 @@ package com.suny.association.controller.core;
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.controller.BaseController;
 import com.suny.association.entity.dto.ResultDTO;
-import com.suny.association.enums.ResponseCodeEnum;
+import com.suny.association.enums.FileOperateEnum;
+import com.suny.association.enums.CommonEnum;
 import com.suny.association.entity.po.Department;
 import com.suny.association.entity.po.Member;
 import com.suny.association.entity.po.MemberRoles;
 import com.suny.association.entity.vo.ConditionMap;
+import com.suny.association.enums.FormEnum;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.core.IDepartmentService;
 import com.suny.association.service.interfaces.core.IMemberRolesService;
@@ -72,16 +74,16 @@ public class MemberController extends BaseController {
     @ResponseBody
     public ResultDTO insert(@RequestBody Member member) {
         if (member.getMemberName() == null || "".equals(member.getMemberName())) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
+            return ResultDTO.failureResult(FormEnum.FIELD_NULL);
         }
         if ("".equals(member.getMemberClassName()) || member.getMemberClassName() == null) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
+            return ResultDTO.failureResult(FormEnum.FIELD_NULL);
         }
         if (!(ValidActionUtil.isContainChinese(member.getMemberName()))) {
-            return ResultDTO.failureResult(ResponseCodeEnum.MUST_CHINESE);
+            return ResultDTO.failureResult(FormEnum.MUST_CHINESE);
         }
         memberService.insert(member);
-        return successResult(ResponseCodeEnum.ADD_SUCCESS);
+        return successResult(CommonEnum.ADD_SUCCESS);
     }
 
 
@@ -126,15 +128,15 @@ public class MemberController extends BaseController {
         /* 获取文件名的后缀名，检查是否存在欺骗   */
         if (!ExcelUtils.parseExcelFileType(fileType, fileExtension)) {
             logger.warn("上传的文件貌似有点小问题，可能是后缀名欺骗");
-            return ResultDTO.failureResult(ResponseCodeEnum.FILE_EXTENSION_WARN);
+            return ResultDTO.failureResult(FileOperateEnum.FILE_EXTENSION_WARN);
         }
         /* 查看成功插入的行数  */
         Map<String,List<Member>> listAtomicReference = memberService.insertBatchFormFile(file, fileExtension);
         int size = listAtomicReference.size();
         if (size == 0) {
-            return successResult(ResponseCodeEnum.ADD_SUCCESS_ALL);
+            return successResult(CommonEnum.ADD_SUCCESS_ALL);
         } else {
-            return ResultDTO.successResultAndData(ResponseCodeEnum.ADD_SUCCESS_PART_OF, listAtomicReference);
+            return ResultDTO.successResultAndData(CommonEnum.ADD_SUCCESS_PART_OF, listAtomicReference);
         }
     }
 
@@ -173,13 +175,13 @@ public class MemberController extends BaseController {
     @ResponseBody
     public ResultDTO deleteById(@PathVariable("id") Long id) {
         if (memberService.selectById(id) == null) {
-            return ResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
+            return ResultDTO.failureResult(CommonEnum.SELECT_FAILURE);
         }
         if (accountService.queryQuoteByMemberId(id) != null) {
-            return ResultDTO.failureResult(ResponseCodeEnum.HAVE_QUOTE);
+            return ResultDTO.failureResult(CommonEnum.HAVE_QUOTE);
         }
         memberService.deleteById(id);
-        return successResult(ResponseCodeEnum.DELETE_SUCCESS);
+        return successResult(CommonEnum.DELETE_SUCCESS);
     }
 
     @SystemControllerLog(description = "更新协会成员信息")
@@ -187,13 +189,13 @@ public class MemberController extends BaseController {
     @ResponseBody
     public ResultDTO update(@RequestBody Member member) {
         if (member.getMemberName() == null || "".equals(member.getMemberName())) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
+            return ResultDTO.failureResult(FormEnum.FIELD_NULL);
         }
         if (!member.getMemberStatus()) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
+            return ResultDTO.failureResult(FormEnum.FIELD_NULL);
         }
         memberService.update(member);
-        return successResult(ResponseCodeEnum.UPDATE_SUCCESS);
+        return successResult(CommonEnum.UPDATE_SUCCESS);
     }
 
     @RequestMapping(value = "/update.html/{id}", method = RequestMethod.GET)
@@ -216,9 +218,9 @@ public class MemberController extends BaseController {
     public ResultDTO selectFreezeMember() {
         List<Member> memberList = memberService.selectFreezeMember();
         if (memberList != null) {
-            return ResultDTO.successResultAndData(ResponseCodeEnum.SELECT_SUCCESS, memberList);
+            return ResultDTO.successResultAndData(CommonEnum.SELECT_SUCCESS, memberList);
         }
-        return ResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
+        return ResultDTO.failureResult(CommonEnum.SELECT_FAILURE);
     }
 
     @SystemControllerLog(description = "查询冻结的管理员")
@@ -227,9 +229,9 @@ public class MemberController extends BaseController {
     public ResultDTO selectFreezeManager() {
         List<Member> memberList = memberService.selectFreezeManager();
         if (memberList != null) {
-            return ResultDTO.successResultAndData(ResponseCodeEnum.SELECT_SUCCESS, memberList);
+            return ResultDTO.successResultAndData(CommonEnum.SELECT_SUCCESS, memberList);
         }
-        return ResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
+        return ResultDTO.failureResult(CommonEnum.SELECT_FAILURE);
     }
 
     @SystemControllerLog(description = "查询正常的成员")
@@ -238,9 +240,9 @@ public class MemberController extends BaseController {
     public ResultDTO selectNormalMember() {
         List<Member> memberList = memberService.selectNormalMember();
         if (memberList != null) {
-            return ResultDTO.successResultAndData(ResponseCodeEnum.SELECT_SUCCESS, memberList);
+            return ResultDTO.successResultAndData(CommonEnum.SELECT_SUCCESS, memberList);
         }
-        return ResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
+        return ResultDTO.failureResult(CommonEnum.SELECT_FAILURE);
     }
 
     @SystemControllerLog(description = "查询正常的管理员")
@@ -249,9 +251,9 @@ public class MemberController extends BaseController {
     public ResultDTO selectNormalManager() {
         List<Member> memberList = memberService.selectNormalManager();
         if (memberList != null) {
-            return ResultDTO.successResultAndData(ResponseCodeEnum.SELECT_SUCCESS, memberList);
+            return ResultDTO.successResultAndData(CommonEnum.SELECT_SUCCESS, memberList);
         }
-        return ResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
+        return ResultDTO.failureResult(CommonEnum.SELECT_FAILURE);
     }
 
     @RequestMapping(value = "/selectAll.action", method = RequestMethod.GET)
@@ -294,7 +296,7 @@ public class MemberController extends BaseController {
     @RequestMapping(value = "/selectById.action/{memberId}", method = RequestMethod.GET)
     public ResultDTO selectById(@PathVariable("memberId") Integer memberId) {
         Member member = memberService.selectById(memberId);
-        return ResultDTO.successResultAndData(ResponseCodeEnum.SELECT_SUCCESS, member);
+        return ResultDTO.successResultAndData(CommonEnum.SELECT_SUCCESS, member);
     }
 
     @SystemControllerLog(description = "查看成员管理页面")

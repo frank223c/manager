@@ -28,26 +28,26 @@
 <body>
 <form class="form-line col-xs-10" style="padding: 25px; text-align: center">
     <label>
-        <input name="account_id" value="" hidden>
+        <input name="account_id" code="" hidden>
     </label>
 
     <div class="form-group">
         <label for="account_name" class="col-sm-2 control-label">用户名【英文字母加数字的组合】<strong class="strongText">(必填)</strong></label>
-        <input class="form-control " value="" id="account_name" name="account_name">
+        <input class="form-control " code="" id="account_name" name="account_name">
     </div>
 
 
     <div class="form-group">
         <label for="account_password" class="col-sm-2 control-label">账号密码<strong
                 class="strongText">(选填，不填写则系统自动生成)</strong></label>
-        <input class="form-control " value="" id="account_password" name="account_password">
+        <input class="form-control " code="" id="account_password" name="account_password">
     </div>
     <div class="form-group">
         <label for="selectRoleOption" class="col-sm-2 control-label">角色</label>
         <select class="form-control" id="selectRoleOption">
             <c:forEach items="${rolesList}" var="role">
-                <option value="${role.roleId}">
-                    <c:out value="${role.description}"/>
+                <option code="${role.roleId}">
+                    <c:out code="${role.description}"/>
                 </option>
             </c:forEach>
         </select>
@@ -55,19 +55,19 @@
     <div class="form-group">
         <label for="selectAccountStatusOption" class="col-sm-2 control-label">状态</label>
         <select class="form-control" id="selectAccountStatusOption" name="memberStatus">
-            <option value="1">正常</option>
-            <option value="0">冻结</option>
+            <option code="1">正常</option>
+            <option code="0">冻结</option>
 
         </select>
     </div>
     <div class="form-group">
         <label for="account_phone" class="col-sm-2 control-label">绑定手机号码<strong class="strongText">(必填)</strong></label>
-        <input class="form-control " value="" id="account_phone" name="account_phone">
+        <input class="form-control " code="" id="account_phone" name="account_phone">
     </div>
 
     <div class="form-group">
         <label for="account_email" class="col-sm-2 control-label">绑定邮箱<strong class="strongText">(必填)</strong></label>
-        <input class="form-control " value="" id="account_email" name="account_email">
+        <input class="form-control " code="" id="account_email" name="account_email">
     </div>
 
 
@@ -160,18 +160,18 @@
                                 //当你在iframe页面关闭自身时
                                 window.parent.layer.alert('必要字段为空，请检查', {icon: 6});
                             }
-                            else if (statusCode == 108) {
+                            else if (statusCode == 116) {
                                 window.parent.layer.alert('用户名重复，请重新填写', {icon: 6});
                                 $("#account_name").focus();
                                 $('#account_name').css('border', '2px solid red');
                             }
-                            else if (statusCode == 107) {
+                            else if (statusCode == 115) {
                                 window.parent.layer.alert('手机号码重复，请重新填写', {icon: 6});
                                 $("#account_name").css('border', '');
                                 $("#account_phone").focus();
                                 $('#account_phone').css('border', '2px solid red');
                             }
-                            else if (statusCode == 106) {
+                            else if (statusCode == 203) {
                                 window.parent.layer.alert('邮箱重复，请重新填写', {icon: 6});
                                 $("#account_phone").css('border', '');
                                 $("#account_email").focus();

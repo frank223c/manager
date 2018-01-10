@@ -51,7 +51,7 @@
     <form>
         <div class="form-group">
             <label for="roleId">角色ID</label>
-            <input id="roleId" type="text" class="form-control" value="">
+            <input id="roleId" type="text" class="form-control" code="">
         </div>
         <div class="form-group">
             <label for="roleName1">角色名字</label>
@@ -188,7 +188,7 @@
         return oTableInit;
     };
 
-    function dateFormat(value, row, index) {
+    function dateFormat(code, row, index) {
         var date = row.createTime;
         var Y = date.year + '-';
         var M = date.monthValue + '-';
@@ -272,7 +272,7 @@
                             layer.load(0, {shade: false, time: 1000});
                             $("#table").bootstrapTable("refresh");
                         }
-                        else if (result.status === 204) {
+                        else if (result.status === 115) {
                             layer.msg("此角色被引用，无法被删除", {icon: 4});
                         }
                         else {

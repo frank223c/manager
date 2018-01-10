@@ -26,7 +26,7 @@
 <div class="container">
     <c:forEach items="${permissionList}" var="havePermissionList">
         <div class="">
-            <input id="roleId" type="hidden" value="${havePermissionList.roleId.roleId}">
+            <input id="roleId" type="hidden" code="${havePermissionList.roleId.roleId}">
             <h2> 角色名称: <strong>${havePermissionList.roleId.roleName}</strong></h2>
             <h2> 角色解释: <strong>${havePermissionList.roleId.description}</strong></h2>
             <h3>拥有的权限:</h3>
@@ -41,7 +41,7 @@
             <label><input type="checkbox" onclick="invertSelect()"></label>反选
             <c:forEach items="${permissions}" var="permission">
                 <label>
-                    <input type="checkbox" value="${permission.permissionId}" class="permiss"
+                    <input type="checkbox" code="${permission.permissionId}" class="permiss"
                            name="permiss"> ${permission.description}
                 </label>
             </c:forEach>

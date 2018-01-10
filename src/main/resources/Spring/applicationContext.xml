@@ -16,25 +16,25 @@
     <context:property-placeholder location="classpath:db.properties"/>
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="${jdbc.driverClass}"/>
-        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
-        <property name="user" value="${jdbc.user}"/>
-        <property name="password" value="${jdbc.password}"/>
-        <property name="minPoolSize" value="${jdbc.minPoolSize}"/>
-        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>
-        <property name="acquireIncrement" value="${jdbc.acquireIncrement}"/>
-        <property name="initialPoolSize" value="${jdbc.initialPoolSize}"/>
+        <property name="driverClass" code="${jdbc.driverClass}"/>
+        <property name="jdbcUrl" code="${jdbc.jdbcUrl}"/>
+        <property name="user" code="${jdbc.user}"/>
+        <property name="password" code="${jdbc.password}"/>
+        <property name="minPoolSize" code="${jdbc.minPoolSize}"/>
+        <property name="maxPoolSize" code="${jdbc.maxPoolSize}"/>
+        <property name="acquireIncrement" code="${jdbc.acquireIncrement}"/>
+        <property name="initialPoolSize" code="${jdbc.initialPoolSize}"/>
     </bean>
 
     <bean id="SqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <!--注入mybatis配置文件-->
-        <property name="configLocation" value="classpath:mybatis-config.xml"/>
-        <property name="mapperLocations" value="classpath*:com/suny/association/mapper/*.xml"/>
+        <property name="configLocation" code="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations" code="classpath*:com/suny/association/mapper/*.xml"/>
     </bean>
     <bean id="MapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.suny.association.mapper"/>
-        <property name="SqlSessionFactoryBeanName" value="SqlSessionFactoryBean"/>
+        <property name="basePackage" code="com.suny.association.mapper"/>
+        <property name="SqlSessionFactoryBeanName" code="SqlSessionFactoryBean"/>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">

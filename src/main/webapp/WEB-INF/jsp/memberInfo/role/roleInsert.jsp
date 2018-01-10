@@ -41,7 +41,7 @@
     <form>
         <div class="form-group">
             <label for="roleId"></label>
-            <input id="roleId" type="text" class="form-control" value="角色ID由系统自动生成" disabled>
+            <input id="roleId" type="text" class="form-control" code="角色ID由系统自动生成" disabled>
         </div>
         <div class="form-group">
             <label for="memberRoleName">角色名字</label>
@@ -74,7 +74,7 @@
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);  //再执行关闭
                 }
-                else if (result.status === 006) {window.parent.layer.msg('重复添加角色');}
+                else if (result.status === 110) {window.parent.layer.msg('重复添加角色');}
                 else if (result.status === 0x2) { window.parent.layer.msg('失败了，检查下哪里错了', {icon: 5});}
                 else if (result.status === 207) {window.parent.layer.msg('填写的名字太长了。', {icon: 5});}
                 else {window.parent.layer.msg('服务器异常，请重试', function () {});

@@ -88,13 +88,13 @@
             contentType: false
         }).done(function (result) {
             var status = result.status;
-            if (status == 898) {
+            if (status == 806) {
                 layer.alert("文件名存在欺骗性，重新检查");
             } else if (status == 8) {
                 layer.alert("在这个Excel中没有读取到一条符合要求的成员信息");
             } else if (status == 2) {
                 layer.alert("全部插入失败，请检查文件是否存在不合理的地方");
-            } else if (status == 109) {
+            } else if (status == 113) {
                 var data = result.data;
                 var message = "插入失败的成员信息为:";
                 for (var i = 0; i < data.length; i++) {

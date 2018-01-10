@@ -1,6 +1,6 @@
 package com.suny.association.utils;
 
-import com.suny.association.enums.ResponseCodeEnum;
+import com.suny.association.enums.FileOperateEnum;
 import com.suny.association.exception.BusinessException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -62,7 +62,7 @@ public class ExcelUtils {
         Workbook workbook = getWorkbook(file, fileExtension);
         if (isOverFlowSheet(workbook, startRow)) {
             logger.error("读取Excel表格时读取的工作表下标溢出，不存在这个工作表");
-            throw new BusinessException(ResponseCodeEnum.SHEET_NUM_OVERFLOW);
+            throw new BusinessException(FileOperateEnum.SHEET_NUM_OVERFLOW);
         }
           /*   这里传入一个起始工作表的序号，读取这个工作表      */
         Sheet sheet = workbook.getSheetAt(startSheet);
@@ -158,7 +158,7 @@ public class ExcelUtils {
             parseLong = Long.parseLong(stringNumber);
         } catch (NumberFormatException e) {
             logger.error("解析出来的数字有问题");
-            throw new BusinessException(ResponseCodeEnum.ROW_VALUE_CONVERT_NUMBER_FAIL);
+            throw new BusinessException(FileOperateEnum.ROW_VALUE_CONVERT_NUMBER_FAIL);
         }
         return parseLong == 0L ? 9999 : parseLong;
     }
@@ -176,7 +176,7 @@ public class ExcelUtils {
             parseInt = Integer.parseInt(stringNumber);
         } catch (NumberFormatException e) {
             logger.error("解析出来的数字有问题");
-            throw new BusinessException(ResponseCodeEnum.ROW_VALUE_CONVERT_NUMBER_FAIL);
+            throw new BusinessException(FileOperateEnum.ROW_VALUE_CONVERT_NUMBER_FAIL);
         }
         return parseInt == 0 ? 9999 : parseInt;
     }
@@ -197,22 +197,22 @@ public class ExcelUtils {
                         return new HSSFWorkbook(fs);
                     } catch (IOException e) {
                         logger.warn("读取的文件格式不支持");
-                        throw new BusinessException(ResponseCodeEnum.FILE_READ_FAIL);
+                        throw new BusinessException(FileOperateEnum.FILE_READ_FAIL);
                     }
                 case EXCEL_FILE_AFTER_2007_EXTENSION:
                     try {
                         return new XSSFWorkbook(fs);
                     } catch (IOException e) {
                         logger.warn("读取的文件格式不支持");
-                        throw new BusinessException(ResponseCodeEnum.FILE_READ_FAIL);
+                        throw new BusinessException(FileOperateEnum.FILE_READ_FAIL);
                     }
                 default:
                     logger.warn("读取的文件格式不支持");
-                    throw new BusinessException(ResponseCodeEnum.FILE_NOT_SUPPORT);
+                    throw new BusinessException(FileOperateEnum.FILE_NOT_SUPPORT);
             }
         } catch (IOException e) {
             logger.error("不存在这个文件，无法进行读取");
-            throw new BusinessException(ResponseCodeEnum.FILE_NOT_EXIST);
+            throw new BusinessException(FileOperateEnum.FILE_NOT_EXIST);
         }
     }
 

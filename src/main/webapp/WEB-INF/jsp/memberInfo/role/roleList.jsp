@@ -51,7 +51,7 @@
     <form>
         <div class="form-group">
             <label for="memberRoleId">角色ID</label>
-            <input id="memberRoleId" type="text" class="form-control" value="">
+            <input id="memberRoleId" type="text" class="form-control" code="">
         </div>
         <div class="form-group">
             <label for="memberRoleName">角色名字</label>
@@ -242,7 +242,7 @@
                             layer.load(0, {shade: false, time: 1000});
                             $("#table").bootstrapTable("refresh");
                         }
-                        else if (result.status === 204) {layer.msg("此角色被引用，无法被删除", {icon: 4});
+                        else if (result.status === 115) {layer.msg("此角色被引用，无法被删除", {icon: 4});
                         }else if (result.status === 207) {window.parent.layer.msg('填写的名字太长了。', {icon: 5});}
                         else {layer.msg("删除失败", {icon: 4});}
                     },

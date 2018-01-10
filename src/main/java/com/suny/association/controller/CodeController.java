@@ -1,7 +1,7 @@
 package com.suny.association.controller;
 
 import com.suny.association.entity.dto.ResultDTO;
-import com.suny.association.enums.ResponseCodeEnum;
+import com.suny.association.enums.LoginEnum;
 import com.suny.association.utils.ValidActionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,9 +131,9 @@ public class CodeController {
                                @RequestParam String formCode) {
         String sessionCode = (String) request.getSession().getAttribute("code");
         if (ValidActionUtil.matchCode(formCode, sessionCode)) {
-            return ResultDTO.successResult(ResponseCodeEnum.VALIDATE_CODE_SUCCESS);
+            return ResultDTO.successResult(LoginEnum.VALIDATE_CODE_SUCCESS);
         }
-        return ResultDTO.failureResult(ResponseCodeEnum.VALIDATE_CODE_ERROR);
+        return ResultDTO.failureResult(LoginEnum.VALIDATE_CODE_ERROR);
     }
 
 

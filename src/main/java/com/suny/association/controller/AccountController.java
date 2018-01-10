@@ -7,7 +7,8 @@ import com.suny.association.entity.po.Account;
 import com.suny.association.entity.po.Member;
 import com.suny.association.entity.po.Roles;
 import com.suny.association.entity.vo.ConditionMap;
-import com.suny.association.enums.ResponseCodeEnum;
+import com.suny.association.enums.CommonEnum;
+import com.suny.association.enums.FormEnum;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.IRolesService;
 import com.suny.association.service.interfaces.core.IMemberService;
@@ -68,7 +69,7 @@ public class AccountController extends BaseController {
             account.setAccountPassword(null);
         }
         accountService.insert(account);
-        return successResult(ResponseCodeEnum.ADD_SUCCESS);
+        return successResult(CommonEnum.ADD_SUCCESS);
     }
 
 
@@ -103,13 +104,13 @@ public class AccountController extends BaseController {
     public ResultDTO deleteById(@PathVariable("accountId") Long accountId) {
         Account accountQuote = accountService.queryQuoteByAccountId(accountId);
         if (accountQuote != null && (null != accountQuote.getAccountMember())) {
-            return failureResult(ResponseCodeEnum.HAVE_QUOTE);
+            return failureResult(CommonEnum.HAVE_QUOTE);
         }
         if (accountService.selectById(accountId) == null) {
-            return failureResult(ResponseCodeEnum.SELECT_FAILURE);
+            return failureResult(CommonEnum.SELECT_FAILURE);
         }
         accountService.deleteById(accountId);
-        return successResult(ResponseCodeEnum.DELETE_SUCCESS);
+        return successResult(CommonEnum.DELETE_SUCCESS);
     }
 
     /**
@@ -124,22 +125,22 @@ public class AccountController extends BaseController {
         Account byPhoneResult = accountService.queryByPhone(account.getAccountPhone());
         Account byMailResult = accountService.queryByMail(account.getAccountEmail());
         if ("".equals(account.getAccountName()) || (account.getAccountName() == null)) {
-            resultMap.put(RESULT, failureResult(ResponseCodeEnum.FIELD_NULL));
+            resultMap.put(RESULT, failureResult(FormEnum.FIELD_NULL));
             resultMap.put(STATUS, Boolean.FALSE);
             return resultMap;
         }
         if (null != byNameResult && !Objects.equals(byNameResult.getAccountId(), account.getAccountId())) {
-            resultMap.put(RESULT, failureResult(ResponseCodeEnum.REPEAT_USERNAME));
+            resultMap.put(RESULT, failureResult(FormEnum.REPEAT_USERNAME));
             resultMap.put(STATUS, Boolean.FALSE);
             return resultMap;
         }
         if (null != byPhoneResult && !Objects.equals(byPhoneResult.getAccountId(), account.getAccountId())) {
-            resultMap.put(RESULT, failureResult(ResponseCodeEnum.REPEAT_PHONE));
+            resultMap.put(RESULT, failureResult(FormEnum.REPEAT_PHONE));
             resultMap.put(STATUS, Boolean.FALSE);
             return resultMap;
         }
         if (null != byMailResult && !Objects.equals(byMailResult.getAccountId(), account.getAccountId())) {
-            resultMap.put(RESULT, failureResult(ResponseCodeEnum.REPEAT_EMAIL));
+            resultMap.put(RESULT, failureResult(FormEnum.REPEAT_EMAIL));
             resultMap.put(STATUS, Boolean.FALSE);
             return resultMap;
         }
@@ -166,13 +167,13 @@ public class AccountController extends BaseController {
         Map resultMap = updateOrInsert(account);
         Account byIdResult = accountService.selectById(account.getAccountId());
         if (byIdResult == null) {
-            return failureResult(ResponseCodeEnum.SELECT_FAILURE);
+            return failureResult(CommonEnum.SELECT_FAILURE);
         }
         if (!(Boolean) resultMap.get(STATUS)) {
             return (ResultDTO) resultMap.get(RESULT);
         }
         accountService.update((Account) resultMap.get("account"));
-        return successResult(ResponseCodeEnum.UPDATE_SUCCESS);
+        return successResult(CommonEnum.UPDATE_SUCCESS);
     }
 
     /**
@@ -244,37 +245,37 @@ public class AccountController extends BaseController {
         if (account.getAccountId().equals(accountId)) {
             if ("".equals(passWord) || "".equals(newPassword)) {
                 logger.warn("两个密码不能为空，必须都有值");
-                return ResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
+                return ResultDTO.failureResult(FormEnum.FIELD_NULL);
             }
             if (newPassword.length() < PASSWORD_MIN_LENGTH) {
                 logger.warn("207字段的长度有错误，密码强制性必须大于9位");
-                return ResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+                return ResultDTO.failureResult(FormEnum.FIELD_LENGTH_WRONG);
             }
             Account databaseAccount = accountService.selectById(accountId);
             if (databaseAccount == null) {
                 logger.error("数据库不存在要更改密码的账号,可能存在用户恶意修改密码风险");
-                return ResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
+                return ResultDTO.failureResult(CommonEnum.SELECT_FAILURE);
             } else {
                 if (!databaseAccount.getAccountPassword().equals(passWord)) {
                     logger.warn("208, 输入的原密码跟数据库的原密码不一致");
-                    return ResultDTO.failureResult(ResponseCodeEnum.OLD_PASSWORD_WRONG);
+                    return ResultDTO.failureResult(FormEnum.OLD_PASSWORD_WRONG);
                 } else if (passWord.equals(newPassword)) {
                     logger.warn("209,两次密码一样");
-                    return ResultDTO.failureResult(ResponseCodeEnum.TWICE_PASSWORD_EQUALS);
+                    return ResultDTO.failureResult(FormEnum.TWICE_PASSWORD_EQUALS);
                 } else {
                     int successNum = accountService.changePassword(accountId, newPassword);
                     if (successNum == 1) {
                         logger.info("更新密码成功");
                         request.getSession().removeAttribute("account");
-                        return ResultDTO.successResult(ResponseCodeEnum.UPDATE_SUCCESS);
+                        return ResultDTO.successResult(CommonEnum.UPDATE_SUCCESS);
                     }
                     logger.warn("更新密码失败");
-                    return ResultDTO.successResult(ResponseCodeEnum.UPDATE_FAILURE);
+                    return ResultDTO.successResult(CommonEnum.UPDATE_FAILURE);
                 }
             }
         }
         logger.info("session中的账号跟要修改的账号ID不一样，恶意修改密码");
-        return ResultDTO.failureResult(ResponseCodeEnum.MALICIOUS_OPERATION);
+        return ResultDTO.failureResult(CommonEnum.MALICIOUS_OPERATION);
     }
 
 

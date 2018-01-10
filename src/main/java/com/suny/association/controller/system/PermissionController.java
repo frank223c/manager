@@ -5,7 +5,8 @@ import com.suny.association.controller.BaseController;
 import com.suny.association.entity.dto.BootstrapTableResultDTO;
 import com.suny.association.entity.po.Permission;
 import com.suny.association.entity.vo.ConditionMap;
-import com.suny.association.enums.ResponseCodeEnum;
+import com.suny.association.enums.CommonEnum;
+import com.suny.association.enums.FormEnum;
 import com.suny.association.service.interfaces.system.IPermissionService;
 import com.suny.association.entity.dto.ResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +46,12 @@ public class PermissionController extends BaseController {
     @ResponseBody
     public ResultDTO insert(@RequestBody Permission permission) {
         if ("".equals(permission.getpermissionName()) || permission.getpermissionName() == null) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
+            return ResultDTO.failureResult(FormEnum.FIELD_NULL);
         } else if (permissionService.selectByName(permission.getpermissionName()) != null) {
-            return ResultDTO.failureResult(ResponseCodeEnum.REPEAT_ADD);
+            return ResultDTO.failureResult(CommonEnum.REPEAT_ADD);
         }
         permissionService.insert(permission);
-        return successResult(ResponseCodeEnum.ADD_SUCCESS);
+        return successResult(CommonEnum.ADD_SUCCESS);
     }
 
 
@@ -77,16 +78,16 @@ public class PermissionController extends BaseController {
     @ResponseBody
     public ResultDTO deleteById(@PathVariable("permissionId") int permissionId) {
         if (!permissionService.queryPermissionQuote(permissionId).isEmpty()) {
-            return failureResult(ResponseCodeEnum.HAVE_QUOTE);
+            return failureResult(CommonEnum.HAVE_QUOTE);
         }
         if (permissionService.selectById(permissionId) == null) {
-            return failureResult(ResponseCodeEnum.SELECT_FAILURE);
+            return failureResult(CommonEnum.SELECT_FAILURE);
         }
         if (permissionId <= 37){
-            return failureResult(ResponseCodeEnum.SYSTEM_LIMIT);
+            return failureResult(CommonEnum.SYSTEM_LIMIT);
         }
         permissionService.deleteById(permissionId);
-        return successResult(ResponseCodeEnum.DELETE_SUCCESS);
+        return successResult(CommonEnum.DELETE_SUCCESS);
     }
 
     /**
@@ -100,10 +101,10 @@ public class PermissionController extends BaseController {
     @ResponseBody
     public ResultDTO update(@RequestBody Permission permission) {
         if (permission.getpermissionId() < 37) {
-            return failureResult(ResponseCodeEnum.SYSTEM_LIMIT);
+            return failureResult(CommonEnum.SYSTEM_LIMIT);
         }
         permissionService.update(permission);
-        return successResult(ResponseCodeEnum.UPDATE_SUCCESS);
+        return successResult(CommonEnum.UPDATE_SUCCESS);
     }
 
 

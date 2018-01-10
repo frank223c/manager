@@ -133,7 +133,7 @@
                         field: "punchTypeId",
                         title: "当前考勤",
                         sortable: true,
-                        order: "desc",
+                        order: "value",
                         align: "center",
                         formatter: 'punchTypeFormatter'
                     }, {
@@ -182,17 +182,17 @@
         return oTableInit;
     };
 
-    function departmentFormatter(value, row, index) {
+    function departmentFormatter(code, row, index) {
         //noinspection JSUnresolvedVariable
         return row.punchRecordId.punchMemberId.memberDepartment.departmentName;
     }
 
-    function punchRecordFormatter(value, row, index) {
+    function punchRecordFormatter(code, row, index) {
         //noinspection JSUnresolvedVariable
         return row.punchRecordId.punchMemberId.memberName;
     }
 
-    function applyForTimeFormat(value, row, index) {
+    function applyForTimeFormat(code, row, index) {
         //noinspection JSUnresolvedVariable
         var date =row.applyForTime;
         var Y = date.year + '-';
@@ -204,7 +204,7 @@
         return Y + M + D + h + m + s;
     }
 
-    function punchTypeFormatter(value, row, index) {
+    function punchTypeFormatter(code, row, index) {
         //noinspection JSUnresolvedVariable
         switch (row.punchTypeId.punchTypeId) {
             case 0:
@@ -225,7 +225,7 @@
         }
     }
 
-    function changePunchTypeFormatter(value, row, index) {
+    function changePunchTypeFormatter(code, row, index) {
         //noinspection JSUnresolvedVariable
         switch (row.changePunchType.punchTypeId) {
             case 0:
@@ -247,7 +247,7 @@
     }
 
 
-    function punchTodayDateFormatter(value, row, index) {
+    function punchTodayDateFormatter(code, row, index) {
         //noinspection JSUnresolvedVariable
         var date = row.punchRecordId.punchDatetime;
         var Y = date.year + '-';
@@ -289,7 +289,7 @@
                             else if (statusCode === 202) {
                                 layer.msg("缺少参数！", {icon: 4});
                             }
-                            else if (statusCode === 206) {
+                            else if (statusCode === 116) {
                                 layer.msg("您在部门的角色不能执行此操作", {icon: 4});
                             }
                             else if (statusCode === 5) {

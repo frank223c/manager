@@ -28,19 +28,19 @@
 <body>
 <form class="form-line col-xs-10" style="padding: 25px; text-align: center">
     <label>
-        <input name="account_id" value="${account.accountId}" hidden>
+        <input name="account_id" code="${account.accountId}" hidden>
     </label>
 
     <div class="form-group">
         <label for="account_name" class="col-sm-2 control-label">用户名【英文字母加数字的组合】<strong class="strongText">(必填)</strong></label>
-        <input class="form-control " value="${account.accountName}" id="account_name" name="account_name">
+        <input class="form-control " code="${account.accountName}" id="account_name" name="account_name">
     </div>
     <div class="form-group">
         <label for="selectRoleOption" class="col-sm-2 control-label">角色</label>
         <select class="form-control" id="selectRoleOption">
             <c:forEach items="${rolesList}" var="role">
-                <option value="${role.roleId}">
-                    <c:out value="${role.description}"/>
+                <option code="${role.roleId}">
+                    <c:out code="${role.description}"/>
                 </option>
             </c:forEach>
         </select>
@@ -48,18 +48,18 @@
     <div class="form-group">
         <label for="selectAccountStatusOption" class="col-sm-2 control-label">状态</label>
         <select class="form-control" id="selectAccountStatusOption" name="memberStatus">
-            <option value="1">正常</option>
-            <option value="0">冻结</option>
+            <option code="1">正常</option>
+            <option code="0">冻结</option>
         </select>
     </div>
     <div class="form-group">
         <label for="account_phone" class="col-sm-2 control-label">绑定手机号码<strong class="strongText">(必填)</strong></label>
-        <input class="form-control " value="${account.accountPhone}" id="account_phone" name="account_phone">
+        <input class="form-control " code="${account.accountPhone}" id="account_phone" name="account_phone">
     </div>
 
     <div class="form-group">
         <label for="account_email" class="col-sm-2 control-label">绑定邮箱<strong class="strongText">(必填)</strong></label>
-        <input class="form-control " value="${account.accountEmail}" id="account_email" name="account_email">
+        <input class="form-control " code="${account.accountEmail}" id="account_email" name="account_email">
     </div>
 
 
@@ -155,18 +155,18 @@
                             parent.layer.close(index); //再执行关闭
                             refreshTable();
                         }
-                        else if (statusCode == 108) {
+                        else if (statusCode == 116) {
                             window.parent.layer.alert('用户名已被使用，请重新填写', {icon: 5});
                             $("#account_name").focus();
                             $('#account_name').css('border', '2px solid red');
                         }
-                        else if (statusCode == 106) {
+                        else if (statusCode == 203) {
                             window.parent.layer.alert('邮箱已被使用，请重新填写', {icon: 5});
                             $("#account_name").css('border', '');
                             $("#account_email").focus();
                             $('#account_email').css('border', '2px solid red');
                         }
-                        else if (statusCode == 107) {
+                        else if (statusCode == 115) {
                             window.parent.layer.alert('手机号码已被使用，请重新填写', {icon: 5});
                             $("#account_email").css('border', '');
                             $("#account_phone").focus();

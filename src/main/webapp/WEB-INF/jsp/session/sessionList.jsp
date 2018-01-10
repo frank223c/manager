@@ -157,11 +157,11 @@
         return oTableInit;
     };
 
-    function account_name_format(value, row, index) {
+    function account_name_format(code, row, index) {
         return row.loginName;
     }
 
-    function date_format(value, row, index) {
+    function date_format(code, row, index) {
         var date = row.loginTime;
         var Y = date.year + '-';
         var M = date.monthValue + '-';
@@ -174,14 +174,14 @@
 
 
     // 格式化状态
-    function status_formatter(value, row, index) {
-        if (value === '1') {
+    function status_formatter(code, row, index) {
+        if (code === '1') {
             return '<span class="label label-success">成功</span>';
         }
-        if (value === '0') {
+        if (code === '0') {
             return '<span class="label label-default">失败</span>';
         }
-        if (value === 'force_logout') {
+        if (code === 'force_logout') {
             return '<span class="label label-danger">踢离</span>';
         }
     }

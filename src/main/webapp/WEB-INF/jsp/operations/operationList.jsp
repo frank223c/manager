@@ -182,18 +182,18 @@
         return oTableInit;
     };
 
-    function accountFormat(value, row, index) {
+    function accountFormat(code, row, index) {
         return row.operationAccountId.accountName;
     }
 
-    function memberNameFormater(value, row, index) {
+    function memberNameFormater(code, row, index) {
         if (row.operationMemberName == null) {
             return "没有绑定成员";
         }
         return row.operationMemberName;
     }
 
-    function dateFormat(value, row, index) {
+    function dateFormat(code, row, index) {
         var date = row.operationTime;
         var Y = date.year + '-';
         var M = date.monthValue + '-';
@@ -204,14 +204,14 @@
         return Y + M + D + h + m + s;
     }
     // 格式化状态
-    function statusFormatter(value, row, index) {
-        if (value == '1') {
+    function statusFormatter(code, row, index) {
+        if (code == '1') {
             return '<span class="label label-success">成功</span>';
         }
-        if (value == '0') {
+        if (code == '0') {
             return '<span class="label label-default">失败</span>';
         }
-        if (value == 'force_logout') {
+        if (code == 'force_logout') {
             return '<span class="label label-danger">踢离</span>';
         }
     }

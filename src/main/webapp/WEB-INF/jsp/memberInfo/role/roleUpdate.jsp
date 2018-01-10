@@ -33,12 +33,12 @@
         <div>角色ID</div>
         <div class="form-group">
             <label for="memberRoleId"></label>
-            <input id="memberRoleId" type="text" class="form-control" value="${role.memberRoleId}" disabled>
+            <input id="memberRoleId" type="text" class="form-control" code="${role.memberRoleId}" disabled>
         </div>
         <div>当前角色名字</div>
         <div class="form-group">
             <label for="roleName_old"></label>
-            <input id="roleName_old" type="text" class="form-control" value="${role.memberRoleName}" disabled>
+            <input id="roleName_old" type="text" class="form-control" code="${role.memberRoleName}" disabled>
         </div>
         <div class="form-group">
             <label for="roleName_new">修改角色名字</label>

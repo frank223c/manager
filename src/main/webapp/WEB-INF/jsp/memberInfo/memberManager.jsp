@@ -41,14 +41,14 @@
                     <label class="control-label col-sm-1" for="txt_search_status"></label>
                     <div class="btn-group" id="txt_search_status">
                         <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="2" checked="checked">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" code="2" checked="checked">
                             全部状态
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="1"> 正常状态
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" code="1"> 正常状态
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="0"> 冻结状态
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" code="0"> 冻结状态
                         </label>
                     </div>
                     <div class="col-sm-4" style="text-align:left;">
@@ -175,21 +175,21 @@
                 },
                 columns: [
                     {title: "全选", field: "select", checkbox: true, width: 20, align: "center", valign: "middle"},
-                    {title: "ID", field: "memberId", sortable: true, order: "desc"},
+                    {title: "ID", field: "memberId", sortable: true, order: "value"},
                     {field: "memberName", title: "姓名", sortable: true, titleTooltip: "this is name"},
-                    {field: "memberClassName", title: "班级名字", sortable: true, order: "desc"},
-                    {field: "memberSex", title: "性别", sortable: true, order: "desc", formatter: 'sexFormatter'},
-                    {field: "memberGradeNumber", title: "年级", sortable: true, order: "desc"},
-                    {field: "member_manager_id", title: "管理员", sortable: true, order: "desc"},
-                    {field: "department", title: "部门", sortable: true, order: "desc", formatter: "departmentFormatter"},
+                    {field: "memberClassName", title: "班级名字", sortable: true, order: "value"},
+                    {field: "memberSex", title: "性别", sortable: true, order: "value", formatter: 'sexFormatter'},
+                    {field: "memberGradeNumber", title: "年级", sortable: true, order: "value"},
+                    {field: "member_manager_id", title: "管理员", sortable: true, order: "value"},
+                    {field: "department", title: "部门", sortable: true, order: "value", formatter: "departmentFormatter"},
                     {
                         field: "memberStatus",
                         title: "状态",
                         sortable: true,
-                        order: "desc",
+                        order: "value",
                         formatter: "memberStatusFormatter"
                     },
-                    {field: "memberRoles", title: "角色", sortable: true, order: "desc", formatter: "memberRoleFormatter"}
+                    {field: "memberRoles", title: "角色", sortable: true, order: "value", formatter: "memberRoleFormatter"}
                 ],
                 onClickRow: function (row, $element) {
                     //$element是当前tr的jquery对象
@@ -219,7 +219,7 @@
         return oTableInit;
     };
 
-    function memberStatusFormatter(value, row, index) {
+    function memberStatusFormatter(code, row, index) {
         //noinspection JSUnresolvedVariable
         var memberStatus = row.memberStatus;
         if (memberStatus == true) {
@@ -230,17 +230,17 @@
         }
     }
 
-    function sexFormatter(value, row, index) {
+    function sexFormatter(code, row, index) {
         return row.memberSex == true ? "男" : "女";
     }
 
-    function departmentFormatter(value, row, index) {
+    function departmentFormatter(code, row, index) {
         //noinspection JSUnresolvedVariable
         return row.memberDepartment.departmentName;
     }
 
 
-    function memberRoleFormatter(value, row, index) {
+    function memberRoleFormatter(code, row, index) {
         //noinspection JSUnresolvedVariable
         return row.memberRoles.memberRoleName;
     }
@@ -326,7 +326,7 @@
                     layer.load(0, {shade: false, time: 1000});
                     $("#tabs").bootstrapTable("refresh");
 
-                } else if (result.status == 204) {
+                } else if (result.status == 115) {
                     layer.msg("存在引用账号，无法删除", {icon: 4});
                 }
                 else {

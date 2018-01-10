@@ -5,7 +5,8 @@ import com.suny.association.entity.dto.BootstrapTableResultDTO;
 import com.suny.association.entity.dto.ResultDTO;
 import com.suny.association.entity.po.Roles;
 import com.suny.association.entity.vo.ConditionMap;
-import com.suny.association.enums.ResponseCodeEnum;
+import com.suny.association.enums.CommonEnum;
+import com.suny.association.enums.FormEnum;
 import com.suny.association.service.interfaces.IRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,15 +43,15 @@ public class RoleController extends BaseController {
     public ResultDTO delete(@PathVariable("roleId") Integer roleId) {
         Integer escapeId = Integer.valueOf(HtmlUtils.htmlEscape(String.valueOf(roleId)));
         if ( escapeId.toString().length() > ACCOUNT_ROLE_ID_LENGTH) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+            return ResultDTO.failureResult(FormEnum.FIELD_LENGTH_WRONG);
         }
         if (!rolesService.queryQuote(roleId).isEmpty()) {
-            return failureResult(ResponseCodeEnum.HAVE_QUOTE);
+            return failureResult(CommonEnum.HAVE_QUOTE);
         } else if (rolesService.selectById(roleId) == null) {
-            return failureResult(ResponseCodeEnum.DELETE_FAILURE);
+            return failureResult(CommonEnum.DELETE_FAILURE);
         }
         rolesService.deleteById(escapeId);
-        return successResult(ResponseCodeEnum.DELETE_SUCCESS);
+        return successResult(CommonEnum.DELETE_SUCCESS);
     }
 
     @SystemControllerLog(description = "更新账号角色")
@@ -62,19 +63,19 @@ public class RoleController extends BaseController {
         String escapeDescription = HtmlUtils.htmlEscape(roles.getDescription());
         Integer escapeId = Integer.valueOf(HtmlUtils.htmlEscape(String.valueOf(roles.getRoleId())));
         if (roles.getRoleId() == null || rolesService.selectById(roles.getRoleId()) == null) {
-            return failureResult(ResponseCodeEnum.SELECT_FAILURE);
+            return failureResult(CommonEnum.SELECT_FAILURE);
         }
         if (escapeName.length() > ACCOUNT_ROLE_NAME_LENGTH || escapeId.toString().length() > ACCOUNT_ROLE_ID_LENGTH||escapeDescription.length()>ACCOUNT_ROLE_DESCRIPTION_LENGTH) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+            return ResultDTO.failureResult(FormEnum.FIELD_LENGTH_WRONG);
         }
         if ("".equals(roles.getDescription()) || roles.getDescription() == null) {
-            return failureResult(ResponseCodeEnum.FIELD_NULL);
+            return failureResult(FormEnum.FIELD_NULL);
         }
         roles.setRoleId(escapeId);
         roles.setRoleName(escapeName);
         roles.setDescription(escapeDescription);
         rolesService.update(roles);
-        return successResult(ResponseCodeEnum.UPDATE_SUCCESS);
+        return successResult(CommonEnum.UPDATE_SUCCESS);
     }
 
     @RequestMapping(value = "/update.html/{roleId}", method = RequestMethod.GET)
@@ -107,18 +108,18 @@ public class RoleController extends BaseController {
         String escapeName = HtmlUtils.htmlEscape(roles.getRoleName());
         String escapeDescription = HtmlUtils.htmlEscape(roles.getDescription());
         if ("".equals(escapeDescription) || escapeDescription == null) {
-            return failureResult(ResponseCodeEnum.FIELD_NULL);
+            return failureResult(FormEnum.FIELD_NULL);
         }
         if (escapeName.length() > ACCOUNT_ROLE_NAME_LENGTH ||escapeDescription.length()>ACCOUNT_ROLE_DESCRIPTION_LENGTH) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+            return ResultDTO.failureResult(FormEnum.FIELD_LENGTH_WRONG);
         }
         if (rolesService.selectByName(escapeDescription) != null) {
-            return failureResult(ResponseCodeEnum.REPEAT_ADD);
+            return failureResult(CommonEnum.REPEAT_ADD);
         }
         roles.setRoleName(escapeName);
         roles.setDescription(escapeDescription);
         rolesService.insert(roles);
-        return successResult(ResponseCodeEnum.ADD_SUCCESS);
+        return successResult(CommonEnum.ADD_SUCCESS);
     }
 
     @RequestMapping(value = "/insert.html", method = RequestMethod.GET)

@@ -211,7 +211,7 @@
     };
 
 
-    function applyTimeFormat(value, row, index) {
+    function applyTimeFormat(code, row, index) {
         var date =row.callbackTime;
         var Y = date.year + '-';
         var M = date.monthValue + '-';
@@ -221,7 +221,7 @@
         var s = date.second;
         return Y + M + D + h + m + s;
     }
-    function callbackTimeFormat(value, row, index) {
+    function callbackTimeFormat(code, row, index) {
         var date =row.applicationMessageId.applyForTime;
         var Y = date.year + '-';
         var M = date.monthValue + '-';
@@ -232,7 +232,7 @@
         return Y + M + D + h + m + s;
     }
 
-    function resultStatusFormat(value, row, index) {
+    function resultStatusFormat(code, row, index) {
         //noinspection JSUnresolvedVariable
         if (row.callbackResult) {
             return '<span class="label label-success">同意</span>';
@@ -241,39 +241,39 @@
         }
     }
 
-    function punchTypeFormat(value, row, index) {
+    function punchTypeFormat(code, row, index) {
         //noinspection JSUnresolvedVariable
         return row.applicationMessageId.punchRecordId.punchTypeId.punchTypeName;
     }
 
-    function changePunchTypeFormat(value, row, index) {
+    function changePunchTypeFormat(code, row, index) {
         //noinspection JSUnresolvedVariable
         return row.applicationMessageId.changePunchType.punchTypeName;
     }
 
-    function punchMemberFormat(value, row, index) {
+    function punchMemberFormat(code, row, index) {
         //noinspection JSUnresolvedVariable
         return row.applicationMessageId.punchRecordId.punchMemberId.memberName;
     }
-    function punchMemberGradeFormat(value, row, index) {
+    function punchMemberGradeFormat(code, row, index) {
         //noinspection JSUnresolvedVariable
         return row.applicationMessageId.punchRecordId.punchMemberId.memberGradeNumber;
     }
 
-    function punchManagerFormat(value, row, index) {
+    function punchManagerFormat(code, row, index) {
         //noinspection JSUnresolvedVariable
         return row.callbackManagerId.memberName;
     }
-    function punchManagerGradeFormat(value, row, index) {
+    function punchManagerGradeFormat(code, row, index) {
         //noinspection JSUnresolvedVariable
         return row.callbackManagerId.memberGradeNumber;
     }
-    function punchManagerRoleFormat(value, row, index) {
+    function punchManagerRoleFormat(code, row, index) {
         //noinspection JSUnresolvedVariable
         return row.callbackManagerId.memberRoles.memberRoleName;
     }
 
-    function punchMemberDepartmentFormat(value, row, index) {
+    function punchMemberDepartmentFormat(code, row, index) {
         //noinspection JSUnresolvedVariable
         return row.applicationMessageId.punchRecordId.punchMemberId.memberDepartment.departmentName;
     }

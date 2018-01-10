@@ -129,7 +129,7 @@
                 },
                 columns: [
                     {title: "全选", field: "select", checkbox: true, width: 20, align: "center", valign: "middle"},
-                    {title: "ID", field: "permissionId", sortable: true, order: "desc", align: "center"},
+                    {title: "ID", field: "permissionId", sortable: true, order: "value", align: "center"},
                     {
                         field: "permissionName",
                         title: "权限名",
@@ -137,13 +137,13 @@
                         titleTooltip: "this is name",
                         align: "center"
                     },
-//                    {field: "accountPassword", title: "密码", order: "desc"},
-                    {field: "description", title: "权限解释", sortable: true, order: "desc", align: "center"},
+//                    {field: "accountPassword", title: "密码", order: "value"},
+                    {field: "description", title: "权限解释", sortable: true, order: "value", align: "center"},
                     {
                         field: "createTime",
                         title: "创建时间",
                         sortable: true,
-                        order: "desc",
+                        order: "value",
                         align: "center",
                         formatter: "dateFormat"
                     },
@@ -151,7 +151,7 @@
                         field: "permissionStatus",
                         title: "权限状态",
                         sortable: true,
-                        order: "desc",
+                        order: "value",
                         formatter: "permissionStatusFormatter",
                         align: "center"
                     },
@@ -183,16 +183,16 @@
         return oTableInit;
     };
 
-    function permissionStatusFormatter(value, row, index) {
-        if (value === true) {
+    function permissionStatusFormatter(code, row, index) {
+        if (code === true) {
             return '<span class="label label-success account-status">正常</span>';
         }
-        if (value === false) {
+        if (code === false) {
             return '<span class="label label-default account-status">冻结</span>';
         }
     }
 
-    function dateFormat(value, row, index) {
+    function dateFormat(code, row, index) {
         var date = row.createTime;
         var Y = date.year + '-';
         var M = date.monthValue + '-';
@@ -288,7 +288,7 @@
                             layer.load(0, {shade: false, time: 1000});
                             $("#mable").bootstrapTable("refresh");
                         }
-                        else if (statusCode == 204) {
+                        else if (statusCode == 115) {
                             layer.msg("权限存在引用，无法删除", {icon: 4});
                         }
                         else if (statusCode == 7) {

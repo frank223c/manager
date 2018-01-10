@@ -22,19 +22,19 @@
 <body>
 <form class="form-line col-xs-10" role="form" style="padding: 25px; text-align: center">
     <label>
-        <input name="memberId" value="${member.memberId}" hidden>
+        <input name="memberId" code="${member.memberId}" hidden>
     </label>
     <div class="form-group">
         <label for="member-name" class="col-sm-2 control-label">姓名</label>
-        <input class="form-control " value="${member.memberName}" id="member-name" name="member-name" disabled>
+        <input class="form-control " code="${member.memberName}" id="member-name" name="member-name" disabled>
     </div>
 
     <div class="form-group">
         <label for="selectDepartmentOption" class="col-sm-2 control-label">部门</label>
         <select class="form-control" id="selectDepartmentOption" name="memberDepartment.departmentId">
             <c:forEach items="${departmentList}" var="role">
-                <option value="${role.departmentId}" name="departmentOption">
-                    <c:out value="${role.departmentName}"/>
+                <option code="${role.departmentId}" name="departmentOption">
+                    <c:out code="${role.departmentName}"/>
                 </option>
             </c:forEach>
         </select>
@@ -42,8 +42,8 @@
     <div class="form-group">
         <label for="selectMemberStatusOption" class="col-sm-2 control-label">状态</label>
         <select class="form-control" id="selectMemberStatusOption" name="memberStatus">
-            <option value="1">正常</option>
-            <option value="0">冻结</option>
+            <option code="1">正常</option>
+            <option code="0">冻结</option>
 
         </select>
     </div>
@@ -51,8 +51,8 @@
         <label for="selectMemberRoleOption" class="col-sm-2 control-label">角色</label>
         <select class="form-control" id="selectMemberRoleOption" name="memberRoleId">
             <c:forEach items="${memberRolesList}" var="memberRole">
-                <option value="${memberRole.memberRoleId}">
-                    <c:out value="${memberRole.memberRoleName}"/></option>
+                <option code="${memberRole.memberRoleId}">
+                    <c:out code="${memberRole.memberRoleName}"/></option>
             </c:forEach>
 
 

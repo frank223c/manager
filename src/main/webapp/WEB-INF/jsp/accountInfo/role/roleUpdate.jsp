@@ -33,26 +33,26 @@
         <div hidden>角色ID</div>
         <div class="form-group">
             <label for="roleId"></label>
-            <input id="roleId" type="hidden" class="form-control" value="${role.roleId}" disabled>
+            <input id="roleId" type="hidden" class="form-control" code="${role.roleId}" disabled>
         </div>
         <div>当前角色英文名字</div>
         <div class="form-group">
             <label for="roleName_old"></label>
-            <input id="roleName_old" type="text" class="form-control" value="${role.roleName}" disabled>
+            <input id="roleName_old" type="text" class="form-control" code="${role.roleName}" disabled>
         </div>
         <div class="form-group">
             <label for="roleName_new">修改角色英文名字</label>
-            <input id="roleName_new" type="text" class="form-control" value="${role.roleName}">
+            <input id="roleName_new" type="text" class="form-control" code="${role.roleName}">
         </div>
 
         <div>当前角色中文名字</div>
         <div class="form-group">
             <label for="description_old"></label>
-            <input id="description_old" type="text" class="form-control" value="${role.description}" disabled>
+            <input id="description_old" type="text" class="form-control" code="${role.description}" disabled>
         </div>
         <div class="form-group">
             <label for="description_new">修改角色中文名字</label>
-            <input id="description_new" type="text" class="form-control" value="${role.description}">
+            <input id="description_new" type="text" class="form-control" code="${role.description}">
         </div>
 
         <button type="button" class="btn btn-warning btn-block" id="submit">点击修改</button>

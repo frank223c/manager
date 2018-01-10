@@ -4,12 +4,12 @@
 
 <configuration>
     <properties>
-        <property name="dialect" value="mysql" />
+        <property name="dialect" code="mysql" />
     </properties>
     <settings>
         <!--开启驼峰跟下划线命名互相转换-->
-        <setting name="mapUnderscoreToCamelCase" value="true"/>
-        <!--<setting name="logImpl" value="STDOUT_LOGGING"/>-->
+        <setting name="mapUnderscoreToCamelCase" code="true"/>
+        <!--<setting name="logImcodealue="STDOUT_LOGGING"/>-->
     </settings>
 
 </configuration>

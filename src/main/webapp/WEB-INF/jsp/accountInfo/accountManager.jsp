@@ -136,16 +136,16 @@
                 },
                 columns: [
                     {title: "全选", field: "select", checkbox: true, width: 20, align: "center", valign: "middle"},
-                    {title: "ID", field: "accountId", sortable: true, order: "desc", align: "center"},
+                    {title: "ID", field: "accountId", sortable: true, order: "value", align: "center"},
                     {field: "accountName", title: "账号名", sortable: true, titleTooltip: "this is name", align: "center"},
-//                    {field: "accountPassword", title: "密码", order: "desc"},
-                    {field: "accountPhone", title: "手机号码", sortable: true, order: "desc", align: "center"},
-                    {field: "accountEmail", title: "邮箱", sortable: true, order: "desc", align: "center"},
+//                    {field: "accountPassword", title: "密码", order: "value"},
+                    {field: "accountPhone", title: "手机号码", sortable: true, order: "value", align: "center"},
+                    {field: "accountEmail", title: "邮箱", sortable: true, order: "value", align: "center"},
                     {
                         field: "accountStatus",
                         title: "账号状态",
                         sortable: true,
-                        order: "desc",
+                        order: "value",
                         formatter: "accountStatusFormatter",
                         align: "center"
                     },
@@ -153,7 +153,7 @@
                         field: "accountRoles",
                         title: "账号角色",
                         sortable: true,
-                        order: "desc",
+                        order: "value",
                         formatter: "rolesFormatter",
                         align: "center"
                     },
@@ -186,23 +186,23 @@
         return oTableInit;
     };
 
-    function accountStatusFormatter(value, row, index) {
-        if (value === true) {
+    function accountStatusFormatter(code, row, index) {
+        if (code === true) {
             return '<span class="label label-success account-status">正常</span>';
         }
-        if (value === false) {
+        if (code === false) {
             return '<span class="label label-default account-status">冻结</span>';
         }
     }
 
-    function accountMember(value, row, index) {
+    function accountMember(code, row, index) {
         //noinspection JSUnresolvedVariable
         if (row.accountMember === null)return '<p class="btn btn-primary">暂无绑定成员</p>';
         return row.accountMember.memberName;
     }
 
 
-    function memberFormatter(value, row, index) {
+    function memberFormatter(code, row, index) {
         //noinspection JSUnresolvedVariable
         if (!(row.accountMember.memberName === null)) {
             return row.accountMember.memberName;
@@ -213,7 +213,7 @@
     }
 
 
-    function rolesFormatter(value, row, index) {
+    function rolesFormatter(code, row, index) {
         return row.accountRoles.description;
     }
 
@@ -300,7 +300,7 @@
                             layer.load(0, {shade: false, time: 1000});
                             $("#mable").bootstrapTable("refresh");
                         }
-                        else if (statusCode == 204) {
+                        else if (statusCode == 115) {
                             layer.msg("账号存在引用，无法删除", {icon: 4});
                         }
                         else if (statusCode == 5) {

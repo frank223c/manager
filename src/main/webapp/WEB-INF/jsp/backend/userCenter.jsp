@@ -472,17 +472,17 @@
                 var status = result.status;
                 if (status === 987) {
                     layer.alert("没有登录你还签到！查看下是不是会话过期了，重新登录下吧");
-                } else if (status === 211) {
+                } else if (status === 117) {
                     layer.alert("请不要恶意操作他人账号！");
                 } else if (status === 5) {
                     layer.alert("没有你这个要签到的账号！恶意操作");
-                } else if (status === 212) {
+                } else if (status === 303) {
                     layer.alert("今天已经签到成功啦，不要重复签到！");
-                } else if (status === 215) {
-                    layer.alert("考勤失败啦，再等等吧！");
-                } else if (status === 213) {
+                }else if (status === 304) {
                     layer.alert("再等等啦，还没有到签到时间！");
-                } else if (status === 214) {
+                } else if (status === 306) {
+                    layer.alert("考勤失败啦，再等等吧！");
+                }  else if (status === 305) {
                     layer.alert("恭喜你签到成功啦！");
                 } else {
                     layer.alert("服务器除了点小问题，可能执行到Bug了");
@@ -559,7 +559,7 @@
 
                 } else if (status === 4) {
                     layer.alert("服务器更新密码出了点小问题，请重试！");
-                } else if (status === 211) {
+                } else if (status === 117) {
                     layer.alert("恶意修改他人密码！");
                 } else {
                     layer.alert("出了点未知的小问题！");

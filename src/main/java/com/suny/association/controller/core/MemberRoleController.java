@@ -6,7 +6,8 @@ import com.suny.association.entity.dto.BootstrapTableResultDTO;
 import com.suny.association.entity.dto.ResultDTO;
 import com.suny.association.entity.po.MemberRoles;
 import com.suny.association.entity.vo.ConditionMap;
-import com.suny.association.enums.ResponseCodeEnum;
+import com.suny.association.enums.CommonEnum;
+import com.suny.association.enums.FormEnum;
 import com.suny.association.service.interfaces.core.IMemberRolesService;
 import com.suny.association.service.interfaces.core.IMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,18 +45,18 @@ public class MemberRoleController extends BaseController {
         // 过滤特殊字符，防止XSS注入
         Integer escapeId = Integer.valueOf(HtmlUtils.htmlEscape(String.valueOf(memberRoleId)));
         if (escapeId.toString().length() > ROLE_ID_MAX_LENGTH) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+            return ResultDTO.failureResult(FormEnum.FIELD_LENGTH_WRONG);
         }
         // 1.查询数据库中是否有这个角色
         if (memberRolesService.selectById(escapeId) == null) {
-            return ResultDTO.failureResult(ResponseCodeEnum.DELETE_FAILURE);
+            return ResultDTO.failureResult(CommonEnum.DELETE_FAILURE);
         }
         // 2.判断数据库里面是不是有成员引用了这个角色,引用了就不能被删除
         if (!memberService.selectByMemberRoleId(escapeId).isEmpty()) {
-            return ResultDTO.failureResult(ResponseCodeEnum.HAVE_QUOTE);
+            return ResultDTO.failureResult(CommonEnum.HAVE_QUOTE);
         }
         memberRolesService.deleteById(escapeId);
-        return ResultDTO.successResult(ResponseCodeEnum.DELETE_SUCCESS);
+        return ResultDTO.successResult(CommonEnum.DELETE_SUCCESS);
     }
 
     @SystemControllerLog(description = "更新成员角色")
@@ -66,24 +67,24 @@ public class MemberRoleController extends BaseController {
         String escapeName = HtmlUtils.htmlEscape(memberRoles.getMemberRoleName());
         Integer escapeId = Integer.valueOf(HtmlUtils.htmlEscape(String.valueOf(memberRoles.getMemberRoleId())));
         if (escapeName.length() > ROLE_NAME_MAX_LENGTH || escapeId.toString().length() > ROLE_ID_MAX_LENGTH) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+            return ResultDTO.failureResult(FormEnum.FIELD_LENGTH_WRONG);
         }
         // 1.首先检查数据库是否存在要更新的数据记录
         if (memberRolesService.selectById(escapeId) == null) {
-            return ResultDTO.failureResult(ResponseCodeEnum.SELECT_FAILURE);
+            return ResultDTO.failureResult(CommonEnum.SELECT_FAILURE);
         }
         // 2.再检查角色名字是否有空值
         if ("".equals(escapeName)) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
+            return ResultDTO.failureResult(FormEnum.FIELD_NULL);
         }
         // 3. 查询数据库中是否已经有存在的值了,如果存在则拒绝更新
         if (memberRolesService.selectByName(escapeName) != null) {
-            return ResultDTO.failureResult(ResponseCodeEnum.REPEAT_ADD);
+            return ResultDTO.failureResult(CommonEnum.REPEAT_ADD);
         }
         memberRoles.setMemberRoleName(escapeName);
         memberRoles.setMemberRoleId(escapeId);
         memberRolesService.update(memberRoles);
-        return ResultDTO.successResult(ResponseCodeEnum.UPDATE_SUCCESS);
+        return ResultDTO.successResult(CommonEnum.UPDATE_SUCCESS);
     }
 
     @RequestMapping(value = "/update.html/{memberRoleId}", method = RequestMethod.GET)
@@ -113,23 +114,23 @@ public class MemberRoleController extends BaseController {
     public ResultDTO insert(@RequestBody MemberRoles memberRoles) {
         String escapeName = HtmlUtils.htmlEscape(memberRoles.getMemberRoleName());
         if (escapeName.length() > ROLE_NAME_MAX_LENGTH) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_LENGTH_WRONG);
+            return ResultDTO.failureResult(FormEnum.FIELD_LENGTH_WRONG);
         }
         // 1.首先检查数据库是否存在要更新的数据记录
         if ("".equals(escapeName)) {
-            return ResultDTO.failureResult(ResponseCodeEnum.FIELD_NULL);
+            return ResultDTO.failureResult(FormEnum.FIELD_NULL);
         }
         // 2.再检查角色名字是否有空值
         if (memberRolesService.selectByName(escapeName) != null) {
-            return ResultDTO.failureResult(ResponseCodeEnum.REPEAT_ADD);
+            return ResultDTO.failureResult(CommonEnum.REPEAT_ADD);
         }
         // 3. 查询数据库中是否已经有存在的值了,如果存在则拒绝更新
         if (memberRolesService.selectByName(escapeName) != null) {
-            return ResultDTO.failureResult(ResponseCodeEnum.REPEAT_ADD);
+            return ResultDTO.failureResult(CommonEnum.REPEAT_ADD);
         }
         memberRoles.setMemberRoleName(escapeName);
         memberRolesService.insert(memberRoles);
-        return ResultDTO.successResult(ResponseCodeEnum.ADD_SUCCESS);
+        return ResultDTO.successResult(CommonEnum.ADD_SUCCESS);
     }
 
     @RequestMapping(value = "/insert.html", method = RequestMethod.GET)

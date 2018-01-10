@@ -168,11 +168,11 @@
         return oTableInit;
     };
 
-    function accountFormat(value, row, index) {
+    function accountFormat(code, row, index) {
         return row.historyAccountId.accountName;
     }
 
-    function dateFormat(value, row, index) {
+    function dateFormat(code, row, index) {
         var date = new Date(row.lastLoginTime);
         var Y = date.getFullYear() + '-';
         var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
@@ -185,11 +185,11 @@
 
 
     // 格式化状态
-    function statusFormatter(value, row, index) {
-        if (value == '1') {
+    function statusFormatter(code, row, index) {
+        if (code == '1') {
             return '<span class="label label-success">成功</span>';
         }
-        if (value == '0') {
+        if (code == '0') {
             return '<span class="label label-default">失败</span>';
         }
 

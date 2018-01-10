@@ -41,7 +41,7 @@
     <form>
         <div class="form-group">
             <label for="roleId"></label>
-            <input id="roleId" type="text" class="form-control" value="角色ID由系统自动生成" disabled>
+            <input id="roleId" type="text" class="form-control" code="角色ID由系统自动生成" disabled>
         </div>
         <div class="form-group">
             <label for="description">角色中文名字</label>
@@ -86,7 +86,7 @@
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);  //再执行关闭
                 }
-                else if (result.status === 006) {
+                else if (result.status === 110) {
                     window.parent.layer.msg('重复添加角色');
                 }
                 else if (result.status === 0x2) {

@@ -21,14 +21,14 @@
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
         <!-- loginUrl认证提交地址，如果没有认证将会请求此地址进行认证，请求此地址将由formAuthenticationFilter进行表单认证 -->
-        <property name="loginUrl" value="/base/loginPage.html"/>
-        <property name="successUrl" value="/base/goAdminPage.html"/>
+        <property name="loginUrl" code="/base/loginPage.html"/>
+        <property name="successUrl" code="/base/goAdminPage.html"/>
         <!--授权失败的地址-->
-        <property name="unauthorizedUrl" value="/base/errorPage.html"/>
+        <property name="unauthorizedUrl" code="/base/errorPage.html"/>
         <property name="filterChainDefinitions">
             <!-- -/**=authc 表示所有的url都必须认证通过才可以访问- -->
             <!--/**=anon 表示所有的url都可以匿名访问-->
-            <value>
+            <code>
                 <!--请求这个地址就自动退出-->
                 /base/logoutAction.do=logout
 
@@ -41,7 +41,7 @@
                 /base/logoutAction.do = anon
                 /account/update.html =anon
                 /** = authc
-            </value>
+            </code>
         </property>
     </bean>
 
@@ -51,7 +51,7 @@
     <!-- shiro的缓存管理器，然后需要将缓存管理器注入到安全管理其中  -->
     <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
         <!--classpath是缓存属性的配置文件  -->
-        <property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml"/>
+        <property name="cacheManagerConfigFile" code="classpath:ehcache-shiro.xml"/>
     </bean>
 
     <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
@@ -60,7 +60,7 @@
     <!-- AOP式方法级权限检查 -->
     <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
           depends-on="lifecycleBeanPostProcessor">
-        <property name="proxyTargetClass" value="true"/>
+        <property name="proxyTargetClass" code="true"/>
     </bean>
 
     <!--开启使用基于注解的开发-->
@@ -71,7 +71,7 @@
 
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="staticMethod"
-                  value="org.apache.shiro.SecurityUtils.setSecurityManager"/>
+                  code="org.apache.shiro.SecurityUtils.setSecurityManager"/>
         <property name="arguments" ref="securityManager"/>
     </bean>
 
@@ -79,23 +79,23 @@
     <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
         <property name="cacheManager" ref="cacheManager"/>
         <!-- session的失效时长，单位毫秒 -->
-        <property name="globalSessionTimeout" value="600000"/>
+        <property name="globalSessionTimeout" code="600000"/>
         <!-- 删除失效的session -->
-        <property name="deleteInvalidSessions" value="true"/>
+        <property name="deleteInvalidSessions" code="true"/>
     </bean>
 
     <!--sessionIdCookie：maxAge=-1表示浏览器关闭时失效此Cookie；
     rememberMeCookie：即记住我的Cookie，保存时长30天；-->
     <!-- 会话Cookie模板 -->
     <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-        <constructor-arg value="sid"/>
-        <property name="httpOnly" value="true"/>
-        <property name="maxAge" value="-1"/>
+        <constructor-arg code="sid"/>
+        <property name="httpOnly" code="true"/>
+        <property name="maxAge" code="-1"/>
     </bean>
     <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-        <constructor-arg value="rememberMe"/>
-        <property name="httpOnly" value="true"/>
-        <property name="maxAge" value="2592000"/><!-- 30天 -->
+        <constructor-arg code="rememberMe"/>
+        <property name="httpOnly" code="true"/>
+        <property name="maxAge" code="2592000"/><!-- 30天 -->
     </bean>
 
 </beans>  

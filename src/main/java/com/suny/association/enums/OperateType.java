@@ -10,28 +10,36 @@ public enum OperateType {
     /**
      * 插入操作
      */
-    INSERT(1),
+    INSERT(1,"插入"),
     /**
      * 删除操作
      */
-    DELETE(2),
+    DELETE(2,"删除"),
     /**
      * 更新操作
      */
-    UPDATE(3),
+    UPDATE(3,"更新"),
     /**
      * 查询操作
      */
-    SELECT(4);
+    SELECT(4,"查询");
 
-    private int value;
+    private int code;
 
-    OperateType(int value) {
+    private String value;
+
+    OperateType(int code, String value) {
+        this.code = code;
         this.value = value;
     }
 
+    public int getCode() {
+        return code;
+    }
 
-    public int getValue() {
+
+    public String getValue() {
         return value;
     }
+
 }

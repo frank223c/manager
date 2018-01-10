@@ -2,7 +2,7 @@ package com.suny.association.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.entity.dto.ResultDTO;
-import com.suny.association.enums.ResponseCodeEnum;
+import com.suny.association.enums.LoginEnum;
 import com.suny.association.entity.po.Account;
 import com.suny.association.entity.po.Member;
 import com.suny.association.service.interfaces.IAccountService;
@@ -99,7 +99,7 @@ public class BackedLoginController {
             String sessionCode = (String) request.getSession().getAttribute("code");
             //   1.3    匹配session里面的验证码跟表单上的验证码是否相等，这里为了开发方便就先关闭
             if (!ValidActionUtil.matchCode(formCode, sessionCode)) {
-                return ResultDTO.failureResult(ResponseCodeEnum.VALIDATE_CODE_ERROR);
+                return ResultDTO.failureResult(LoginEnum.VALIDATE_CODE_ERROR);
             }
             //   1.4   获取登录的结果,也就是带有ticket则表示登录成功了
             AtomicReference<Map<String, Object>> loginResult = loginService.login(username, password);
@@ -116,14 +116,14 @@ public class BackedLoginController {
                 //    1.4.4   把一些进入主页面需要的数据先放进去
                 saveUser(request, response, username);
                 logger.warn("登录成功了,给前端发送通知");
-                return ResultDTO.successResult(ResponseCodeEnum.LOGIN_SYSTEM);
+                return ResultDTO.successResult(LoginEnum.LOGIN_SYSTEM);
             }
             //   1.5   没有返回ticket就是登录失败了,可能是由于面膜错误,账号错误，账号密码不匹配，参数为空等等
-            return ResultDTO.failureResult(ResponseCodeEnum.LOGIN_FAILURE);
+            return ResultDTO.failureResult(LoginEnum.UNKNOWN_ERROR);
         }
         //   2.  重复提交表单的业务逻辑处理
         logger.warn("重复提交表单");
-        return ResultDTO.failureResult(ResponseCodeEnum.REPEAT_SUBMIT);
+        return ResultDTO.failureResult(LoginEnum.REPEAT_SUBMIT);
     }
 
 
@@ -186,10 +186,10 @@ public class BackedLoginController {
         if (session != null) {
             session.removeAttribute(ACCOUNT_ATTRIBUTE);
             session.removeAttribute(MEMBER_ATTRIBUTE);
-            return ResultDTO.successResult(ResponseCodeEnum.LOGOUT_SUCCESS);
+            return ResultDTO.successResult(LoginEnum.LOGOUT_SUCCESS);
         }
         request.getSession().removeAttribute(TICKET);
-        return ResultDTO.failureResult(ResponseCodeEnum.LOGOUT_FAIL);
+        return ResultDTO.failureResult(LoginEnum.LOGOUT_FAIL);
     }
 
 

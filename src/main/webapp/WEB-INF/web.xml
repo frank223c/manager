@@ -11,7 +11,7 @@
     <!--先执行spring容器，切记-->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:Spring/applicationContext*.xml</param-value>
+        <param-code>classpath:Spring/applicationContext*.xml</param-code>
     </context-param>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -68,7 +68,7 @@
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
         <init-param>
             <param-name>encoding</param-name>
-            <param-value>UTF-8</param-value>
+            <param-code>UTF-8</param-code>
         </init-param>
     </filter>
 
@@ -85,7 +85,7 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>classpath:Spring/applicationContext-SpringMVC.xml</param-value>
+            <param-code>classpath:Spring/applicationContext-SpringMVC.xml</param-code>
         </init-param>
 
     </servlet>

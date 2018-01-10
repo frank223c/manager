@@ -34,20 +34,20 @@
     <div class="form-group">
         <label for="permission_name" class="col-sm-2 control-label">权限名【必须为英文,符合shiro的规则】<strong
                 class="strongText">(必填)</strong></label>
-        <input class="form-control " value="" id="permission_name" name="permission_name">
+        <input class="form-control " code="" id="permission_name" name="permission_name">
     </div>
 
 
     <div class="form-group">
         <label for="permission_description" class="col-sm-2 control-label">权限中文解释<strong
                 class="strongText">(选填，建议填写)</strong></label>
-        <input class="form-control " value="" id="permission_description" name="permission_description">
+        <input class="form-control " code="" id="permission_description" name="permission_description">
     </div>
     <div class="form-group">
         <label for="permission_status" class="col-sm-2 control-label">状态</label>
         <select class="form-control" id="permission_status" name="permission_status">
-            <option value="1">正常</option>
-            <option value="0">冻结</option>
+            <option code="1">正常</option>
+            <option code="0">冻结</option>
 
         </select>
     </div>
@@ -100,7 +100,7 @@
                             //当你在iframe页面关闭自身时
                             window.parent.layer.alert('必要字段为空，请检查', {icon: 6});
                         }
-                        else if (statusCode == 006) {
+                        else if (statusCode == 110) {
                             window.parent.layer.alert('权限名重复，请重新填写', {icon: 6});
                             $("#permissionName").focus();
                             $('#permissionName').css('border', '2px solid red');
