@@ -1,6 +1,6 @@
 package com.suny.association.service.impl;
 
-import com.suny.association.enums.OperateType;
+import com.suny.association.enums.OperateTypeEnum;
 import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.LoginTicketMapper;
 import com.suny.association.entity.po.Account;
@@ -64,14 +64,14 @@ public class LoginServiceImpl implements ILoginService {
                     map.get().put(TICKET, loginTicket.getTicket());
                 } else {
                     //  2.2.2  数据库中存在已经过期的ticket,为了不删除ticket就直接更新过期时间跟状态,就直接更新
-                    operateTicket(account.getAccountId(), OperateType.UPDATE);
+                    operateTicket(account.getAccountId(), OperateTypeEnum.UPDATE);
                     //  2.2.3   把ticket返回给Controller
                     map.get().put(TICKET, loginTicketMapper.selectByAccountId(account.getAccountId()));
                 }
                 //  2.3  数据库中不存在对应用户的ticket
             } else {
                 //          2.3.1 对登录的用户添加一个ticket
-                operateTicket(account.getAccountId(), OperateType.INSERT);
+                operateTicket(account.getAccountId(), OperateTypeEnum.INSERT);
                 map.get().put(TICKET, loginTicketMapper.selectByAccountId(account.getAccountId()));
             }
             //  2.4 只要账号密码验证成功的话我们就可以说就已经是登录成功了的
@@ -91,7 +91,7 @@ public class LoginServiceImpl implements ILoginService {
         return !("".equals(param) || param.length() == 0);
     }
 
-    private void operateTicket(long accountId, OperateType operateType) {
+    private void operateTicket(long accountId, OperateTypeEnum operateTypeEnum) {
         LoginTicket loginTicket = new LoginTicket();
         loginTicket.setAccountId(accountId);
         LocalDateTime expired = LocalDateTime.now().plusHours(148);
@@ -99,10 +99,10 @@ public class LoginServiceImpl implements ILoginService {
         // 状态为0则表示不过期，过期则为0
         loginTicket.setStatus(0);
         loginTicket.setTicket(UUID.randomUUID().toString().replaceAll("-", ""));
-        if (operateType == OperateType.INSERT) {
+        if (operateTypeEnum == OperateTypeEnum.INSERT) {
             logger.warn("插入一条ticket值{}",loginTicket.toString());
             loginTicketMapper.insert(loginTicket);
-        } else if (operateType == OperateType.UPDATE) {
+        } else if (operateTypeEnum == OperateTypeEnum.UPDATE) {
              logger.warn("更新数据库中的ticket值{}",loginTicket.toString());
             loginTicketMapper.update(loginTicket);
         }

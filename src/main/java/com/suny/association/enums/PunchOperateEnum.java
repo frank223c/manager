@@ -34,4 +34,9 @@ public enum PunchOperateEnum {
     public String getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return code + "," + value;
+    }
 }

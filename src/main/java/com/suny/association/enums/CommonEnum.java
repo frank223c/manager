@@ -48,7 +48,7 @@ public enum CommonEnum {
 
     @Override
     public String toString() {
-        return "系统代码:" + code + "," + value;
+        return code + "," + value;
     }
 
 

@@ -51,7 +51,7 @@
             <select class="form-control" id="selectMemberGradeOption" name="memberGradeNumber">
                 <c:forEach items="${memberGradeList}" var="memberGrade">
                     <option name="" code="${memberGrade}">
-                        <c:out code="${memberGrade}届"/>
+                        <c:out value="${memberGrade}届"/>
                     </option>
                 </c:forEach>
             </select>
@@ -64,7 +64,7 @@
                 <option code="">自己就是管理</option>
                 <c:forEach items="${managerList}" var="manager">
                     <option code="${manager.memberId}" name="memberManagerOption">
-                        <c:out code="${manager.memberName}"/>
+                        <c:out value="${manager.memberName}"/>
                     </option>
                 </c:forEach>
             </select>
@@ -74,7 +74,7 @@
             <select class="form-control" id="selectDepartmentOption" name="memberDepartmentId">
                 <c:forEach items="${departmentList}" var="role">
                     <option code="${role.departmentId}" name="departmentOption">
-                        <c:out code="${role.departmentName}"/>
+                        <c:out value="${role.departmentName}"/>
                     </option>
                 </c:forEach>
             </select>
@@ -92,7 +92,7 @@
             <select class="form-control" id="selectMemberRoleOption" name="memberRoleId">
                 <c:forEach items="${memberRolesList}" var="memberRole">
                     <option code="${memberRole.memberRoleId}">
-                        <c:out code="${memberRole.memberRoleName}"/></option>
+                        <c:out value="${memberRole.memberRoleName}"/></option>
                 </c:forEach>
 
 

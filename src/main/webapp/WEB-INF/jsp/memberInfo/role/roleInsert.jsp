@@ -41,7 +41,7 @@
     <form>
         <div class="form-group">
             <label for="roleId"></label>
-            <input id="roleId" type="text" class="form-control" code="角色ID由系统自动生成" disabled>
+            <input id="roleId" type="text" class="form-control" value="角色ID由系统自动生成" disabled>
         </div>
         <div class="form-group">
             <label for="memberRoleName">角色名字</label>

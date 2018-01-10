@@ -35,7 +35,7 @@
         <%--<a id="goBack" href="javascript:;" onclick="logoutAction()"><i class="zmdi zmdi-run"></i> 强制退出</a></a>--%>
     </div>
 
-    <input type="hidden" name="token" id="token" code="${sessionScope.token}">
+    <input type="hidden" name="token" id="token" VALUE="${sessionScope.token}">
 
     <input type="text" id="userName" name="LoginForm[username]" class="txt_input txt_input2" placeholder="请输入用户名"
            autocomplete="off">
@@ -256,10 +256,10 @@
                         loginBtn.attr("disabled", "true");
                         //登录成功
                         layer.msg('登陆成功了', function () {
-                            layer.msg('正在进入主页面', {
+                           /* layer.msg('正在进入主页面', {
                                 icon: 16
                                 , shade: 0.01
-                            });
+                            });*/
                             goAdminPage();
                         });
                     } else if (statusCode === 996 || statusCode === 1) {

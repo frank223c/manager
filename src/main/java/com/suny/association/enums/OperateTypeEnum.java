@@ -6,7 +6,7 @@ package com.suny.association.enums;
  * @author 孙建荣
  * @date 17-9-21
  */
-public enum OperateType {
+public enum OperateTypeEnum {
     /**
      * 插入操作
      */
@@ -28,7 +28,7 @@ public enum OperateType {
 
     private String value;
 
-    OperateType(int code, String value) {
+    OperateTypeEnum(int code, String value) {
         this.code = code;
         this.value = value;
     }
@@ -40,6 +40,11 @@ public enum OperateType {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return code + "," + value;
     }
 
 }

@@ -58,7 +58,7 @@ public class ResultDTO {
 
 
     /**
-     * 一个抽取出来的公共操作方法，用于设置响应的status跟message
+     * 一个抽取出来的公共操作方法，用于设置响应的status跟message,依赖于枚举类的toString()方法
      *
      * @param enumObject 传过来的枚举值
      * @return JSONResponseUtil实体
@@ -67,12 +67,10 @@ public class ResultDTO {
         ResultDTO jsonResult = new ResultDTO();
         //获取枚举值的toString方法后的字符值
         String errorMessage = enumObject.toString();
-
         // 返回的toString字符值中有一个状态码，下面把这个状态码抓取出来返回给前端
         int afterErrorCode = errorMessage.lastIndexOf(',');
-        String errorCodeString = errorMessage.substring(5, afterErrorCode);
+        String errorCodeString = errorMessage.substring(0, afterErrorCode);
         int errorCodeNumber = Integer.parseInt(errorCodeString);
-
         // 设置返回给前端的状态码与及消息
         jsonResult.setStatus(errorCodeNumber);
         jsonResult.setMessage(errorMessage);
