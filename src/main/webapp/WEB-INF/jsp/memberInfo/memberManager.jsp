@@ -41,14 +41,14 @@
                     <label class="control-label col-sm-1" for="txt_search_status"></label>
                     <div class="btn-group" id="txt_search_status">
                         <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" code="2" checked="checked">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="2" checked="checked">
                             全部状态
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" code="1"> 正常状态
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="1"> 正常状态
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" code="0"> 冻结状态
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="0"> 冻结状态
                         </label>
                     </div>
                     <div class="col-sm-4" style="text-align:left;">

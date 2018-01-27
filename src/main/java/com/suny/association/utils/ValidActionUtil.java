@@ -13,17 +13,6 @@ import java.util.regex.Pattern;
  */
 public class ValidActionUtil {
 
-    /**
-     * 匹配表单填写的验证码跟session中储存的验证码
-     *
-     * @param formCode    表单提交的验证码
-     * @param sessionCode session里面报存的验证码
-     * @return 比较的结果
-     */
-    public static boolean matchCode(String formCode, String sessionCode) {
-//        return !formCode.equals("") && sessionCode.equals(formCode);
-        return true;
-    }
 
 
     /**

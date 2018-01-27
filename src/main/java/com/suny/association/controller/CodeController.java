@@ -101,7 +101,7 @@ public class CodeController {
         }
         // 将四位数字的验证码保存到Session中。
         HttpSession session = req.getSession();
-        logger.warn("generation code is : {} ",randomCode);
+        logger.warn("generation code is : {} ", randomCode);
         session.setAttribute("code", randomCode.toString());
 
         // 禁止图像缓存。
@@ -130,7 +130,8 @@ public class CodeController {
     public ResultDTO checkCode(HttpServletRequest request,
                                @RequestParam String formCode) {
         String sessionCode = (String) request.getSession().getAttribute("code");
-        if (ValidActionUtil.matchCode(formCode, sessionCode)) {
+        logger.info("表单传过来的验证码为{},session里面的验证码为{}", formCode, sessionCode);
+        if (!"".equals(formCode) && sessionCode.equals(formCode)) {
             return ResultDTO.successResult(LoginEnum.VALIDATE_CODE_SUCCESS);
         }
         return ResultDTO.failureResult(LoginEnum.VALIDATE_CODE_ERROR);

@@ -66,14 +66,14 @@ public class ResultDTO {
     private static ResultDTO setStatusAndMessage(Object enumObject) {
         ResultDTO jsonResult = new ResultDTO();
         //获取枚举值的toString方法后的字符值
-        String errorMessage = enumObject.toString();
+        String message = enumObject.toString();
         // 返回的toString字符值中有一个状态码，下面把这个状态码抓取出来返回给前端
-        int afterErrorCode = errorMessage.lastIndexOf(',');
-        String errorCodeString = errorMessage.substring(0, afterErrorCode);
-        int errorCodeNumber = Integer.parseInt(errorCodeString);
+        int afterCode = message.lastIndexOf(',');
+        String codeString = message.substring(0, afterCode);
+        int codeNumber = Integer.parseInt(codeString);
         // 设置返回给前端的状态码与及消息
-        jsonResult.setStatus(errorCodeNumber);
-        jsonResult.setMessage(errorMessage);
+        jsonResult.setStatus(codeNumber);
+        jsonResult.setMessage(message);
         return jsonResult;
     }
 

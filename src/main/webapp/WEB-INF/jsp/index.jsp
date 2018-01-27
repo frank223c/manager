@@ -58,7 +58,7 @@
     <p id="error1"></p> <!-- 用户名密码错误提示 -->
     <p id="error2"></p> <!-- 验证码错误提示 -->
     <p id="error3"></p> <!-- 用户名提示 -->
-    <button type="button" href="javascript:;" id="loginBtn" onclick="checkForm()">登录</button>
+    <button type="button" href="javascript:;" id="loginBtn" onclick="sendLoginInfo()">登录</button>
     <a id="forget" href="#">忘记密码 ?</a>
     <a id="set_username" href="#">学号登录入口 ?</a>
 </div>
@@ -75,34 +75,23 @@
 <script type="text/javascript" src="${basePath}/js/jquery.js"></script>
 <script src="${basePath}/plugins/layer/layer.js"></script>
 <script>
-    var userName;
-    userName = $("#userName");
+    var userName = $("#userName");
+    var passWord = $('#passWord');
+    var code = $('#code');
+
     var userNameValue;
-
-    var passWord;
-    passWord = $('#passWord');
     var passWordValue;
-
-    var code;
-    code = $('#code');
     var codeValue;
 
-    var error1;
-    error1 = $('#error1');
-    var error1Value;
-    error1Value = error1.val();
-    var error2;
-    error2 = $('#error2');
-    var error2Value;
-    error2Value = error2.val();
-    var error3;
-    error3 = $('#error3');
-    var error3Value;
-    error3Value = error3.val();
 
-    var tokenVal;
+    var error1 = $('#error1');
+    var error1Value = error1.val();
+    var error2 = $('#error2');
+    var error2Value = error2.val();
+    var error3 = $('#error3');
+    var error3Value = error3.val();
 
-    tokenVal = $("#token").val();
+    var tokenVal = $("#token").val();
 
     //切换验证码
     $("#codePanel").click(function () {
@@ -180,60 +169,57 @@
             code.css('border', '2px solid red');
             return false;
         }
-
-        //当所有的框都填满了的时候首先检查验证码
-        checkCode();
-
+        sendLoginInfo();
     }
 
     var loginBtn = $("#loginBtn");
     //验证码验证
-    function checkCode() {
-        var flag = 1;
-        if (flag) {
-            $.ajax({
-                url: '${basePath}/code/checkCode',
-                type: 'post',
-                data: {formCode: codeValue},
-                beforeSend: function () {
-                    flag = 0;
-                    loginBtn.attr("disabled", "true");
-                    loginBtn.text("登录验证中");
-                },
-                success: function (result) {
-                    if (result.status === 991) {
-                        layer.msg('验证码错了。。', {icon: 5});
-                        error2.text('验证码错误');
-                        emptyInputValue(code);
-                        code.focus();
-                        code.css('border', '2px solid red');
-                        refresh();
-                        loginBtn.text("登录");
-                        loginBtn.removeAttr("disabled");
-                        return false;
-                    }
-                    else {
-                        // 现在开始发送登陆请求
-                        sendLoginInfo();
-                    }
-                    flag = 1;
-                    loginBtn.text("登录");
-                    loginBtn.removeAttr("disabled");
-                },
-                error: function () {
-                    loginBtn.text("登录");
-                    loginBtn.removeAttr("disabled");
-                    layer.msg('服务器开小差了,出了点小问题。。', {icon: 5});
-                }
-            });
+    /*function checkCode() {
+     var flag = 1;
+     if (flag) {
+     $.ajax({
+     url: '/code/checkCode',
+     type: 'post',
+     data: {formCode: codeValue},
+     beforeSend: function () {
+     flag = 0;
+     loginBtn.attr("disabled", "true");
+     loginBtn.text("登录验证中");
+     },
+     success: function (result) {
+     if (result.status === 991) {
+     layer.msg('验证码错了。。', {icon: 5});
+     error2.text('验证码错误');
+     emptyInputValue(code);
+     code.focus();
+     code.css('border', '2px solid red');
+     refresh();
+     loginBtn.text("登录");
+     loginBtn.removeAttr("disabled");
+     return false;
+     }
+     else {
+     // 现在开始发送登陆请求
+     sendLoginInfo();
+     }
+     flag = 1;
+     loginBtn.text("登录");
+     loginBtn.removeAttr("disabled");
+     },
+     error: function () {
+     loginBtn.text("登录");
+     loginBtn.removeAttr("disabled");
+     layer.msg('服务器开小差了,出了点小问题。。', {icon: 5});
+     }
+     });
 
-        }
-    }
+     }
+     }*/
     function sendLoginInfo() {
         var param = {
-            username: userNameValue,
-            password: passWordValue,
-            formCode: codeValue,
+            username: userName.val(),
+            password: passWord.val(),
+            formCode: code.val(),
             token: tokenVal
         };
         var flag = 1;
@@ -256,10 +242,10 @@
                         loginBtn.attr("disabled", "true");
                         //登录成功
                         layer.msg('登陆成功了', function () {
-                           /* layer.msg('正在进入主页面', {
-                                icon: 16
-                                , shade: 0.01
-                            });*/
+                            /* layer.msg('正在进入主页面', {
+                             icon: 16
+                             , shade: 0.01
+                             });*/
                             goAdminPage();
                         });
                     } else if (statusCode === 996 || statusCode === 1) {
@@ -272,9 +258,13 @@
                     } else if (statusCode === 998) {
                         layer.alert('您已经登录过了，请不要重复登录,点击强制退出清除您的会话');
                     } else if (statusCode === 988) {
-                        layer.alert('重复提交表单，速度太快了。。。。。刷新页面后再尝试登陆');
+                        layer.msg('重复提交表单，速度太快了。。。。。请再次再尝试登陆', {icon: 5});
+                        //切换验证码
+                        $("#codePanel").attr("src", '${basePath}/code/generateCode?rand=' + Math.random());
                     } else if (statusCode === 991) {
                         layer.msg('验证码错误', {icon: 5});
+                        //切换验证码
+                        $("#codePanel").attr("src", '${basePath}/code/generateCode?rand=' + Math.random());
                     }
                     else {
                         layer.alert('检查下你的用户名跟密码尝试重新登录');

@@ -261,7 +261,7 @@ public class MemberController extends BaseController {
     public Map<Object, Object> selectAll(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                          @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
                                          @RequestParam(value = "departmentname", required = false) String departmentname,
-                                         @RequestParam(value = "status", required = false) int status) {
+                                         @RequestParam(value = "status",defaultValue = "2",required = false) int status) {
         Boolean memberStatus = true;
         Map<Object, Object> tableDate = new HashMap<>(16);
         Member member = new Member();

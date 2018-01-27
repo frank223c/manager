@@ -98,7 +98,7 @@ public class BackedLoginController {
             //   1.2    获取session中保存的本次服务器下发的验证码
             String sessionCode = (String) request.getSession().getAttribute("code");
             //   1.3    匹配session里面的验证码跟表单上的验证码是否相等，这里为了开发方便就先关闭
-            if (!ValidActionUtil.matchCode(formCode, sessionCode)) {
+            if ("".equals(formCode) || !sessionCode.equals(formCode)) {
                 return ResultDTO.failureResult(LoginEnum.VALIDATE_CODE_ERROR);
             }
             //   1.4   获取登录的结果,也就是带有ticket则表示登录成功了
