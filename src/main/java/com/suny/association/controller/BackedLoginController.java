@@ -91,16 +91,18 @@ public class BackedLoginController {
                                  @RequestParam("token") String token,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
+        //   1.2    获取session中保存的本次服务器下发的验证码
+        String sessionCode = (String) request.getSession().getAttribute("code");
+        //   1.3    匹配session里面的验证码跟表单上的验证码是否相等，这里为了开发方便就先关闭
+        if ("".equals(formCode) || !sessionCode.equals(formCode)) {
+            return ResultDTO.failureResult(LoginEnum.VALIDATE_CODE_ERROR);
+        }
+
         //    1.  首先验证表单提交的token跟session里面的token是否相等，相等就说明不是重复提交
         if (!isRepeatSubmit(token, request)) {
             //   1.1   把session里面的token标记先移除
             request.getSession().removeAttribute(TOKEN);
-            //   1.2    获取session中保存的本次服务器下发的验证码
-            String sessionCode = (String) request.getSession().getAttribute("code");
-            //   1.3    匹配session里面的验证码跟表单上的验证码是否相等，这里为了开发方便就先关闭
-            if ("".equals(formCode) || !sessionCode.equals(formCode)) {
-                return ResultDTO.failureResult(LoginEnum.VALIDATE_CODE_ERROR);
-            }
+
             //   1.4   获取登录的结果,也就是带有ticket则表示登录成功了
             AtomicReference<Map<String, Object>> loginResult = loginService.login(username, password);
             if (loginResult.get().containsKey(TICKET)) {

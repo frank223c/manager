@@ -2,6 +2,7 @@ package com.suny.association.controller;
 
 import com.suny.association.entity.dto.ResultDTO;
 import com.suny.association.enums.LoginEnum;
+import com.suny.association.utils.TokenProcessor;
 import com.suny.association.utils.ValidActionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import java.util.Random;
 @Controller
 public class CodeController {
     private static final int INTERFERING_LINE_COUNT = 40;
+    private static final String TOKEN = "token";
     private static Logger logger = LoggerFactory.getLogger(CodeController.class);
     private char[] codeSequence = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
             'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
@@ -137,5 +139,16 @@ public class CodeController {
         return ResultDTO.failureResult(LoginEnum.VALIDATE_CODE_ERROR);
     }
 
+    @RequestMapping("/getToken")
+    @ResponseBody
+    public String getToken(HttpServletRequest request) {
+        //   1.1   把session里面的token标记先移除
+        request.getSession().removeAttribute(TOKEN);
+        //    1.2 产生个新的token
+        String token = TokenProcessor.getInstance().makeToken();
+        request.getSession().setAttribute(TOKEN, token);
+        logger.info("产生的令牌值是 {}", token);
+        return token;
+    }
 
 }
