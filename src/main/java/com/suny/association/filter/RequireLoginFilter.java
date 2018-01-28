@@ -10,11 +10,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * 强制登录过滤器
  *
  * @author 孙建荣
  * @date 17-9-20
@@ -23,9 +25,8 @@ public class RequireLoginFilter implements Filter {
 
     private static Logger logger = LoggerFactory.getLogger(RequireLoginFilter.class);
     private static final String EXECUTE_NEXT_FILTER = "EXECUTE_NEXT_FILTER";
-    private static final String PORTAL_LOGIN_URL = "/login";
+    private static final String PORTAL_LOGIN_URL = "/login.html";
     private LoginTicketMapper loginTicketMapper;
-    private AccountMapper accountMapper;
 
 
     /**
@@ -38,7 +39,6 @@ public class RequireLoginFilter implements Filter {
         ServletContext servletContext = filterConfig.getServletContext();
         ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         loginTicketMapper = (LoginTicketMapper) context.getBean("loginTicketMapper");
-        accountMapper = (AccountMapper) context.getBean("accountMapper");
         logger.info("===============登录验证过滤器开始初始化============");
     }
 
@@ -50,13 +50,9 @@ public class RequireLoginFilter implements Filter {
         // 1.判断是否要继续执行下一个Filter,executeNextFilter值为false的话就直接放行到下一个Filter
         Boolean executeNextFilter = (Boolean) req.getAttribute("EXECUTE_NEXT_FILTER");
         if (!executeNextFilter) {
-            // 1.1 如果发现了IS_LOGIN这个标记为true的话就说明是自动登录状态
+            // 1.1 如果发现了EXECUTE_NEXT_FILTERN这个标记为true的话就说明是需要直接放行状态
             logger.info("【RequireLoginFilter】当前过滤器直接放行");
             chain.doFilter(req, resp);
-        } else if (req.getAttribute("Account") != null ) {
-            // 如果session中由用户就直接放行到下一个
-            request.setAttribute(EXECUTE_NEXT_FILTER, true);
-            chain.doFilter(request, response);
         } else {
             // 2.   判断是否有登录标记ticket,ticket是从Cookie中进行获取,循环遍历验证室友存在ticket值
             String ticket = LoginTicketUtil.getTicket(request);
@@ -66,7 +62,7 @@ public class RequireLoginFilter implements Filter {
                 LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
                 // 3.2  如果查出来数据库里面没有这个ticket或者是已经过期了的话就让它重新登录
                 if (loginTicket == null || LoginTicketUtil.isExpired(loginTicket)) {
-                    response.sendRedirect(((HttpServletRequest) req).getContextPath()+PORTAL_LOGIN_URL);
+                    response.sendRedirect(((HttpServletRequest) req).getContextPath() + PORTAL_LOGIN_URL);
                     logger.warn("【RequireLoginFilter】ticket过期了或者是前端伪造的了,强制需要重新登录,重定向到登录页面");
                     req.setAttribute(EXECUTE_NEXT_FILTER, false);
                     chain.doFilter(req, resp);

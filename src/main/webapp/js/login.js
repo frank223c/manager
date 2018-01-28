@@ -117,7 +117,7 @@ function sendLoginInfo() {
                     flag = 0;
                     //登录成功
                     layer.msg('登陆成功了', function () {
-                        window.parent.location.href = getRootPath() + "/userCenter.html";
+                        window.parent.location.href = getRootPath() + "/admin.html";
                     });
                 } else if (statusCode === 996 || statusCode === 1) {
                     layer.msg('用户名或者密码错误。。', {icon: 5});
@@ -167,7 +167,7 @@ function enableBtn(buttonElement) {
 
 //切换验证码
 function refreshValidateCode() {
-    validateCodePicture.attr("src", getRootPath() + '/code/generateCode?rand=' + Math.random());
+    validateCodePicture.attr("src", getRootPath() + '/code/imageCode?rand=' + Math.random());
     validateCodeElement.val('');
 }
 

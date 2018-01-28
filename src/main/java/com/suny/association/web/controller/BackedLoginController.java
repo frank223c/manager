@@ -2,11 +2,14 @@ package com.suny.association.web.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.entity.dto.ResultDTO;
-import com.suny.association.enums.LoginEnum;
 import com.suny.association.entity.po.Account;
+import com.suny.association.entity.po.LoginTicket;
 import com.suny.association.entity.po.Member;
+import com.suny.association.enums.LoginEnum;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.ILoginService;
+import com.suny.association.service.interfaces.system.ILoginticketService;
+import com.suny.association.utils.LoginTicketUtil;
 import com.suny.association.utils.TokenProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,41 +25,43 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Comments:   基础公共Controller
  *
  * @author :   孙建荣
- * Create Date: 2017/03/05 11:05
+ *         Create Date: 2017/03/05 11:05
  */
 @Controller
 public class BackedLoginController {
     private static Logger logger = LoggerFactory.getLogger(BackedLoginController.class);
     private static final String TICKET = "ticket";
-    private static final String ACCOUNT_ATTRIBUTE="account";
-    private static final String MEMBER_ATTRIBUTE="member";
-    private static final String USER_SUBJECT_NAME="account";
+    private static final String ACCOUNT_ATTRIBUTE = "account";
+    private static final String MEMBER_ATTRIBUTE = "member";
+    private static final String USER_SUBJECT_NAME = "account";
     private final IAccountService accountService;
-
-
     private final ILoginService loginService;
-
+    private final ILoginticketService loginticketService;
     private static final String TOKEN = "token";
 
     @Autowired
-    public BackedLoginController(IAccountService accountService, ILoginService loginService) {
+    public BackedLoginController(IAccountService accountService, ILoginService loginService, ILoginticketService loginticketService) {
         this.accountService = accountService;
         this.loginService = loginService;
+        this.loginticketService = loginticketService;
     }
 
 
     /**
      * 登录页面
      */
-    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/login.html"}, method = RequestMethod.GET)
     public String backendLogin(HttpServletRequest request) {
+        if (hasValidTicket(request)) {
+            return "redirect:admin.html";
+        }
         String token = TokenProcessor.getInstance().makeToken();
         request.getSession().setAttribute(TOKEN, token);
         logger.info("产生的令牌值是 {}", token);
@@ -92,7 +97,7 @@ public class BackedLoginController {
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
         //   1.2    获取session中保存的本次服务器下发的验证码
-        String sessionCode = (String) request.getSession().getAttribute("code");
+        String sessionCode = (String) request.getSession().getAttribute("imageCode");
         //   1.3    匹配session里面的验证码跟表单上的验证码是否相等，这里为了开发方便就先关闭
         if ("".equals(formCode) || !sessionCode.equals(formCode)) {
             return ResultDTO.failureResult(LoginEnum.VALIDATE_CODE_ERROR);
@@ -102,12 +107,11 @@ public class BackedLoginController {
         if (!isRepeatSubmit(token, request)) {
             //   1.1   把session里面的token标记先移除
             request.getSession().removeAttribute(TOKEN);
-
             //   1.4   获取登录的结果,也就是带有ticket则表示登录成功了
-            AtomicReference<Map<String, Object>> loginResult = loginService.login(username, password);
-            if (loginResult.get().containsKey(TICKET)) {
+            Map<String, Object> loginResult = loginService.login(username, password);
+            if (loginResult.containsKey(TICKET)) {
                 //   1.4.1    把获取到的ticket放到Cookie中去
-                String ticket = (String) loginResult.get().get(TICKET);
+                String ticket = (String) loginResult.get(TICKET);
                 Cookie cookie = new Cookie(TICKET, ticket);
                 cookie.setPath("/");
                 if (rememberMe) {
@@ -142,10 +146,7 @@ public class BackedLoginController {
             return true;
         }
         String sessionToken = (String) request.getSession().getAttribute(TOKEN);
-        if (sessionToken == null) {
-            return true;
-        }
-        return sessionToken.equals(token) ? false : false;
+        return sessionToken == null || (sessionToken.equals(token) ? false : false);
     }
 
 
@@ -168,12 +169,25 @@ public class BackedLoginController {
      *
      * @return 管理员中心
      */
-    @RequestMapping(value = {"/"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/", "/admin.html"}, method = RequestMethod.GET)
     public ModelAndView userCenter(HttpServletRequest request) {
-        if(request.getSession().getAttribute(USER_SUBJECT_NAME) != null){
-            return new ModelAndView("backend/userCenter");
+        if (hasValidTicket(request)) {
+            return new ModelAndView("backend/admin");
         }
-        return new ModelAndView("redirect:/login");
+        // ticket过期或者是没有ticket就直接登录去
+        return new ModelAndView("redirect:/login.html");
+    }
+
+    /**
+     * 判断ticket是否有效
+     *
+     * @param request 请求
+     * @return 有效则为true, 无效则为false
+     */
+    private boolean hasValidTicket(HttpServletRequest request) {
+        String ticket = LoginTicketUtil.getTicket(request);
+        LoginTicket loginTicket = loginticketService.selectByTicket(ticket);
+        return loginTicket.getExpired().isAfter(LocalDateTime.now());
     }
 
 

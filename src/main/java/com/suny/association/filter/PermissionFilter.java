@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class PermissionFilter implements Filter {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(PermissionFilter.class);
     private static final String IS_LOGIN = "IS_LOGIN";
-    private static final String PORTAL_LOGIN_URL = "/login.jsp";
+    private static final String PORTAL_LOGIN_URL = "/login.html";
     private static final String NO_PERMISSION = "/403.jsp";
     private IPermissionAllotService permissionAllotService;
     private IAccessPermissionService accessPermissionService;

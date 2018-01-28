@@ -11,5 +11,5 @@ import java.util.concurrent.atomic.AtomicReference;
  * on 17-9-21.上午8:07
  */
 public interface ILoginService extends IBaseService<LoginTicket> {
-    AtomicReference<Map<String, Object>> login(String username, String password);
+   Map<String, Object> login(String username, String password);
 }

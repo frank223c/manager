@@ -52,7 +52,7 @@
             <div style="float:left;width:100px; margin-left: 13px; height:42px;">
                 <img style="width:100px; height:42px; cursor: pointer;" title="点击刷新" id="codePicture"
                      onclick="refreshValidateCode()"
-                     src="${basePath}/code/generateCode"/>
+                     src="${basePath}/code/imageCode"/>
             </div>
         </div>
 

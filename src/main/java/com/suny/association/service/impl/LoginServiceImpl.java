@@ -42,13 +42,13 @@ public class LoginServiceImpl implements ILoginService {
     }
 
     @Override
-    public AtomicReference<Map<String, Object>> login(String username, String password) {
+    public Map<String, Object> login(String username, String password) {
         //  1. 首先对参数进行各种非空判断,如果违规就直接返回给Controller
-        AtomicReference<Map<String, Object>> map = new AtomicReference<>(new HashMap<>(16));
+        Map<String, Object> map = new HashMap<>(16);
         if (!(validParam(username) || validParam(password))) {
             //   1.1 登录失败也保存登录日志,这样可与从数据库中获取短时间内登录次数非常多的账号
             loginHistoryService.saveLoginLog(username, false);
-            map.get().put("msg", "参数不能为空");
+            map.put("msg", "参数不能为空");
             return map;
         }
         //  2.     ==========账号密码匹配成功的业务逻辑=============
@@ -61,18 +61,18 @@ public class LoginServiceImpl implements ILoginService {
                 //  2.2.1  数据库中存在不过期的ticket,添加到Map里面返回给Controller
                 if (loginTicket.getExpired().isAfter(LocalDateTime.now())) {
                     // 把ticket添加到Redis里面
-                    map.get().put(TICKET, loginTicket.getTicket());
+                    map.put(TICKET, loginTicket.getTicket());
                 } else {
                     //  2.2.2  数据库中存在已经过期的ticket,为了不删除ticket就直接更新过期时间跟状态,就直接更新
                     operateTicket(account.getAccountId(), OperateTypeEnum.UPDATE);
                     //  2.2.3   把ticket返回给Controller
-                    map.get().put(TICKET, loginTicketMapper.selectByAccountId(account.getAccountId()));
+                    map.put(TICKET, loginTicketMapper.selectByAccountId(account.getAccountId()));
                 }
                 //  2.3  数据库中不存在对应用户的ticket
             } else {
                 //          2.3.1 对登录的用户添加一个ticket
                 operateTicket(account.getAccountId(), OperateTypeEnum.INSERT);
-                map.get().put(TICKET, loginTicketMapper.selectByAccountId(account.getAccountId()));
+                map.put(TICKET, loginTicketMapper.selectByAccountId(account.getAccountId()));
             }
             //  2.4 只要账号密码验证成功的话我们就可以说就已经是登录成功了的
             loginHistoryService.saveLoginLog(username, true);
@@ -82,7 +82,7 @@ public class LoginServiceImpl implements ILoginService {
         //  3.1    保存登录失败的日志信息
         loginHistoryService.saveLoginLog(username, false);
         //  3.1.2    向controller返回信息
-        map.get().put("msg", "账号密码匹配失败");
+        map.put("msg", "账号密码匹配失败");
         return map;
     }
 

@@ -56,13 +56,7 @@ public class ImageCodeGeneratorImpl implements ValidateCodeGenerator {
 
         // 随机产生40条干扰线，使图象中的认证码不易被其它程序探测到。
         gd.setColor(Color.BLACK);
-        for (int i = 0; i < INTERFERING_LINE_COUNT; i++) {
-            int x = random.nextInt(width);
-            int y = random.nextInt(height);
-            int xl = random.nextInt(12);
-            int yl = random.nextInt(12);
-            gd.drawLine(x, y, x + xl, y + yl);
-        }
+        interferenceLine(width, height, gd, random);
 
         // randomCode用于保存随机产生的验证码，以便用户登录后进行验证。
         randomCode = new StringBuilder();
@@ -91,6 +85,16 @@ public class ImageCodeGeneratorImpl implements ValidateCodeGenerator {
         }
 
         return buffImg;
+    }
+
+    private void interferenceLine(int width, int height, Graphics gd, Random random) {
+        for (int i = 0; i < INTERFERING_LINE_COUNT; i++) {
+            int x = random.nextInt(width);
+            int y = random.nextInt(height);
+            int xl = random.nextInt(12);
+            int yl = random.nextInt(12);
+            gd.drawLine(x, y, x + xl, y + yl);
+        }
     }
 
 
