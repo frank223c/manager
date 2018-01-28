@@ -23,7 +23,7 @@ public class RequireLoginFilter implements Filter {
 
     private static Logger logger = LoggerFactory.getLogger(RequireLoginFilter.class);
     private static final String EXECUTE_NEXT_FILTER = "EXECUTE_NEXT_FILTER";
-    private static final String PORTAL_LOGIN_URL = "/index.html";
+    private static final String PORTAL_LOGIN_URL = "/login";
     private LoginTicketMapper loginTicketMapper;
     private AccountMapper accountMapper;
 

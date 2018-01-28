@@ -1,4 +1,4 @@
-package com.suny.association.controller;
+package com.suny.association.web.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.entity.dto.BootstrapTableResultDTO;

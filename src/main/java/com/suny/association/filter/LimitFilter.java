@@ -19,8 +19,7 @@ public class LimitFilter implements Filter {
     /**
      *  不需要登录就可以访问的资源*/
     private static final String[] INHERENT_ESCAPE_URIS = {
-            "/index.jsp","/login.html", "/login.action",
-            "/userCenter.html", "/index.html"
+            "/login.jsp","/login.html", "/login.action"
     };
 
     @Override

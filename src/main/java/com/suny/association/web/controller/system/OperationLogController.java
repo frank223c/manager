@@ -1,7 +1,7 @@
-package com.suny.association.controller.system;
+package com.suny.association.web.controller.system;
 
 import com.suny.association.annotation.SystemControllerLog;
-import com.suny.association.controller.BaseController;
+import com.suny.association.web.controller.BaseController;
 import com.suny.association.entity.dto.BootstrapTableResultDTO;
 import com.suny.association.entity.po.OperationLog;
 import com.suny.association.entity.vo.ConditionMap;

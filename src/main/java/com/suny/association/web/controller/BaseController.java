@@ -1,13 +1,7 @@
-package com.suny.association.controller;
+package com.suny.association.web.controller;
 
-import com.suny.association.utils.JackJsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
 
 /**
  * Comments:    基础的控制器

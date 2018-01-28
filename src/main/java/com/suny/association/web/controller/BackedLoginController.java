@@ -1,4 +1,4 @@
-package com.suny.association.controller;
+package com.suny.association.web.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.entity.dto.ResultDTO;
@@ -8,7 +8,6 @@ import com.suny.association.entity.po.Member;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.ILoginService;
 import com.suny.association.utils.TokenProcessor;
-import com.suny.association.utils.ValidActionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +37,7 @@ public class BackedLoginController {
     private static final String TICKET = "ticket";
     private static final String ACCOUNT_ATTRIBUTE="account";
     private static final String MEMBER_ATTRIBUTE="member";
+    private static final String USER_SUBJECT_NAME="account";
     private final IAccountService accountService;
 
 
@@ -55,12 +55,12 @@ public class BackedLoginController {
     /**
      * 登录页面
      */
-    @RequestMapping(value = {"/", "/index.html"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
     public String backendLogin(HttpServletRequest request) {
         String token = TokenProcessor.getInstance().makeToken();
         request.getSession().setAttribute(TOKEN, token);
         logger.info("产生的令牌值是 {}", token);
-        return "/index";
+        return "login";
     }
 
 
@@ -150,7 +150,7 @@ public class BackedLoginController {
 
 
     /**
-     * 验证成功后报存用户的登录信息
+     * 验证成功后保存用户的登录信息
      *
      * @param response response请求
      * @param username 登录的用户名
@@ -168,9 +168,12 @@ public class BackedLoginController {
      *
      * @return 管理员中心
      */
-    @RequestMapping(value = {"/userCenter.html"}, method = RequestMethod.GET)
-    public ModelAndView userCenter() {
-        return new ModelAndView("backend/userCenter");
+    @RequestMapping(value = {"/"}, method = RequestMethod.GET)
+    public ModelAndView userCenter(HttpServletRequest request) {
+        if(request.getSession().getAttribute(USER_SUBJECT_NAME) != null){
+            return new ModelAndView("backend/userCenter");
+        }
+        return new ModelAndView("redirect:/login");
     }
 
 
