@@ -8,20 +8,17 @@ import com.suny.association.entity.po.LoginTicket;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.interfaces.ILoginService;
 import com.suny.association.service.interfaces.system.ILoginHistoryService;
+import com.suny.association.utils.JedisAdapter;
+import com.suny.association.utils.RedisKeyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.*;
 
 /**
- *
  * @author 孙建荣
  * @date 17-9-21
  */
@@ -33,12 +30,14 @@ public class LoginServiceImpl implements ILoginService {
     private final LoginTicketMapper loginTicketMapper;
     private final AccountMapper accountMapper;
     private final ILoginHistoryService loginHistoryService;
+    private final JedisAdapter jedisAdapter;
 
     @Autowired
-    public LoginServiceImpl(LoginTicketMapper loginTicketMapper, AccountMapper accountMapper, ILoginHistoryService loginHistoryService) {
+    public LoginServiceImpl(LoginTicketMapper loginTicketMapper, AccountMapper accountMapper, ILoginHistoryService loginHistoryService, JedisAdapter jedisAdapter) {
         this.loginTicketMapper = loginTicketMapper;
         this.accountMapper = accountMapper;
         this.loginHistoryService = loginHistoryService;
+        this.jedisAdapter = jedisAdapter;
     }
 
     @Override
@@ -55,24 +54,13 @@ public class LoginServiceImpl implements ILoginService {
         if (authAction(username, password)) {
             Account account = accountMapper.selectByName(username);
             //  2.1   查看数据库里面ticket是否存在
-            LoginTicket loginTicket = loginTicketMapper.selectByAccountId(account.getAccountId());
-            //  2.2   数据库中存在这个用户的ticket
-            if (loginTicket != null) {
-                //  2.2.1  数据库中存在不过期的ticket,添加到Map里面返回给Controller
-                if (loginTicket.getExpired().isAfter(LocalDateTime.now())) {
-                    // 把ticket添加到Redis里面
-                    map.put(TICKET, loginTicket.getTicket());
-                } else {
-                    //  2.2.2  数据库中存在已经过期的ticket,为了不删除ticket就直接更新过期时间跟状态,就直接更新
-                    operateTicket(account.getAccountId(), OperateTypeEnum.UPDATE);
-                    //  2.2.3   把ticket返回给Controller
-                    map.put(TICKET, loginTicketMapper.selectByAccountId(account.getAccountId()));
-                }
-                //  2.3  数据库中不存在对应用户的ticket
+            String redisValidTicket = getRedisValidTicket(username);
+            if (redisValidTicket != null) {
+                map.put(TICKET, redisValidTicket);
             } else {
-                //          2.3.1 对登录的用户添加一个ticket
-                operateTicket(account.getAccountId(), OperateTypeEnum.INSERT);
-                map.put(TICKET, loginTicketMapper.selectByAccountId(account.getAccountId()));
+                // 到了这里说明Redis里面不存在对应的key了
+                String mysqlValidTicket = getMysqlValidTicket(account);
+                map.put(TICKET, mysqlValidTicket);
             }
             //  2.4 只要账号密码验证成功的话我们就可以说就已经是登录成功了的
             loginHistoryService.saveLoginLog(username, true);
@@ -86,26 +74,84 @@ public class LoginServiceImpl implements ILoginService {
         return map;
     }
 
+    /**
+     * 从MYSQL数据库中查询数据库中的Ticket
+     *
+     * @param account 登录的账号信息
+     * @return Ticket字符串
+     */
+    private String getMysqlValidTicket(Account account) {
+        // 都不存在就直接去查数据库
+        LoginTicket loginTicket = loginTicketMapper.selectByAccountId(account.getAccountId());
+        //  2.2   数据库中存在这个用户的ticket
+        if (loginTicket != null) {
+            //  2.2.1  数据库中存在不过期的ticket,添加到Map里面返回给Controller
+            if (loginTicket.getExpired().isAfter(LocalDateTime.now())) {
+                // 把ticket添加到Redis里面
+                return loginTicket.getTicket();
+            } else {
+                //  2.2.2  数据库中存在已经过期的ticket,为了不删除ticket就直接更新过期时间跟状态,就直接更新
+                operateTicket(account, OperateTypeEnum.UPDATE);
+                //  2.2.3   把ticket返回给Controller
+                return loginTicketMapper.selectByAccountId(account.getAccountId()).getTicket();
+            }
+            //  2.3  数据库中不存在对应用户的ticket
+        } else {
+            //          2.3.1 对登录的用户添加一个ticket
+            operateTicket(account, OperateTypeEnum.INSERT);
+            return loginTicketMapper.selectByAccountId(account.getAccountId()).getTicket();
+        }
+    }
+
+    /**
+     * 从Redis里面查看是否有当前用户有效的ticket
+     *
+     * @param username 用户名
+     * @return Ticket字符串
+     */
+    private String getRedisValidTicket(String username) {
+        // 先从redis里面取
+        String redisTicket = jedisAdapter.get(RedisKeyUtils.getLoginticket(username));
+        // 如果redis里面存在对应用户的ticket
+        if (redisTicket != null && !Objects.equals(redisTicket, "")) {
+            long expireTime = jedisAdapter.getExpireTime(RedisKeyUtils.getLoginticket(username));
+            if (expireTime > 0) {
+                // redis里面读取用户信息成功,直接放行登录
+                return redisTicket;
+            }
+        }
+        return null;
+    }
+
 
     private boolean validParam(String param) {
         return !("".equals(param) || param.length() == 0);
     }
 
-    private void operateTicket(long accountId, OperateTypeEnum operateTypeEnum) {
+    /**
+     * 操作不同数据库中的ticket,更新或者是新增
+     *
+     * @param account         登录账号
+     * @param operateTypeEnum 操作类型
+     */
+    private void operateTicket(Account account, OperateTypeEnum operateTypeEnum) {
+        int expireSeconds = 604800;
         LoginTicket loginTicket = new LoginTicket();
-        loginTicket.setAccountId(accountId);
-        LocalDateTime expired = LocalDateTime.now().plusHours(148);
+        loginTicket.setAccountId(account.getAccountId());
+        LocalDateTime expired = LocalDateTime.now().plusSeconds(expireSeconds);
         loginTicket.setExpired(expired);
         // 状态为0则表示不过期，过期则为0
         loginTicket.setStatus(0);
         loginTicket.setTicket(UUID.randomUUID().toString().replaceAll("-", ""));
         if (operateTypeEnum == OperateTypeEnum.INSERT) {
-            logger.warn("插入一条ticket值{}",loginTicket.toString());
             loginTicketMapper.insert(loginTicket);
         } else if (operateTypeEnum == OperateTypeEnum.UPDATE) {
-             logger.warn("更新数据库中的ticket值{}",loginTicket.toString());
             loginTicketMapper.update(loginTicket);
         }
+        // 对Redis来说,Mysql数据库里面的Ticket无论是新增还是更新,在Redis里面都是已经被删除了的
+        String redisTicketKeyName = RedisKeyUtils.getLoginticket(account.getAccountName());
+        jedisAdapter.set(redisTicketKeyName, loginTicket.getTicket());
+        jedisAdapter.setExpire(redisTicketKeyName, expireSeconds);
     }
 
 

@@ -8,8 +8,10 @@ import com.suny.association.entity.po.Member;
 import com.suny.association.enums.LoginEnum;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.ILoginService;
-import com.suny.association.service.interfaces.system.ILoginticketService;
+import com.suny.association.service.interfaces.system.ILoginTicketService;
+import com.suny.association.utils.JedisAdapter;
 import com.suny.association.utils.LoginTicketUtil;
+import com.suny.association.utils.RedisKeyUtils;
 import com.suny.association.utils.TokenProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Comments:   基础公共Controller
@@ -40,17 +43,18 @@ public class BackedLoginController {
     private static final String TICKET = "ticket";
     private static final String ACCOUNT_ATTRIBUTE = "account";
     private static final String MEMBER_ATTRIBUTE = "member";
-    private static final String USER_SUBJECT_NAME = "account";
     private final IAccountService accountService;
     private final ILoginService loginService;
-    private final ILoginticketService loginticketService;
+    private final ILoginTicketService loginTicketService;
     private static final String TOKEN = "token";
+    private final JedisAdapter jedisAdapter;
 
     @Autowired
-    public BackedLoginController(IAccountService accountService, ILoginService loginService, ILoginticketService loginticketService) {
+    public BackedLoginController(IAccountService accountService, ILoginService loginService, ILoginTicketService loginTicketService, JedisAdapter jedisAdapter) {
         this.accountService = accountService;
         this.loginService = loginService;
-        this.loginticketService = loginticketService;
+        this.loginTicketService = loginTicketService;
+        this.jedisAdapter = jedisAdapter;
     }
 
 
@@ -59,6 +63,7 @@ public class BackedLoginController {
      */
     @RequestMapping(value = {"/login.html"}, method = RequestMethod.GET)
     public String backendLogin(HttpServletRequest request) {
+        // 如果有没有过期的ticket直接去管理员页面
         if (hasValidTicket(request)) {
             return "redirect:admin.html";
         }
@@ -115,7 +120,7 @@ public class BackedLoginController {
                 Cookie cookie = new Cookie(TICKET, ticket);
                 cookie.setPath("/");
                 if (rememberMe) {
-                    cookie.setMaxAge(3600 * 24 * 5);
+                    cookie.setMaxAge(3600 * 24 * 7);
                 }
                 // cookie.setSecure(true); 在http中是客户端cookie无效的；在https中才有效。请注意这里在HTTP连接中会导致导致客户端的cookie无法传输
                 response.addCookie(cookie);
@@ -170,12 +175,12 @@ public class BackedLoginController {
      * @return 管理员中心
      */
     @RequestMapping(value = {"/", "/admin.html"}, method = RequestMethod.GET)
-    public ModelAndView userCenter(HttpServletRequest request) {
+    public String userCenter(HttpServletRequest request) {
         if (hasValidTicket(request)) {
-            return new ModelAndView("backend/admin");
+            return "backend/admin";
         }
         // ticket过期或者是没有ticket就直接登录去
-        return new ModelAndView("redirect:/login.html");
+        return "/login";
     }
 
     /**
@@ -186,8 +191,23 @@ public class BackedLoginController {
      */
     private boolean hasValidTicket(HttpServletRequest request) {
         String ticket = LoginTicketUtil.getTicket(request);
-        LoginTicket loginTicket = loginticketService.selectByTicket(ticket);
-        return loginTicket.getExpired().isAfter(LocalDateTime.now());
+        if (ticket != null) {
+           /* String redisTicket = jedisAdapter.get(RedisKeyUtils.getLoginticket(username));
+            // 如果redis里面存在对应用户的ticket
+            if (redisTicket != null && !Objects.equals(redisTicket, "")) {
+                long expireTime = jedisAdapter.getExpireTime(RedisKeyUtils.getLoginticket(username));
+                if (expireTime > 0) {
+                    // redis里面读取用户信息成功,直接放行登录
+                    return redisTicket;
+                }
+            }*/
+            LoginTicket loginTicket = loginTicketService.selectByTicket(ticket);
+            // 这里防止前端伪造ticket的情况,数据库中不存在这个
+            return loginTicket != null && loginTicket.getExpired().isAfter(LocalDateTime.now());
+        }
+        // cookie里面没有ticket就直接返回false
+        return false;
+
     }
 
 

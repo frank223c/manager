@@ -3,7 +3,7 @@ package com.suny.association.service.impl.system;
 import com.suny.association.entity.po.LoginTicket;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.mapper.LoginTicketMapper;
-import com.suny.association.service.interfaces.system.ILoginticketService;
+import com.suny.association.service.interfaces.system.ILoginTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.List;
  *  @version 1.0
  **************************************/
 @Service
-public class LoginticketServiceImpl implements ILoginticketService {
+public class LoginTicketServiceImpl implements ILoginTicketService {
     @Autowired
     private LoginTicketMapper loginTicketMapper;
 

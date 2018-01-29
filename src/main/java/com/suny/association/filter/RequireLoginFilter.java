@@ -1,8 +1,7 @@
 package com.suny.association.filter;
 
-import com.suny.association.mapper.AccountMapper;
-import com.suny.association.mapper.LoginTicketMapper;
 import com.suny.association.entity.po.LoginTicket;
+import com.suny.association.service.interfaces.system.ILoginTicketService;
 import com.suny.association.utils.LoginTicketUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +9,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,7 +24,7 @@ public class RequireLoginFilter implements Filter {
     private static Logger logger = LoggerFactory.getLogger(RequireLoginFilter.class);
     private static final String EXECUTE_NEXT_FILTER = "EXECUTE_NEXT_FILTER";
     private static final String PORTAL_LOGIN_URL = "/login.html";
-    private LoginTicketMapper loginTicketMapper;
+    private ILoginTicketService loginTicketService;
 
 
     /**
@@ -38,7 +36,7 @@ public class RequireLoginFilter implements Filter {
     public void init(FilterConfig filterConfig) {
         ServletContext servletContext = filterConfig.getServletContext();
         ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-        loginTicketMapper = (LoginTicketMapper) context.getBean("loginTicketMapper");
+        loginTicketService = (ILoginTicketService) context.getBean("loginTicketServiceImpl");
         logger.info("===============登录验证过滤器开始初始化============");
     }
 
@@ -59,7 +57,7 @@ public class RequireLoginFilter implements Filter {
             // 3.判断登录标记是否过期,不过期就自动登录,过期就需要重新登录
             if (ticket != null) {
                 // 3.1  根据ticket字符串去数据库里面查询是否有这个,防止客户端伪造ticket
-                LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
+                LoginTicket loginTicket = loginTicketService.selectByTicket(ticket);
                 // 3.2  如果查出来数据库里面没有这个ticket或者是已经过期了的话就让它重新登录
                 if (loginTicket == null || LoginTicketUtil.isExpired(loginTicket)) {
                     response.sendRedirect(((HttpServletRequest) req).getContextPath() + PORTAL_LOGIN_URL);

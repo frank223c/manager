@@ -19,8 +19,8 @@ public class RedisKeyUtils {
         return BIZ_TICKET + SPLIT + ticket;
     }
 
-    public static String getLoginticket(String ticket) {
-        return BIZ_LOGIN_TICKET + SPLIT + ticket;
+    public static String getLoginticket(String username) {
+        return BIZ_LOGIN_TICKET + SPLIT + username;
     }
 
     public static String getAccountKey(String ticket) {
