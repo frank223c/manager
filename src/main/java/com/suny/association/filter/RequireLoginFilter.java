@@ -2,9 +2,12 @@ package com.suny.association.filter;
 
 import com.suny.association.entity.po.LoginTicket;
 import com.suny.association.service.interfaces.system.ILoginTicketService;
+import com.suny.association.utils.JedisAdapter;
 import com.suny.association.utils.LoginTicketUtil;
+import com.suny.association.utils.RedisKeyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -12,6 +15,8 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * 强制登录过滤器
@@ -20,11 +25,12 @@ import java.io.IOException;
  * @date 17-9-20
  */
 public class RequireLoginFilter implements Filter {
-
+    private static final String TICKET_SPLIT_SYMBOL = ":";
     private static Logger logger = LoggerFactory.getLogger(RequireLoginFilter.class);
     private static final String EXECUTE_NEXT_FILTER = "EXECUTE_NEXT_FILTER";
     private static final String PORTAL_LOGIN_URL = "/login.html";
     private ILoginTicketService loginTicketService;
+    private JedisAdapter jedisAdapter;
 
 
     /**
@@ -37,6 +43,7 @@ public class RequireLoginFilter implements Filter {
         ServletContext servletContext = filterConfig.getServletContext();
         ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         loginTicketService = (ILoginTicketService) context.getBean("loginTicketServiceImpl");
+        jedisAdapter = (JedisAdapter) context.getBean("jedisAdapter");
         logger.info("===============登录验证过滤器开始初始化============");
     }
 
@@ -55,28 +62,52 @@ public class RequireLoginFilter implements Filter {
             // 2.   判断是否有登录标记ticket,ticket是从Cookie中进行获取,循环遍历验证室友存在ticket值
             String ticket = LoginTicketUtil.getTicket(request);
             // 3.判断登录标记是否过期,不过期就自动登录,过期就需要重新登录
-            if (ticket != null) {
-                // 3.1  根据ticket字符串去数据库里面查询是否有这个,防止客户端伪造ticket
-                LoginTicket loginTicket = loginTicketService.selectByTicket(ticket);
-                // 3.2  如果查出来数据库里面没有这个ticket或者是已经过期了的话就让它重新登录
-                if (loginTicket == null || LoginTicketUtil.isExpired(loginTicket)) {
-                    response.sendRedirect(((HttpServletRequest) req).getContextPath() + PORTAL_LOGIN_URL);
-                    logger.warn("【RequireLoginFilter】ticket过期了或者是前端伪造的了,强制需要重新登录,重定向到登录页面");
-                    req.setAttribute(EXECUTE_NEXT_FILTER, false);
-                    chain.doFilter(req, resp);
-                } else {
-                    // 3.3 到这里说明ticket是还没有过期的,根据数据库中login_ticket表中的账号去查询账号信息
-                    logger.info("【RequireLoginFilter】有效的ticket值为【{}】,直接为登录状态,发送到下一个过滤器", ticket);
-                    req.setAttribute(EXECUTE_NEXT_FILTER, true);
-                    chain.doFilter(req, resp);
-                }
+            if (ticket != null && hasValidTicket(request)) {
+                // ticket过期了就送的去登录
+                // 3.3 到这里说明ticket是还没有过期的,根据数据库中login_ticket表中的账号去查询账号信息
+                logger.info("【RequireLoginFilter】有效的ticket值为【{}】,直接为登录状态,发送到下一个过滤器", ticket);
+                req.setAttribute(EXECUTE_NEXT_FILTER, true);
+                chain.doFilter(req, resp);
             } else {
-                // 4. 没有登录过,直接跳转到登录页面
+                // 4. 要么就没有登录过,要么就ticket过期了,直接跳转到登录页面
                 request.getRequestDispatcher(PORTAL_LOGIN_URL).forward(request, response);
-                logger.warn("【RequireLoginFilter】请求头没有携带ticket,需要重新登录");
+                req.setAttribute(EXECUTE_NEXT_FILTER, false);
+                chain.doFilter(req, resp);
+                logger.warn("【RequireLoginFilter】ticket无效或者没有,需要重新登录");
             }
         }
 
+    }
+
+    /**
+     * 判断ticket是否有效
+     *
+     * @param request 请求
+     * @return 有效则为true, 无效则为false
+     */
+    @SuppressWarnings("Duplicates")
+    private boolean hasValidTicket(HttpServletRequest request) {
+        String ticket = LoginTicketUtil.getTicket(request);
+        // 当cookie中ticket不为空的时候才去查询是否ticket有效
+        if (ticket != null) {
+            int point = ticket.indexOf(TICKET_SPLIT_SYMBOL);
+            String username = ticket.substring(0, point);
+            String redisTicket = jedisAdapter.get(RedisKeyUtils.getLoginticket(username));
+            // 如果redis里面存在对应用户的ticket
+            if (redisTicket != null && !Objects.equals(redisTicket, "")) {
+                long expireTime = jedisAdapter.getExpireTime(RedisKeyUtils.getLoginticket(username));
+                if (expireTime > 0) {
+                    // redis里面读取用户信息成功,直接放行登录
+                    return true;
+                }
+            }
+            // Redis中不存在才去关系数据库中查询
+            LoginTicket loginTicket = loginTicketService.selectByTicket(ticket);
+            // 这里防止前端伪造ticket的情况,数据库中不存在这个
+            return loginTicket != null && loginTicket.getExpired().isAfter(LocalDateTime.now());
+        }
+        // cookie里面没有ticket就直接返回false
+        return false;
     }
 
 

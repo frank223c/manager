@@ -39,6 +39,7 @@ import java.util.Objects;
  */
 @Controller
 public class BackedLoginController {
+    private static final String TICKET_SPLIT_SYMBOL = ":";
     private static Logger logger = LoggerFactory.getLogger(BackedLoginController.class);
     private static final String TICKET = "ticket";
     private static final String ACCOUNT_ATTRIBUTE = "account";
@@ -47,32 +48,31 @@ public class BackedLoginController {
     private final ILoginService loginService;
     private final ILoginTicketService loginTicketService;
     private static final String TOKEN = "token";
-    private final JedisAdapter jedisAdapter;
+    @Autowired
+    private JedisAdapter jedisAdapter;
 
     @Autowired
-    public BackedLoginController(IAccountService accountService, ILoginService loginService, ILoginTicketService loginTicketService, JedisAdapter jedisAdapter) {
+    public BackedLoginController(IAccountService accountService, ILoginService loginService, ILoginTicketService loginTicketService) {
         this.accountService = accountService;
         this.loginService = loginService;
         this.loginTicketService = loginTicketService;
-        this.jedisAdapter = jedisAdapter;
     }
 
 
     /**
      * 登录页面
      */
-    @RequestMapping(value = {"/login.html"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/", "/admin.html", "/login.html"}, method = RequestMethod.GET)
     public String backendLogin(HttpServletRequest request) {
         // 如果有没有过期的ticket直接去管理员页面
         if (hasValidTicket(request)) {
-            return "redirect:admin.html";
+            return "backend/admin";
         }
         String token = TokenProcessor.getInstance().makeToken();
         request.getSession().setAttribute(TOKEN, token);
         logger.info("产生的令牌值是 {}", token);
         return "login";
     }
-
 
     /**
      * 全局错误页面
@@ -170,20 +170,6 @@ public class BackedLoginController {
 
 
     /**
-     * 登录成功后的操作
-     *
-     * @return 管理员中心
-     */
-    @RequestMapping(value = {"/", "/admin.html"}, method = RequestMethod.GET)
-    public String userCenter(HttpServletRequest request) {
-        if (hasValidTicket(request)) {
-            return "backend/admin";
-        }
-        // ticket过期或者是没有ticket就直接登录去
-        return "/login";
-    }
-
-    /**
      * 判断ticket是否有效
      *
      * @param request 请求
@@ -191,23 +177,26 @@ public class BackedLoginController {
      */
     private boolean hasValidTicket(HttpServletRequest request) {
         String ticket = LoginTicketUtil.getTicket(request);
+        // 当cookie中ticket不为空的时候才去查询是否ticket有效
         if (ticket != null) {
-           /* String redisTicket = jedisAdapter.get(RedisKeyUtils.getLoginticket(username));
+            int point = ticket.indexOf(TICKET_SPLIT_SYMBOL);
+            String username = ticket.substring(0, point);
+            String redisTicket = jedisAdapter.get(RedisKeyUtils.getLoginticket(username));
             // 如果redis里面存在对应用户的ticket
             if (redisTicket != null && !Objects.equals(redisTicket, "")) {
                 long expireTime = jedisAdapter.getExpireTime(RedisKeyUtils.getLoginticket(username));
                 if (expireTime > 0) {
                     // redis里面读取用户信息成功,直接放行登录
-                    return redisTicket;
+                    return true;
                 }
-            }*/
+            }
+            // Redis中不存在才去关系数据库中查询
             LoginTicket loginTicket = loginTicketService.selectByTicket(ticket);
             // 这里防止前端伪造ticket的情况,数据库中不存在这个
             return loginTicket != null && loginTicket.getExpired().isAfter(LocalDateTime.now());
         }
         // cookie里面没有ticket就直接返回false
         return false;
-
     }
 
 

@@ -81,13 +81,13 @@ public class LoginServiceImpl implements ILoginService {
      * @return Ticket字符串
      */
     private String getMysqlValidTicket(Account account) {
-        // 都不存在就直接去查数据库
         LoginTicket loginTicket = loginTicketMapper.selectByAccountId(account.getAccountId());
         //  2.2   数据库中存在这个用户的ticket
         if (loginTicket != null) {
             //  2.2.1  数据库中存在不过期的ticket,添加到Map里面返回给Controller
             if (loginTicket.getExpired().isAfter(LocalDateTime.now())) {
-                // 把ticket添加到Redis里面
+                // 把MYSQL里面的ticket添加到Redis里面
+                mysqlTicketToRedisTicket(account,loginTicket.getExpired().getSecond(),loginTicket.getTicket());
                 return loginTicket.getTicket();
             } else {
                 //  2.2.2  数据库中存在已经过期的ticket,为了不删除ticket就直接更新过期时间跟状态,就直接更新
@@ -142,15 +142,25 @@ public class LoginServiceImpl implements ILoginService {
         loginTicket.setExpired(expired);
         // 状态为0则表示不过期，过期则为0
         loginTicket.setStatus(0);
-        loginTicket.setTicket(UUID.randomUUID().toString().replaceAll("-", ""));
+        loginTicket.setTicket(account.getAccountName()+":"+UUID.randomUUID().toString().replaceAll("-", ""));
         if (operateTypeEnum == OperateTypeEnum.INSERT) {
             loginTicketMapper.insert(loginTicket);
         } else if (operateTypeEnum == OperateTypeEnum.UPDATE) {
             loginTicketMapper.update(loginTicket);
         }
         // 对Redis来说,Mysql数据库里面的Ticket无论是新增还是更新,在Redis里面都是已经被删除了的
+        mysqlTicketToRedisTicket(account, expireSeconds, loginTicket.getTicket());
+    }
+
+    /**
+     *  把MSQL中的ticket同步到Redis里面
+     * @param account    登录用户信息
+     * @param expireSeconds   过期时间
+     * @param stringTicket  登录ticket字符串
+     */
+    private void mysqlTicketToRedisTicket(Account account, int expireSeconds, String stringTicket) {
         String redisTicketKeyName = RedisKeyUtils.getLoginticket(account.getAccountName());
-        jedisAdapter.set(redisTicketKeyName, loginTicket.getTicket());
+        jedisAdapter.set(redisTicketKeyName, stringTicket);
         jedisAdapter.setExpire(redisTicketKeyName, expireSeconds);
     }
 
