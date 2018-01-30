@@ -29,6 +29,19 @@ public class AccountMapperTest {
     }
 
     @Test
+    public void selectById() throws Exception {
+        Account account = accountMapper.selectById(1);
+        logger.info(account.toString());
+    }
+
+    @Test
+    public void selectByName() throws Exception {
+        Account account = accountMapper.selectByName("Suny");
+        logger.info(account.toString());
+    }
+
+
+    @Test
     public void selectMemberReference() throws Exception {
         Account account = accountMapper.selectMemberReference(1);
         logger.info(account.toString());

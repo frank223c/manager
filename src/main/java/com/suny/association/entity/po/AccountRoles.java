@@ -1,33 +1,46 @@
 package com.suny.association.entity.po;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- *   账号角色实体
+ * 账号角色实体
+ *
  * @author sunjianrong
  */
-public class Roles {
+public class AccountRoles {
     /**
-     * 账号主键id*/
+     * 账号主键id
+     */
     private Integer roleId;
 
-    /** 账号的中文解释*/
+    /**
+     * 账号的中文解释
+     */
     private String description;
 
-    /** 账号的角色名字 */
+    /**
+     * 账号的角色名字
+     */
     private String roleName;
 
-    /** 账号创建的时间 */
+    /**
+     * 账号创建的时间
+     */
     private LocalDateTime createTime;
 
-    public Roles() {
+    private List<Permission> permissionList = new ArrayList<>();
+
+    public AccountRoles() {
     }
 
-    public Roles(Integer roleId, String description, String roleName, LocalDateTime createTime) {
+    public AccountRoles(Integer roleId, String description, String roleName, LocalDateTime createTime, List<Permission> permissionList) {
         this.roleId = roleId;
         this.description = description;
         this.roleName = roleName;
         this.createTime = createTime;
+        this.permissionList = permissionList;
     }
 
     public Integer getRoleId() {
@@ -62,13 +75,11 @@ public class Roles {
         this.createTime = createTime;
     }
 
-    @Override
-    public String toString() {
-        return "Roles{" +
-                "角色ID=" + roleId +
-                ", 中文角色名字='" + description + '\'' +
-                ", 角色名字英文='" + roleName + '\'' +
-                ", 创建时间=" + createTime +
-                '}';
+    public List<Permission> getPermissionList() {
+        return permissionList;
+    }
+
+    public void setPermissionList(List<Permission> permissionList) {
+        this.permissionList = permissionList;
     }
 }

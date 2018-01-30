@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suny.association.mapper.RolesMapper">
-    <resultMap id="BaseResultMap" type="com.suny.association.entity.po.Roles">
+    <resultMap id="BaseResultMap" type="com.suny.association.entity.po.AccountRoles">
         <id column="role_id" property="roleId"/>
         <result column="role_name" property="roleName"/>
         <result column="role_description" property="description"/>
@@ -21,21 +21,21 @@
         WHERE a.account_role_id = #{ roleId}
     </select>
 
-    <insert id="insert" parameterType="com.suny.association.entity.po.Roles">
-        INSERT INTO roles
+    <insert id="insert" parameterType="com.suny.association.entity.po.AccountRoles">
+        INSERT INTO accountRolesList
         (role_name,role_description)
         VALUES
         (#{roleName},#{description})
     </insert>
 
     <delete id="deleteById" parameterType="long">
-        DELETE FROM roles
+        DELETE FROM accountRolesList
         WHERE role_id = #{roleId}
     </delete>
 
 
-    <update id="update" parameterType="com.suny.association.entity.po.Roles">
-        UPDATE roles
+    <update id="update" parameterType="com.suny.association.entity.po.AccountRoles">
+        UPDATE accountRolesList
         SET role_name = #{description}
         WHERE
             role_id = #{roleId}
@@ -48,7 +48,7 @@
         r.role_name,
         r.role_description,
         r.role_create_time
-        FROM roles AS r
+        FROM accountRolesList AS r
     </select>
 
     <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
@@ -57,7 +57,7 @@
         r.role_name,
         r.role_description,
         r.role_create_time
-        FROM roles AS r
+        FROM accountRolesList AS r
         WHERE r.role_id = #{roleId}
     </select>
 
@@ -67,7 +67,7 @@
         r.role_name,
         r.role_description,
         r.role_create_time
-        FROM roles AS r
+        FROM accountRolesList AS r
         WHERE r.role_name LIKE CONCAT(CONCAT('%', #{description}), '%')
     </select>
 
@@ -78,7 +78,7 @@
         r.role_name,
         r.role_description,
         r.role_create_time
-        FROM roles AS r
+        FROM accountRolesList AS r
         <where>
             1=1
             <if test="entity.roleId != null">and  role_id =#{entity.roleId}</if>
@@ -92,12 +92,12 @@
 
     <select id="selectCount" resultType="int">
         SELECT count(*)
-        FROM roles;
+        FROM accountRolesList;
     </select>
-    <select id="selectCountByParam" parameterType="com.suny.association.entity.po.Roles" resultType="java.lang.Integer">
+    <select id="selectCountByParam" parameterType="com.suny.association.entity.po.AccountRoles" resultType="java.lang.Integer">
         SELECT
             count(*)
-        FROM roles AS r
+        FROM accountRolesList AS r
             <where>
                 1=1
                 <if test="roleId != null">and  role_id =#{roleId}</if>

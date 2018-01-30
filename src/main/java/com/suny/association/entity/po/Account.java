@@ -1,6 +1,8 @@
 package com.suny.association.entity.po;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author sunjianrong
@@ -21,23 +23,23 @@ public class Account implements Serializable {
 
     private Boolean accountStatus;
 
-    private  Roles accountRoles;
+    private transient List<AccountRoles> accountRolesList = new ArrayList<>();
 
-    private  Member accountMember;
+    private Member accountMember;
 
 
     public Account() {
     }
 
 
-    public Account(Long accountId, String accountName, String accountPassword, Long accountPhone, String accountEmail, Boolean accountStatus, Roles accountRoles, Member accountMember) {
+    public Account(Long accountId, String accountName, String accountPassword, Long accountPhone, String accountEmail, Boolean accountStatus, List<AccountRoles> accountRolesList, Member accountMember) {
         this.accountId = accountId;
         this.accountName = accountName;
         this.accountPassword = accountPassword;
         this.accountPhone = accountPhone;
         this.accountEmail = accountEmail;
         this.accountStatus = accountStatus;
-        this.accountRoles = accountRoles;
+        this.accountRolesList = accountRolesList;
         this.accountMember = accountMember;
     }
 
@@ -90,12 +92,12 @@ public class Account implements Serializable {
         this.accountStatus = accountStatus;
     }
 
-    public Roles getAccountRoles() {
-        return accountRoles;
+    public List<AccountRoles> getAccountRolesList() {
+        return accountRolesList;
     }
 
-    public void setAccountRoles(Roles accountRoles) {
-        this.accountRoles = accountRoles;
+    public void setAccountRolesList(List<AccountRoles> accountRolesList) {
+        this.accountRolesList = accountRolesList;
     }
 
     public Member getAccountMember() {
@@ -108,39 +110,34 @@ public class Account implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o){
+        if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()){
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
         Account account = (Account) o;
 
-        if (accountId != null ? !accountId.equals(account.accountId) : account.accountId != null){
+        if (accountId != null ? !accountId.equals(account.accountId) : account.accountId != null) {
             return false;
         }
-        if (accountName != null ? !accountName.equals(account.accountName) : account.accountName != null){
+        if (accountName != null ? !accountName.equals(account.accountName) : account.accountName != null) {
             return false;
         }
-        if (accountPassword != null ? !accountPassword.equals(account.accountPassword) : account.accountPassword != null)
-        {
+        if (accountPassword != null ? !accountPassword.equals(account.accountPassword) : account.accountPassword != null) {
             return false;
         }
-        if (accountPhone != null ? !accountPhone.equals(account.accountPhone) : account.accountPhone != null)
-        {
+        if (accountPhone != null ? !accountPhone.equals(account.accountPhone) : account.accountPhone != null) {
             return false;
         }
-        if (accountEmail != null ? !accountEmail.equals(account.accountEmail) : account.accountEmail != null)
-        {
+        if (accountEmail != null ? !accountEmail.equals(account.accountEmail) : account.accountEmail != null) {
             return false;
         }
-        if (accountStatus != null ? !accountStatus.equals(account.accountStatus) : account.accountStatus != null)
-        {
+        if (accountStatus != null ? !accountStatus.equals(account.accountStatus) : account.accountStatus != null) {
             return false;
         }
-        if (accountRoles != null ? !accountRoles.equals(account.accountRoles) : account.accountRoles != null)
-        {
+        if (accountRolesList != null ? !accountRolesList.equals(account.accountRolesList) : account.accountRolesList != null) {
             return false;
         }
         return accountMember != null ? accountMember.equals(account.accountMember) : account.accountMember == null;
@@ -155,7 +152,7 @@ public class Account implements Serializable {
         result = 31 * result + (accountPhone != null ? accountPhone.hashCode() : 0);
         result = 31 * result + (accountEmail != null ? accountEmail.hashCode() : 0);
         result = 31 * result + (accountStatus != null ? accountStatus.hashCode() : 0);
-        result = 31 * result + (accountRoles != null ? accountRoles.hashCode() : 0);
+        result = 31 * result + (accountRolesList != null ? accountRolesList.hashCode() : 0);
         result = 31 * result + (accountMember != null ? accountMember.hashCode() : 0);
         return result;
     }
@@ -169,7 +166,7 @@ public class Account implements Serializable {
                 ", 手机号码=" + accountPhone +
                 ", 邮箱='" + accountEmail + '\'' +
                 ", 账号状态=" + accountStatus +
-                ", 账号角色=" + accountRoles +
+                ", 账号角色=" + accountRolesList +
                 ", 对应成员=" + accountMember +
                 '}';
     }

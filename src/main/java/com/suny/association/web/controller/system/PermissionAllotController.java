@@ -1,12 +1,12 @@
 package com.suny.association.web.controller.system;
 
 import com.suny.association.annotation.SystemControllerLog;
+import com.suny.association.entity.po.AccountRoles;
 import com.suny.association.web.controller.BaseController;
 import com.suny.association.entity.dto.ResultDTO;
 import com.suny.association.enums.CommonEnum;
 import com.suny.association.entity.po.Permission;
 import com.suny.association.entity.po.PermissionAllot;
-import com.suny.association.entity.po.Roles;
 import com.suny.association.service.interfaces.system.IPermissionAllotService;
 import com.suny.association.service.interfaces.system.IPermissionService;
 import com.suny.association.service.interfaces.IRolesService;
@@ -60,7 +60,7 @@ public class PermissionAllotController extends BaseController {
             //  实例化一个LIst来装权限的集合
             List<Permission> perList = new ArrayList<>();
             //  实例化一个角色
-            Roles r = new Roles();
+            AccountRoles r = new AccountRoles();
             //   给角色实体设置角色id
             r.setRoleId(roleId);
             //    给【权限角色中间表】实体对象添加角色属性
@@ -96,7 +96,7 @@ public class PermissionAllotController extends BaseController {
     @SystemControllerLog(description = "查看权限分配页面")
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
     public ModelAndView index(ModelAndView modelAndView) {
-        List<Roles> roleList = rolesService.selectAll();
+        List<AccountRoles> roleList = rolesService.selectAll();
         List<PermissionAllot> permissionAllotList = permissionAllotService.selectAll();
         modelAndView.addObject("roleList", roleList);
         modelAndView.addObject("permissionAllotList", permissionAllotList);

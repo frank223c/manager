@@ -27,7 +27,7 @@ public class Permission implements Serializable {
     /**
      *权限创建的时间
      */
-    private LocalDateTime createTime;
+    private transient LocalDateTime createTime;
     /**
      * 权限的状态，1为可用，0为不可用
      */

@@ -227,7 +227,7 @@
                         <%--<shiro:principal/>--%>
                         <%--<shiro:user></shiro:user>--%>
                         <%--【${member.memberRoles.memberRoleName}】 ${member.memberName}，您好！--%>
-                        【${sessionScope.account.accountRoles.description}】 ${sessionScope.member.memberName}，您好！
+                        【${sessionScope.account.accountRolesList.description}】 ${sessionScope.member.memberName}，您好！
                         <i class="zmdi zmdi-caret-down"></i>
                     </div>
                 </a>

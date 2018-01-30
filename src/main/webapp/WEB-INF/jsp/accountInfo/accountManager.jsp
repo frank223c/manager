@@ -150,7 +150,7 @@
                         align: "center"
                     },
                     {
-                        field: "accountRoles",
+                        field: "accountRolesList",
                         title: "账号角色",
                         sortable: true,
                         order: "value",
@@ -214,7 +214,7 @@
 
 
     function rolesFormatter(code, row, index) {
-        return row.accountRoles.description;
+        return row.accountRolesList.description;
     }
 
     var ButtonInit = function () {

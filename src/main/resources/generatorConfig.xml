@@ -96,7 +96,7 @@
         <table tableName="operation" schema=""/>
         <table tableName="punch_record" schema=""/>
         <table tableName="punch_type" schema=""/>
-        <table tableName="roles" schema=""/>-->
+        <table tableNaaccountRolesoles" schema=""/>-->
         <table tableName="department" schema=""/>
 
     </context>

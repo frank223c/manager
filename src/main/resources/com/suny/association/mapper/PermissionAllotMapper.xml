@@ -3,7 +3,7 @@
 <mapper namespace="com.suny.association.mapper.PermissionAllotMapper">
     <resultMap id="BaseResultMap" type="com.suny.association.entity.po.PermissionAllot">
         <id property="id" column="pr_role_id"/>
-        <association property="roleId" column="role_id" javaType="com.suny.association.entity.po.Roles">
+        <association property="roleId" column="role_id" javaType="com.suny.association.entity.po.AccountRoles">
             <id column="r_role_id" property="roleId"/>
             <result column="r_role_name" property="roleName"/>
             <result column="r_role_description" property="description"/>
@@ -21,7 +21,7 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.suny.association.entity.po.PermissionAllot">
-        INSERT INTO permission_union_role (role_id, permiss_id) VALUES
+        INSERT INTO account_roles_union_permission (role_id, permiss_id) VALUES
         <foreach collection="permissionArrayList" index="index" item="perList" separator=",">
             (
             #{roleId.roleId},
@@ -31,7 +31,7 @@
     </insert>
 
     <delete id="deleteById" parameterType="int">
-        DELETE FROM permission_union_role
+        DELETE FROM account_roles_union_permission
         WHERE role_id = #{roleId}
     </delete>
 
@@ -48,8 +48,8 @@
             r.role_description       AS r_role_description,
             r.role_create_time       AS r_role_create_time
         FROM permission p,
-            permission_union_role pr,
-            roles r
+            account_roles_union_permission pr,
+            accountRolesList r
         WHERE p.permission_id = pr.permiss_id
               AND pr.role_id = r.role_id;
     </select>
@@ -66,8 +66,8 @@
             r.role_description       AS r_role_description,
             r.role_create_time       AS r_role_create_time
         FROM permission p,
-            permission_union_role pr,
-            roles r
+            account_roles_union_permission pr,
+            accountRolesList r
         WHERE p.permission_id = pr.permiss_id
               AND pr.role_id = #{roleId}
               AND r.role_id = #{roleId}

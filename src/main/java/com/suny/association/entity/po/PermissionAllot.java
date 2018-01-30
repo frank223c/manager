@@ -20,7 +20,7 @@ public class PermissionAllot implements Serializable {
     /**
      * 角色id
      */
-    private Roles roleId;
+    private AccountRoles roleId;
     /**
      * 权限id
      */
@@ -29,7 +29,7 @@ public class PermissionAllot implements Serializable {
     public PermissionAllot() {
     }
 
-    public PermissionAllot(Integer id, Roles roleId, List<Permission> permissionArrayList) {
+    public PermissionAllot(Integer id, AccountRoles roleId, List<Permission> permissionArrayList) {
         this.id = id;
         this.roleId = roleId;
         this.permissionArrayList = permissionArrayList;
@@ -43,11 +43,11 @@ public class PermissionAllot implements Serializable {
         this.id = id;
     }
 
-    public Roles getRoleId() {
+    public AccountRoles getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Roles roleId) {
+    public void setRoleId(AccountRoles roleId) {
         this.roleId = roleId;
     }
 

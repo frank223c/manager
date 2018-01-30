@@ -32,15 +32,15 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${permissionAllotList}" var="roles">
+        <c:forEach items="${permissionAllotList}" var="accountRolesList">
             <tr>
-                <td>${roles.roleId.description}</td>
+                <td>${accountRolesList.roleId.description}</td>
                 <td>
-                    <c:forEach items="${roles.permissionArrayList}" var="permission">
+                    <c:forEach items="${accountRolesList.permissionArrayList}" var="permission">
                         【${permission.description}】
                     </c:forEach>
                 </td>
-                <td><a href="#" onclick="changeRolePermission(${roles.roleId.roleId})">分配权限</a></td>
+                <td><a href="#" onclick="changeRolePermission(${accountRolesList.roleId.roleId})">分配权限</a></td>
             </tr>
         </c:forEach>
         </tbody>

@@ -1,12 +1,13 @@
 package com.suny.association.filter;
 
 
+import com.suny.association.cache.Cache;
+import com.suny.association.cache.CacheManager;
 import com.suny.association.mapper.AccountMapper;
 import com.suny.association.mapper.LoginTicketMapper;
 import com.suny.association.entity.po.*;
 import com.suny.association.service.interfaces.system.IAccessPermissionService;
 import com.suny.association.service.interfaces.system.IPermissionAllotService;
-import com.suny.association.utils.LoginTicketUtil;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -15,21 +16,27 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
  * Comments:   权限控制过滤器
+ *
  * @author :   孙建荣
- * Create Date: 2017/05/11 21:28
+ *         Create Date: 2017/05/11 21:28
  */
 public class PermissionFilter implements Filter {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(PermissionFilter.class);
+    private static final String TICKET_SPLIT_SYMBOL = ":";
+    private static final String USER_TICKET = "user_ticket";
     private static final String IS_LOGIN = "IS_LOGIN";
     private static final String PORTAL_LOGIN_URL = "/login.html";
     private static final String NO_PERMISSION = "/403.jsp";
+    public static final String PERMISSION_CACHE_PREFIX = "PERMISSION_";
     private IPermissionAllotService permissionAllotService;
     private IAccessPermissionService accessPermissionService;
     private LoginTicketMapper loginTicketMapper;
@@ -64,29 +71,17 @@ public class PermissionFilter implements Filter {
             chain.doFilter(req, resp);
         } else {
             String reqURI = request.getRequestURI();
-            //   【1】. 如果可以在本地线程变量里面取到Account信息,根据URL判断是否有对应的操作权限,否则就要求登录
-            String ticket = LoginTicketUtil.getTicket(request);
-            // 3.判断登录标记是否过期,不过期就自动登录,过期就需要重新登录
-            // 3.1  根据ticket字符串去数据库里面查询是否有这个,防止客户端伪造ticket
-            LoginTicket loginTicket = loginTicketMapper.selectByTicket(ticket);
-            Account account = accountMapper.selectById(loginTicket.getAccountId());
-            //   【2】. 判断是否已经存在Account信息
-            if (account != null) {
-                // 2.1 判断是否有对应的权限
-                boolean isPermission = isPermission(account, reqURI);
-                //    2.1.1 有权限则放行到下一个Filter
-                if (isPermission) {
-                    logger.info("【PermissionFilter】用户【{}】具有访问【{}】的权限,验证通过放行", account.getAccountName(), reqURI);
-                    chain.doFilter(request, response);
-                } else {
-                    // 2.1.2   重定向到无权限页面友情提示页面
-                    logger.warn("【PermissionFilter】用户【{}】不具有访问【{}】的权限,验证失败,重定向到{}页面", account.getAccountName(), reqURI, NO_PERMISSION);
-                    response.sendRedirect(NO_PERMISSION);
-                }
+            String ticket = (String) request.getAttribute(USER_TICKET);
+            int point = ticket.indexOf(TICKET_SPLIT_SYMBOL);
+            String username = ticket.substring(0, point);
+            // 2.1 判断是否有对应的权限
+            boolean isPermission = isPermission(username, reqURI);
+            //    2.1.1 有权限则放行到下一个Filter
+            if (isPermission) {
+                chain.doFilter(request, response);
             } else {
-                // 【3】. 没有取到Account信息,所以就直接重定向到登录页面
-                logger.warn("【PermissionFilter】没有取到登录账号的信息,直接发到登录页面");
-                response.sendRedirect(request.getContextPath() + PORTAL_LOGIN_URL);
+                // 2.1.2   重定向到无权限页面友情提示页面
+                response.sendRedirect(NO_PERMISSION);
             }
         }
 
@@ -95,22 +90,33 @@ public class PermissionFilter implements Filter {
     /**
      * 验证用户是否有这个权限操作当前的URL地址.
      *
-     * @param account 用户账号.
-     * @param path    访问的URL地址.
+     * @param username 用户账号名.
+     * @param path     访问的URL地址.
      * @return 有访问这个URL地址的权限就返回true, 否则就返回false
      */
-    private boolean isPermission(Account account, String path) {
+    private boolean isPermission(String username, String path) {
+        Cache cache = CacheManager.getCache(PERMISSION_CACHE_PREFIX + username);
+        List<PermissionAllot> allotList = (List<PermissionAllot>) cache.getValue();
+        // 查看缓存中是否有这个用户的权限缓存,有就直接匹配,没有就去数据库查询
+        if (allotList != null) {
+            // 这里就对权限进行判断
+        }
+        // 等于空就是缓存里面没有值,先从数据库查询一次,然后再放到缓存里面去
+
+        Account account = accountMapper.selectByName(username);
         //   1. 得到账号的角色,然后查询到用户对应的角色,    注意!这里使用的是单用户单角色
-        Integer roleId = account.getAccountRoles().getRoleId();
-        //   2. 构建一个有序的角色集合
+        List<AccountRoles> accountRolesList = account.getAccountRolesList();
+        //   2. 取出所有用户拥有的权限,放到HashSet里面去重
         AtomicReference<HashSet<String>> permissions = new AtomicReference<>(new HashSet<>());
-        List<PermissionAllot> permissionAllotList = permissionAllotService.queryByRoleId(roleId);
+        for (AccountRoles accountRoles : accountRolesList) {
+            List<Permission> permissionList = accountRoles.getPermissionList();
+            for (Permission permission : permissionList) {
+                String permissionName = permission.getpermissionName();
+                permissions.get().add(permissionName);
+            }
+        }
         //   3. 首先进行判断，防止角色没有权限导致数据下标溢出
-        if (!permissionAllotList.isEmpty()) {
-            // 3.1 这里得到的是账号-角色中间表的数据,所以得到的是一个大的集合,所以先取到第一个下标的数据,大的集合[下标]里面就是所有的权限数据
-            List<Permission> permissionArrayList = permissionAllotList.get(0).getPermissionArrayList();
-            // 3.2 把权限集合放到一个有序的集合里面去
-            permissions.get().addAll(permissionArrayList.stream().map(Permission::getpermissionName).collect(Collectors.toList()));
+        if (!permissions.get().isEmpty()) {
             // 3.3 查询当前访问的URL需要什么权限
             AccessPermission accessPermission = accessPermissionService.selectByName(path);
             // 3.4 前面虽然已经判断了一次,但是有些URL也是可以匿名访问的
@@ -121,18 +127,16 @@ public class PermissionFilter implements Filter {
                 //  3.4.1 从权限实体中获取当前操作所需要得到权限字符串
                 String urlPermission = accessPermission.getAccessPermission();
                 //  3.4.2 定义一个标记,在循环中使用
-                boolean hasPermission = false;
+                boolean hasPermission;
                 //  3.4.3  循环匹配每一个权限实体里面的权限字符串跟请求的权限字符串是否相等,如果为true就直接跳出循环
-                for (Permission per : permissionArrayList) {
-                    hasPermission = per.getpermissionName().equals(urlPermission);
-                    if (hasPermission){
-                        break;
+                AtomicReference<Iterator<String>> iterator = new AtomicReference<>(permissions.get().iterator());
+                if(iterator.get().hasNext()){
+                    String permissionName = iterator.get().next();
+                    hasPermission = permissionName.equals(urlPermission);
+                    if (hasPermission) {
+                        logger.info("访问当前页面需要【{}】用户{}有访问【{}】这个权限，放行", urlPermission, account.getAccountName(), urlPermission);
+                        return true;
                     }
-                }
-                //  3.4.4 有权限就直接放行,没有就返回false,有就返回true
-                if (hasPermission) {
-                    logger.info("访问当前页面需要【{}】用户{}有访问【{}】这个权限，放行", urlPermission, account.getAccountName(), urlPermission);
-                    return true;
                 }
                 logger.warn("用户{}没有访问这个操作的权限", account.getAccountName());
                 return false;

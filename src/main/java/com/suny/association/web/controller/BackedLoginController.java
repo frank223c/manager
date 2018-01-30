@@ -175,6 +175,7 @@ public class BackedLoginController {
      * @param request 请求
      * @return 有效则为true, 无效则为false
      */
+    @SuppressWarnings("Duplicates")
     private boolean hasValidTicket(HttpServletRequest request) {
         String ticket = LoginTicketUtil.getTicket(request);
         // 当cookie中ticket不为空的时候才去查询是否ticket有效

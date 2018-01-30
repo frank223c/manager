@@ -3,7 +3,7 @@ package com.suny.association.web.controller;
 import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.entity.dto.BootstrapTableResultDTO;
 import com.suny.association.entity.dto.ResultDTO;
-import com.suny.association.entity.po.Roles;
+import com.suny.association.entity.po.AccountRoles;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.enums.CommonEnum;
 import com.suny.association.enums.FormEnum;
@@ -57,31 +57,31 @@ public class RoleController extends BaseController {
     @SystemControllerLog(description = "更新账号角色")
     @ResponseBody
     @RequestMapping(value = "/update.action", method = RequestMethod.POST)
-    public ResultDTO update(@RequestBody Roles roles) {
+    public ResultDTO update(@RequestBody AccountRoles accountRoles) {
         // 过滤特殊字符，防止XSS注入
-        String escapeName = HtmlUtils.htmlEscape(roles.getRoleName());
-        String escapeDescription = HtmlUtils.htmlEscape(roles.getDescription());
-        Integer escapeId = Integer.valueOf(HtmlUtils.htmlEscape(String.valueOf(roles.getRoleId())));
-        if (roles.getRoleId() == null || rolesService.selectById(roles.getRoleId()) == null) {
+        String escapeName = HtmlUtils.htmlEscape(accountRoles.getRoleName());
+        String escapeDescription = HtmlUtils.htmlEscape(accountRoles.getDescription());
+        Integer escapeId = Integer.valueOf(HtmlUtils.htmlEscape(String.valueOf(accountRoles.getRoleId())));
+        if (accountRoles.getRoleId() == null || rolesService.selectById(accountRoles.getRoleId()) == null) {
             return failureResult(CommonEnum.SELECT_FAILURE);
         }
         if (escapeName.length() > ACCOUNT_ROLE_NAME_LENGTH || escapeId.toString().length() > ACCOUNT_ROLE_ID_LENGTH||escapeDescription.length()>ACCOUNT_ROLE_DESCRIPTION_LENGTH) {
             return ResultDTO.failureResult(FormEnum.FIELD_LENGTH_WRONG);
         }
-        if ("".equals(roles.getDescription()) || roles.getDescription() == null) {
+        if ("".equals(accountRoles.getDescription()) || accountRoles.getDescription() == null) {
             return failureResult(FormEnum.FIELD_NULL);
         }
-        roles.setRoleId(escapeId);
-        roles.setRoleName(escapeName);
-        roles.setDescription(escapeDescription);
-        rolesService.update(roles);
+        accountRoles.setRoleId(escapeId);
+        accountRoles.setRoleName(escapeName);
+        accountRoles.setDescription(escapeDescription);
+        rolesService.update(accountRoles);
         return successResult(CommonEnum.UPDATE_SUCCESS);
     }
 
     @RequestMapping(value = "/update.html/{roleId}", method = RequestMethod.GET)
     public ModelAndView updatePage(@PathVariable int roleId
             , ModelAndView modelAndView) {
-        Roles role = rolesService.selectById(roleId);
+        AccountRoles role = rolesService.selectById(roleId);
         if (role == null) {
             int defaultId = 0;
             role = rolesService.selectById(defaultId);
@@ -97,16 +97,16 @@ public class RoleController extends BaseController {
     /**
      * 插入数据请求
      *
-     * @param roles 数据
+     * @param accountRoles 数据
      * @return 插入数据的结果
      */
     @SystemControllerLog(description = "新增账号角色")
     @ResponseBody
     @RequestMapping(value = "/insert.action", method = RequestMethod.POST)
-    public ResultDTO insert(@RequestBody Roles roles) {
+    public ResultDTO insert(@RequestBody AccountRoles accountRoles) {
         // 过滤特殊字符，防止XSS注入
-        String escapeName = HtmlUtils.htmlEscape(roles.getRoleName());
-        String escapeDescription = HtmlUtils.htmlEscape(roles.getDescription());
+        String escapeName = HtmlUtils.htmlEscape(accountRoles.getRoleName());
+        String escapeDescription = HtmlUtils.htmlEscape(accountRoles.getDescription());
         if ("".equals(escapeDescription) || escapeDescription == null) {
             return failureResult(FormEnum.FIELD_NULL);
         }
@@ -116,9 +116,9 @@ public class RoleController extends BaseController {
         if (rolesService.selectByName(escapeDescription) != null) {
             return failureResult(CommonEnum.REPEAT_ADD);
         }
-        roles.setRoleName(escapeName);
-        roles.setDescription(escapeDescription);
-        rolesService.insert(roles);
+        accountRoles.setRoleName(escapeName);
+        accountRoles.setDescription(escapeDescription);
+        rolesService.insert(accountRoles);
         return successResult(CommonEnum.ADD_SUCCESS);
     }
 
@@ -137,22 +137,22 @@ public class RoleController extends BaseController {
      */
     @RequestMapping(value = "/selectByParam.action", method = RequestMethod.GET)
     @ResponseBody
-    public BootstrapTableResultDTO selectByParam(Roles roles,
+    public BootstrapTableResultDTO selectByParam(AccountRoles accountRoles,
                                          @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
                                          @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        List<Roles> rolesList;
+        List<AccountRoles> accountRolesList;
         int total;
-        if(roles==null){
-            Roles roles1 = new Roles();
-            ConditionMap<Roles> conditionMap=new ConditionMap<>(roles1,offset,limit);
-            rolesList = rolesService.selectByParam(conditionMap);
-            total = rolesService.selectCountByParam(roles1);
+        if(accountRoles ==null){
+            AccountRoles accountRoles1 = new AccountRoles();
+            ConditionMap<AccountRoles> conditionMap=new ConditionMap<>(accountRoles1,offset,limit);
+            accountRolesList = rolesService.selectByParam(conditionMap);
+            total = rolesService.selectCountByParam(accountRoles1);
         }else{
-            ConditionMap<Roles> conditionMap=new ConditionMap<>(roles,offset,limit);
-            rolesList = rolesService.selectByParam(conditionMap);
-            total = rolesService.selectCountByParam(roles);
+            ConditionMap<AccountRoles> conditionMap=new ConditionMap<>(accountRoles,offset,limit);
+            accountRolesList = rolesService.selectByParam(conditionMap);
+            total = rolesService.selectCountByParam(accountRoles);
         }
-        return new BootstrapTableResultDTO(total,rolesList);
+        return new BootstrapTableResultDTO(total, accountRolesList);
     }
 
     @SystemControllerLog(description = "查看账号角色页面")

@@ -1,7 +1,5 @@
 package com.suny.association.service;
 
-import com.suny.association.entity.po.Account;
-import com.suny.association.entity.po.Roles;
 import com.suny.association.entity.vo.ConditionMap;
 
 import java.util.List;

@@ -87,7 +87,7 @@
         SELECT
             pr.role_id,
             pr.permiss_id
-        FROM permission_union_role AS pr
+        FROM account_roles_union_permission AS pr
         WHERE
             pr.permiss_id = #{ permissionId}
     </select>

@@ -1,9 +1,9 @@
 package com.suny.association.service.impl;
 
 import com.suny.association.annotation.SystemServiceLog;
+import com.suny.association.entity.po.AccountRoles;
 import com.suny.association.mapper.RolesMapper;
 import com.suny.association.entity.po.Account;
-import com.suny.association.entity.po.Roles;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.service.AbstractBaseServiceImpl;
 import com.suny.association.service.interfaces.IRolesService;
@@ -19,7 +19,7 @@ import java.util.List;
  * Create Date: 2017/03/07 22:41
  */
 @Service
-public class RolesServiceImpl extends AbstractBaseServiceImpl<Roles> implements IRolesService {
+public class RolesServiceImpl extends AbstractBaseServiceImpl<AccountRoles> implements IRolesService {
 
     private final RolesMapper rolesMapper;
 
@@ -40,36 +40,36 @@ public class RolesServiceImpl extends AbstractBaseServiceImpl<Roles> implements 
     @SystemServiceLog(description = " 更新账号角色失败")
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void update(Roles roles) {
-        if (roles.getRoleId() == null) {
+    public void update(AccountRoles accountRoles) {
+        if (accountRoles.getRoleId() == null) {
             throw new RuntimeException();
         }
-        rolesMapper.update(roles);
+        rolesMapper.update(accountRoles);
     }
 
     /*  插入一条账号角色 */
     @SystemServiceLog(description = "插入账号角色失败")
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void insert(Roles roles) {
-        rolesMapper.insert(roles);
+    public void insert(AccountRoles accountRoles) {
+        rolesMapper.insert(accountRoles);
     }
 
     /* 查询所有的账号角色     */
     @Override
-    public List<Roles> selectAll() {
+    public List<AccountRoles> selectAll() {
         return rolesMapper.selectAll();
     }
 
     /* 通过查询条件查询账号角色     */
     @Override
-    public List<Roles> selectByParam(ConditionMap<Roles> conditionMap) {
+    public List<AccountRoles> selectByParam(ConditionMap<AccountRoles> conditionMap) {
         return rolesMapper.selectByParam(conditionMap);
     }
 
     /* 通过账号角色id查询账号角色     */
     @Override
-    public Roles selectById(long id) {
+    public AccountRoles selectById(long id) {
         return rolesMapper.selectById(id);
     }
 
@@ -82,12 +82,12 @@ public class RolesServiceImpl extends AbstractBaseServiceImpl<Roles> implements 
     /**
      * 根据查询条件查询操作记录
      *
-     * @param roles 操作日志实体
+     * @param accountRoles 操作日志实体
      * @return 条件查询出来的账号
      */
     @Override
-    public int selectCountByParam(Roles roles) {
-        return rolesMapper.selectCountByParam(roles);
+    public int selectCountByParam(AccountRoles accountRoles) {
+        return rolesMapper.selectCountByParam(accountRoles);
     }
 
     /* 查询触引用该角色的所有账号信息     */
@@ -98,7 +98,7 @@ public class RolesServiceImpl extends AbstractBaseServiceImpl<Roles> implements 
 
     /* 通过角色名字查询账号角色     */
     @Override
-    public Roles selectByName(String name) {
+    public AccountRoles selectByName(String name) {
         return rolesMapper.selectByName(name);
     }
 }

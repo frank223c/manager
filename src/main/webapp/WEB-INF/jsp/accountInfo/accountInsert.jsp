@@ -45,7 +45,7 @@
     <div class="form-group">
         <label for="selectRoleOption" class="col-sm-2 control-label">角色</label>
         <select class="form-control" id="selectRoleOption">
-            <c:forEach items="${rolesList}" var="role">
+            <c:forEach items="${accountRolesList}" var="role">
                 <option code="${role.roleId}">
                     <c:out value="${role.description}"/>
                 </option>
@@ -141,7 +141,7 @@
                             accountPassword: accountPasswordVal,
                             accountPhone: accountPhoneVal,
                             accountEmail: accountEmailVal,
-                            accountRoles: {
+                            accountRolesList: {
                                 roleId: selectRoleOptionVal
                             },
                             accountStatus: selectAccountStatusOptionVal

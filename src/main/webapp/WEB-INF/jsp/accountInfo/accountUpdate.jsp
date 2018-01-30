@@ -38,7 +38,7 @@
     <div class="form-group">
         <label for="selectRoleOption" class="col-sm-2 control-label">角色</label>
         <select class="form-control" id="selectRoleOption">
-            <c:forEach items="${rolesList}" var="role">
+            <c:forEach items="${accountRolesList}" var="role">
                 <option code="${role.roleId}">
                     <c:out code="${role.description}"/>
                 </option>
@@ -78,7 +78,7 @@
     $(function () {
         //选中成员当前自己的所属角色
         $("#selectRoleOption").each(function () {
-            $("#selectRoleOption").val(${account.accountRoles.roleId});
+            $("#selectRoleOption").val(${account.accountRolesList.roleId});
         });
         //选中账号状态
         $("#selectAccountStatusOption").each(function () {
@@ -138,7 +138,7 @@
                         accountName: accountNameVal,
                         accountPhone: accountPhoneVal,
                         accountEmail: accountEmailVal,
-                        accountRoles: {
+                        accountRolesList: {
                             roleId: selectRoleOptionVal
                         },
                         accountStatus: selectAccountStatusOptionVal

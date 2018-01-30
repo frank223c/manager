@@ -48,7 +48,7 @@ CREATE TABLE `account` (
   KEY `FK_member_account_id` (`account_role_id`),
   KEY `FK_account_member_id` (`account_member_id`),
   CONSTRAINT `FK_account_member_id` FOREIGN KEY (`account_member_id`) REFERENCES `member` (`member_id`),
-  CONSTRAINT `FK_member_account_id` FOREIGN KEY (`account_role_id`) REFERENCES `roles` (`role_id`)
+  CONSTRAINT `FK_member_account_id` FOREIGN KEY (`account_role_id`) REFERENCES `accountRolesList` (`role_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8;
 
 /*Data for the table `account` */
@@ -57,7 +57,7 @@ insert  into `account`(`account_id`,`account_name`,`account_password`,`account_p
 
 /*Table structure for table `account_union_role` */
 
-DROP TABLE IF EXISTS `account_union_role`;
+DROP TABLE IF EXISTS account_union_account_roles;
 
 CREATE TABLE `account_union_role` (
   `id` int(20) NOT NULL AUTO_INCREMENT COMMENT '账号-权限中间表',
@@ -239,7 +239,7 @@ insert  into `permission`(`permission_id`,`permission_name`,`permission_descript
 
 /*Table structure for table `permission_union_role` */
 
-DROP TABLE IF EXISTS `permission_union_role`;
+DROP TABLE IF EXISTS account_roles_union_permission;
 
 CREATE TABLE `permission_union_role` (
   `id` int(20) NOT NULL AUTO_INCREMENT COMMENT '权限-角色id',
@@ -248,13 +248,13 @@ CREATE TABLE `permission_union_role` (
   PRIMARY KEY (`id`),
   KEY `FK_permission_union_role` (`role_id`),
   KEY `FK_permission_union_role_permission` (`permiss_id`),
-  CONSTRAINT `FK_permission_union_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`),
+  CONSTRAINT `FK_permission_union_role` FOREIGN KEY (`role_id`) REFERENCES `accountRolesList` (`role_id`),
   CONSTRAINT `FK_permission_union_role_permission` FOREIGN KEY (`permiss_id`) REFERENCES `permission` (`permission_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=289 DEFAULT CHARSET=utf8;
 
 /*Data for the table `permission_union_role` */
 
-insert  into `permission_union_role`(`id`,`role_id`,`permiss_id`) values (2,2,2),(3,2,3),(4,2,4),(205,0,1),(206,0,2),(207,0,3),(244,3,1),(245,3,2),(246,3,3),(247,3,4),(248,3,5),(249,3,6),(250,3,7),(251,3,8),(252,3,9),(253,3,10),(254,3,11),(255,3,12),(256,3,13),(257,3,14),(258,3,15),(259,3,16),(260,3,17),(261,3,18),(262,3,19),(263,3,20),(264,3,21),(265,3,22),(266,3,23),(267,3,24),(268,3,25),(269,3,26),(270,3,27),(271,3,28),(272,3,29),(273,3,30),(274,3,31),(275,3,32),(276,3,33),(277,3,34),(278,3,35),(279,3,36),(280,3,37),(281,3,38),(282,3,39),(283,3,40),(284,3,41),(285,3,42),(286,3,43),(287,3,44),(288,1,12);
+insert  into account_roles_union_permission(`id`,`role_id`,`permiss_id`) values (2,2,2),(3,2,3),(4,2,4),(205,0,1),(206,0,2),(207,0,3),(244,3,1),(245,3,2),(246,3,3),(247,3,4),(248,3,5),(249,3,6),(250,3,7),(251,3,8),(252,3,9),(253,3,10),(254,3,11),(255,3,12),(256,3,13),(257,3,14),(258,3,15),(259,3,16),(260,3,17),(261,3,18),(262,3,19),(263,3,20),(264,3,21),(265,3,22),(266,3,23),(267,3,24),(268,3,25),(269,3,26),(270,3,27),(271,3,28),(272,3,29),(273,3,30),(274,3,31),(275,3,32),(276,3,33),(277,3,34),(278,3,35),(279,3,36),(280,3,37),(281,3,38),(282,3,39),(283,3,40),(284,3,41),(285,3,42),(286,3,43),(287,3,44),(288,1,12);
 
 /*Table structure for table `punch_record` */
 
@@ -292,11 +292,11 @@ CREATE TABLE `punchtype` (
 
 insert  into `punchtype`(`punch_type_id`,`punch_type_name`) values (0,'缺勤'),(1,'正常'),(2,'迟到'),(3,'请假'),(4,'未知');
 
-/*Table structure for table `roles` */
+/*Table structure for table `accountRolesList` */
 
-DROP TABLE IF EXISTS `roles`;
+DROP TABLE IF EXISTS `accountRolesList`;
 
-CREATE TABLE `roles` (
+CREATE TABLE `accountRolesList` (
   `role_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '角色id',
   `role_name` varchar(20) DEFAULT NULL COMMENT '角色英文名字',
   `role_description` varchar(20) NOT NULL COMMENT '角色中文解释',
@@ -304,9 +304,9 @@ CREATE TABLE `roles` (
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
-/*Data for the table `roles` */
+/*Data for the table `accountRolesList` */
 
-insert  into `roles`(`role_id`,`role_name`,`role_description`,`role_create_time`) values (0,'general','普通账号','2017-04-11 18:09:48'),(1,'admin','管理员','2017-04-11 18:09:48'),(2,'dba','数据库管理员','2017-04-11 18:09:48'),(3,'super','超级管理员','2017-04-11 18:09:48'),(4,'dev','开发与设计人员','2017-05-06 10:13:02'),(5,'anonymouse','匿名用户','2017-05-06 10:13:36');
+insert  into `accountRolesList`(`role_id`,`role_name`,`role_description`,`role_create_time`) values (0,'general','普通账号','2017-04-11 18:09:48'),(1,'admin','管理员','2017-04-11 18:09:48'),(2,'dba','数据库管理员','2017-04-11 18:09:48'),(3,'super','超级管理员','2017-04-11 18:09:48'),(4,'dev','开发与设计人员','2017-05-06 10:13:02'),(5,'anonymouse','匿名用户','2017-05-06 10:13:36');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

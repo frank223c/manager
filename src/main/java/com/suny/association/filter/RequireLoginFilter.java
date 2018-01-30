@@ -26,6 +26,7 @@ import java.util.Objects;
  */
 public class RequireLoginFilter implements Filter {
     private static final String TICKET_SPLIT_SYMBOL = ":";
+    private static final String USER_TICKET = "user_ticket";
     private static Logger logger = LoggerFactory.getLogger(RequireLoginFilter.class);
     private static final String EXECUTE_NEXT_FILTER = "EXECUTE_NEXT_FILTER";
     private static final String PORTAL_LOGIN_URL = "/login.html";
@@ -66,6 +67,7 @@ public class RequireLoginFilter implements Filter {
                 // ticket过期了就送的去登录
                 // 3.3 到这里说明ticket是还没有过期的,根据数据库中login_ticket表中的账号去查询账号信息
                 logger.info("【RequireLoginFilter】有效的ticket值为【{}】,直接为登录状态,发送到下一个过滤器", ticket);
+                req.setAttribute(USER_TICKET,ticket);
                 req.setAttribute(EXECUTE_NEXT_FILTER, true);
                 chain.doFilter(req, resp);
             } else {

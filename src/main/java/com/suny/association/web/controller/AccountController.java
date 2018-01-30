@@ -4,8 +4,8 @@ import com.suny.association.annotation.SystemControllerLog;
 import com.suny.association.entity.dto.BootstrapTableResultDTO;
 import com.suny.association.entity.dto.ResultDTO;
 import com.suny.association.entity.po.Account;
+import com.suny.association.entity.po.AccountRoles;
 import com.suny.association.entity.po.Member;
-import com.suny.association.entity.po.Roles;
 import com.suny.association.entity.vo.ConditionMap;
 import com.suny.association.enums.CommonEnum;
 import com.suny.association.enums.FormEnum;
@@ -83,10 +83,10 @@ public class AccountController extends BaseController {
     public ModelAndView insertPage(ModelAndView modelAndView) {
         List<Account> account = accountService.selectAll();
         List<Member> memberList = memberService.selectAll();
-        List<Roles> rolesList = rolesService.selectAll();
+        List<AccountRoles> accountRolesList = rolesService.selectAll();
         modelAndView.addObject("account", account);
         modelAndView.addObject("memberList", memberList);
-        modelAndView.addObject("rolesList", rolesList);
+        modelAndView.addObject("rolesList", accountRolesList);
         modelAndView.setViewName("accountInfo/accountInsert");
         return modelAndView;
     }
@@ -189,10 +189,10 @@ public class AccountController extends BaseController {
               /*         这里是项目的代码，非测试代码             */
         Account account = accountService.selectById(id);
         List<Member> memberList = memberService.selectAll();
-        List<Roles> rolesList = rolesService.selectAll();
+        List<AccountRoles> accountRolesList = rolesService.selectAll();
         modelAndView.addObject("account", account);
         modelAndView.addObject("memberList", memberList);
-        modelAndView.addObject("rolesList", rolesList);
+        modelAndView.addObject("rolesList", accountRolesList);
         modelAndView.setViewName("/accountInfo/accountUpdate");
         return modelAndView;
     }

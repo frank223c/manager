@@ -1,6 +1,5 @@
 package com.suny.association.mapper;
 
-import com.suny.association.entity.po.Roles;
 import com.suny.association.mapper.interfaces.IMapper;
 import com.suny.association.entity.po.Account;
 import org.apache.ibatis.annotations.Param;

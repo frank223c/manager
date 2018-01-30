@@ -50,9 +50,6 @@ public class AccountServiceImpl extends AbstractBaseServiceImpl<Account> impleme
         } catch (Exception e) {
             logger.error("插入账号信息失败{}",e.getMessage());
             // 抛自定义的异常
-
-
-
             throw new RuntimeException(e);
         }
     }

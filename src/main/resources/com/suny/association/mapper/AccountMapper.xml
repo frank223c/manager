@@ -9,12 +9,19 @@
         <result property="accountEmail" column="account_email"/>
         <result property="accountStatus" column="account_status"/>
         <!--账号角色复杂类型关联-->
-        <association property="accountRoles" column="account_role_id"
-                     javaType="com.suny.association.entity.po.Roles">
-            <id property="roleId" column="r_role_id"/>
-            <result property="description" column="r_role_name"/>
-            <result property="createTime" column="r_role_create_time"/>
-        </association>
+        <collection property="accountRolesList" javaType="List" ofType="com.suny.association.entity.po.AccountRoles">
+            <id property="roleId" column="account_role_id" javaType="Integer"/>
+            <result property="roleName" column="account_role_name" javaType="String"/>
+            <result property="description" column="account_role_description" javaType="String"/>
+            <result property="createTime" column="account_role_create_time" />
+            <collection property="permissionList" javaType="List" ofType="com.suny.association.entity.po.Permission">
+                <id property="permissionId" column="permission_id" javaType="Integer"/>
+                <result property="permissionName" column="permission_name" javaType="String"/>
+                <result property="description" column="permission_description" javaType="String"/>
+                <result property="createTime" column="permission_create_time" />
+                <result property="permissionStatus" column="permission_status" javaType="boolean"/>
+            </collection>
+        </collection>
         <!--复杂类型的集-->
         <collection property="accountMember" column="account_member_id" ofType="com.suny.association.entity.po.Member">
             <id property="memberId" column="m_member_id"/>
@@ -40,6 +47,35 @@
                           resultMap="BaseResultMap"/>-->
         </collection>
     </resultMap>
+
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        a.account_id,
+        a.account_name,
+        a.account_status,
+        a.account_member_id,
+        a.account_phone,
+        a.account_email,
+        ar.role_id  AS account_role_id,
+        ar.role_name as account_role_name,
+        ar.role_description AS account_role_description,
+        ar.role_create_time AS account_role_create_time,
+        p.permission_id AS permission_id,
+        p.permission_name AS permission_name,
+        p.permission_description AS permission_description,
+        p.create_time AS permission_create_time,
+        p.permission_status AS permission_status,
+        auar.role_id          AS auar_role_id,
+        m.member_id        AS m_member_id,
+        m.member_name      AS m_member_name
+        FROM account a
+        INNER JOIN account_union_account_roles auar ON a.account_id = auar.account_id
+        INNER JOIN account_roles ar ON ar.role_id = auar.role_id
+        INNER JOIN account_roles_union_permission arup ON arup.role_id = ar.role_id
+        INNER JOIN permission p ON p.permission_id = arup.permiss_id
+        INNER JOIN member m ON a.account_member_id=m.member_id
+        WHERE a.account_id = #{accountId};
+    </select>
 
 
     <!--===================这里开始是方法====================-->
@@ -79,22 +115,14 @@
     </select>
 
 
-    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        SELECT
-            a.account_id,
-            a.account_name,
-            a.account_status,
-            a.account_member_id,
-            a.account_role_id,
-            r.role_id          AS r_role_id,
-            r.role_description AS r_role_name,
-            m.member_id        AS m_member_id,
-            m.member_name      AS m_member_name
-        FROM account a
-            JOIN roles r
-                ON a.account_role_id = r.role_id
-            JOIN member m ON a.account_member_id = m.member_id
-        WHERE a.account_id = #{accountId};
+
+    <select id="getUserInfo">
+        SELECT * FROM account account
+            INNER JOIN account_union_account_roles auar ON account.account_id = auar.account_id
+            INNER JOIN account_roles ar ON ar.role_id = auar.role_id
+            INNER JOIN account_roles_union_permission arup ON arup.role_id = ar.role_id
+            INNER JOIN permission p ON p.permission_id = arup.permiss_id
+        WHERE account.account_id = 1
     </select>
 
     <!--=============================================================================================-->
@@ -110,7 +138,7 @@
             <if test="accountEmail != null">account_email,</if>
             <if test="accountStatus != null">account_status,</if>
             <if test="accountMember != null">account_member_id,</if>
-            <if test="accountRoles != null">account_role_id,</if>
+            <if test="accountRolesList != null">account_role_id,</if>
         </trim>
         <trim prefix="values(" suffix=")" suffixOverrides=",">
             <if test="accountId != null">#{accountId,jdbcType=BIGINT},</if>
@@ -120,7 +148,7 @@
             <if test="accountEmail != null">#{accountEmail,jdbcType=VARCHAR},</if>
             <if test="accountStatus != null">#{accountStatus,jdbcType=BOOLEAN},</if>
             <if test="accountMember != null">#{accountMember.memberId,jdbcType=BIGINT},</if>
-            <if test="accountRoles != null">#{accountRoles.roleId,jdbcType=INTEGER},</if>
+            <if test="accountRolesList != null">#{accountRolesList.roleId,jdbcType=INTEGER},</if>
         </trim>
     </insert>
 
@@ -135,7 +163,7 @@
             <if test="accountEmail != null">account_email,</if>
             <if test="accountStatus != null">account_status,</if>
             <if test="accountMember != null">account_member_id,</if>
-            <if test="accountRoles != null">account_role_id,</if>
+            <if test="accountRolesList != null">account_role_id,</if>
         </trim>
         <trim prefix="values(" suffix=")" suffixOverrides=",">
             <if test="accountId != null">#{accountId,jdbcType=BIGINT},</if>
@@ -145,7 +173,7 @@
             <if test="accountEmail != null">#{accountEmail,jdbcType=VARCHAR},</if>
             <if test="accountStatus != null">#{accountStatus,jdbcType=BOOLEAN},</if>
             <if test="accountMember != null">#{accountMember.memberId,jdbcType=BIGINT},</if>
-            <if test="accountRoles != null">#{accountRoles.roleId,jdbcType=INTEGER},</if>
+            <if test="accountRolesList != null">#{accountRolesList.roleId,jdbcType=INTEGER},</if>
         </trim>
     </insert>
     <!--批量插入简单的账号,仅限于Excel文件上传的-->
@@ -173,7 +201,7 @@
             <if test="accountEmail != null">account_email =#{accountEmail},</if>
             <if test="accountStatus != null">account_status =#{accountStatus},</if>
             <if test="accountMember != null">account_member_id =#{accountMember.memberId},</if>
-            <if test="accountRoles != null">account_role_id =#{accountRoles.roleId},</if>
+            <if test="accountRolesList != null">account_role_id =#{accountRolesList.roleId},</if>
         </trim>
         WHERE account_id = #{accountId}
     </update>
@@ -198,7 +226,7 @@
             m.member_id        AS m_member_id,
             m.member_name      AS m_member_name
         FROM account a
-            JOIN roles r ON a.account_role_id = r.role_id
+            JOIN accountRolesList r ON a.account_role_id = r.role_id
             JOIN member m ON a.account_member_id = m.member_id
         WHERE account_member_id = #{memberId}
     </select>
@@ -227,19 +255,28 @@
         SELECT
             a.account_id,
             a.account_name,
+            a.account_status,
+            a.account_member_id,
             a.account_phone,
             a.account_email,
-            a.account_status,
-            a.account_password,
-            a.account_member_id,
-            a.account_role_id,
-            r.role_id          AS r_role_id,
-            r.role_description AS r_role_name,
+            ar.role_id  AS account_role_id,
+            ar.role_name as account_role_name,
+            ar.role_description AS account_role_description,
+            ar.role_create_time AS account_role_create_time,
+            p.permission_id AS permission_id,
+            p.permission_name AS permission_name,
+            p.permission_description AS permission_description,
+            p.create_time AS permission_create_time,
+            p.permission_status AS permission_status,
+            auar.role_id          AS auar_role_id,
             m.member_id        AS m_member_id,
             m.member_name      AS m_member_name
         FROM account a
-            JOIN roles r ON a.account_role_id = r.role_id
-            JOIN member m ON a.account_member_id = m.member_id
+            INNER JOIN account_union_account_roles auar ON a.account_id = auar.account_id
+            INNER JOIN account_roles ar ON ar.role_id = auar.role_id
+            INNER JOIN account_roles_union_permission arup ON arup.role_id = ar.role_id
+            INNER JOIN permission p ON p.permission_id = arup.permiss_id
+            INNER JOIN member m ON a.account_member_id=m.member_id
         WHERE a.account_name = #{name};
     </select>
 
@@ -272,7 +309,7 @@
             m.member_id        AS m_member_id,
             m.member_name      AS m_member_name
         FROM account a
-            JOIN roles r ON a.account_role_id = r.role_id
+            JOIN accountRolesList r ON a.account_role_id = r.role_id
             JOIN member m ON a.account_member_id = m.member_id
         WHERE a.account_phone = #{phoneNumber}
     </select>
@@ -291,7 +328,7 @@
             m.member_id        AS m_member_id,
             m.member_name      AS m_member_name
         FROM account a
-            JOIN roles r ON a.account_role_id = r.role_id
+            JOIN accountRolesList r ON a.account_role_id = r.role_id
             JOIN member m ON a.account_member_id = m.member_id
         WHERE a.account_email = #{email}
     </select>
@@ -311,7 +348,7 @@
             m.member_id        AS m_member_id,
             m.member_name      AS m_member_name
         FROM account a
-            JOIN roles r ON a.account_role_id = r.role_id
+            JOIN accountRolesList r ON a.account_role_id = r.role_id
             JOIN member m ON a.account_member_id = m.member_id
     </select>
 
@@ -330,7 +367,7 @@
         m.member_id        AS m_member_id,
         m.member_name      AS m_member_name
         FROM account a
-        JOIN roles r ON a.account_role_id = r.role_id
+        JOIN accountRolesList r ON a.account_role_id = r.role_id
         JOIN member m ON a.account_member_id = m.member_id
         <where>
             1=1
