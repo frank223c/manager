@@ -17,7 +17,7 @@ public class Cache {
     /**
      * 缓存的数据
      */
-    private Object value;  //
+    private Object value;
     /**
      * 更新的时间
      */

@@ -17,8 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 /**
  * Comments:   权限控制过滤器
@@ -34,6 +32,7 @@ public class PermissionFilter implements Filter {
     private static final String PORTAL_LOGIN_URL = "/login.html";
     private static final String NO_PERMISSION = "/403.jsp";
     public static final String PERMISSION_CACHE_PREFIX = "PERMISSION_";
+    public static final String ACCESS_PERMISSION_CACHE_PREFIX = "ACCESS_PERMISSION_";
     private IPermissionAllotService permissionAllotService;
     private IAccessPermissionService accessPermissionService;
     private LoginTicketMapper loginTicketMapper;
@@ -67,15 +66,41 @@ public class PermissionFilter implements Filter {
             logger.info("【PermissionFilter】当前过滤器直接放行");
             chain.doFilter(req, resp);
         } else {
+            boolean hasPermission;
             // 这里使用getRequestURI会携带项目名字,getServletPath不会携带项目名字
-            String reqURI = request.getServletPath();
+            String requestUrl = request.getServletPath();
             String ticket = (String) request.getAttribute(USER_TICKET);
             int point = ticket.indexOf(TICKET_SPLIT_SYMBOL);
             String username = ticket.substring(0, point);
-            // 2.1 判断是否有对应的权限
-            boolean isPermission = isPermission(username, reqURI);
+            // 如果缓存中有权限信息就直接去缓存中取
+            List<String> permissionFormCache = getPermissionFormCache(username);
+            List<AccessPermission> accessPermissionListFormCache = getAccessPermissionListFormCache();
+            // 当从缓存中取当前用户的权限以及系统所有操作权限都不为空时
+            if (!permissionFormCache.isEmpty() && !accessPermissionListFormCache.isEmpty()) {
+                hasPermission = hasPermission(permissionFormCache, accessPermissionListFormCache, requestUrl);
+            } else {
+                if (permissionFormCache.isEmpty() && accessPermissionListFormCache.isEmpty()) {
+                    // 当从缓存中取当前用户的权限为空的时候,直接从MYSQL中查询用户的权限
+                    List<String> permissionFormMYSQL = getPermissionFormMYSQL(username);
+                    setPermissionToCache(permissionFormMYSQL, username);
+                    // 当从缓存中取到系统中所有的的操作权限为空的时候,直接从MYSQL中查询用户的权限
+                    List<AccessPermission> accessPermissionListFormMYSQL = getAccessPermissionListFormMYSQL();
+                    setAccessPermissionListToCache(accessPermissionListFormMYSQL);
+                    hasPermission = hasPermission(permissionFormMYSQL, accessPermissionListFormMYSQL, requestUrl);
+                } else if (permissionFormCache.isEmpty()) {
+                    // 当从缓存中取当前用户的权限为空的时候,直接从MYSQL中查询用户的权限
+                    List<String> permissionFormMYSQL = getPermissionFormMYSQL(username);
+                    setPermissionToCache(permissionFormMYSQL, username);
+                    hasPermission = hasPermission(permissionFormMYSQL, accessPermissionListFormCache, requestUrl);
+                } else {
+                    // 当从缓存中取到系统中所有的的操作权限为空的时候,直接从MYSQL中查询用户的权限
+                    List<AccessPermission> accessPermissionListFormMYSQL = getAccessPermissionListFormMYSQL();
+                    setAccessPermissionListToCache(accessPermissionListFormMYSQL);
+                    hasPermission = hasPermission(permissionFormCache, accessPermissionListFormMYSQL, requestUrl);
+                }
+            }
             //    2.1.1 有权限则放行到下一个Filter
-            if (isPermission) {
+            if (hasPermission) {
                 chain.doFilter(request, response);
             } else {
                 // 2.1.2   重定向到无权限页面友情提示页面
@@ -86,64 +111,124 @@ public class PermissionFilter implements Filter {
     }
 
     /**
-     * 验证用户是否有这个权限操作当前的URL地址.
+     * 获取用户的权限从MYSQL数据库里面
      *
-     * @param username 用户账号名.
-     * @param path     访问的URL地址.
-     * @return 有访问这个URL地址的权限就返回true, 否则就返回false
+     * @param username 用户名
+     * @return 字符权限集合
      */
-    private boolean isPermission(String username, String path) {
-//        Cache cache = CacheManager.getCache(PERMISSION_CACHE_PREFIX + username);
-//        List<PermissionAllot> allotList = (List<PermissionAllot>) cache.getValue();
-//         查看缓存中是否有这个用户的权限缓存,有就直接匹配,没有就去数据库查询
-//        if (allotList != null) {
-//             这里就对权限进行判断
-//        }
-        // 等于空就是缓存里面没有值,先从数据库查询一次,然后再放到缓存里面去
-
+    private List<String> getPermissionFormMYSQL(String username) {
         Account account = accountMapper.selectByName(username);
-        //   1. 得到账号的角色,然后查询到用户对应的角色,    注意!这里使用的是单用户单角色
         List<AccountRoles> accountRolesList = account.getAccountRolesList();
         //   2. 取出所有用户拥有的权限,放到HashSet里面去重
-        List<String> permissions = new ArrayList<>();
+        List<String> stringPermissionList = new ArrayList<>();
         // 遍历所有的角色
         for (AccountRoles accountRoles : accountRolesList) {
             List<Permission> permissionList = accountRoles.getPermissionList();
             // 遍历当前循环中角色中所有的权限
             for (Permission permission : permissionList) {
                 // 把权限实体转换为String权限,放入集合中去
-                if (!permissions.contains(permission.getpermissionName())) {
+                if (!stringPermissionList.contains(permission.getpermissionName())) {
                     String permissionName = permission.getpermissionName();
-                    permissions.add(permissionName);
+                    stringPermissionList.add(permissionName);
                 }
             }
         }
-        //   3. 首先进行判断，防止角色没有权限导致数据下标溢出
-        if (!permissions.isEmpty()) {
+        return stringPermissionList;
+    }
+
+    /**
+     * 把权限放到缓存里面去
+     *
+     * @param permissionList 权限列表
+     * @param username       用户名
+     */
+    private void setPermissionToCache(List<String> permissionList, String username) {
+        Cache cache = new Cache();
+        cache.setKey(PERMISSION_CACHE_PREFIX + username);
+        cache.setValue(permissionList);
+        CacheManager.putCache(PERMISSION_CACHE_PREFIX + username, cache);
+    }
+
+    /**
+     * 获取用户的权限从缓存里面
+     *
+     * @param username 用户名
+     * @return 字符权限集合
+     */
+    private List<String> getPermissionFormCache(String username) {
+        Cache cache = CacheManager.getCache(PERMISSION_CACHE_PREFIX + username);
+        if (cache != null) {
+            return (List<String>) cache.getValue();
+        }
+        return Collections.emptyList();
+    }
+
+    /**
+     * 把权限放到缓存里面去
+     *
+     * @param accessPermissionList 操作需要的权限列表
+     */
+    private void setAccessPermissionListToCache(List<AccessPermission> accessPermissionList) {
+        Cache cache = new Cache();
+        cache.setKey(ACCESS_PERMISSION_CACHE_PREFIX);
+        cache.setValue(accessPermissionList);
+        CacheManager.putCache(ACCESS_PERMISSION_CACHE_PREFIX, cache);
+    }
+
+    /**
+     * 从MYSQL数据库中取得系统所有操作需要的权限
+     *
+     * @return 所有操作需要的权限
+     */
+    private List<AccessPermission> getAccessPermissionListFormCache() {
+        Cache cache = CacheManager.getCache(ACCESS_PERMISSION_CACHE_PREFIX);
+        if (cache != null) {
+            return (List<AccessPermission>) cache.getValue();
+        }
+        return Collections.emptyList();
+    }
+
+
+    /**
+     * 从MYSQL数据库中取得所有操作需要的权限
+     *
+     * @return 所有操作需要的权限
+     */
+    private List<AccessPermission> getAccessPermissionListFormMYSQL() {
+        return accessPermissionService.selectAll();
+    }
+
+
+    /**
+     * 验证用户是否有这个权限操作当前的URL地址.
+     *
+     * @param path 访问的URL地址.
+     * @return 有访问这个URL地址的权限就返回true, 否则就返回false
+     */
+    private boolean hasPermission(List<String> permissionList, List<AccessPermission> accessPermissionList, String path) {
+        String urlRequirePermission = null;
+        boolean hasPermission;
+        if (!permissionList.isEmpty()) {
             // 3.3 查询当前访问的URL需要什么权限
-            AccessPermission accessPermission = accessPermissionService.selectByName(path);
+            for (AccessPermission accessPermission : accessPermissionList) {
+                if (accessPermission.getAccessUrl().equals(path)) {
+                    urlRequirePermission = accessPermission.getAccessPermission();
+                    break;
+                }
+            }
             // 3.4 前面虽然已经判断了一次,但是有些URL也是可以匿名访问的
-            if (accessPermission == null) {
-                logger.info("这个页面不需要权限就可以访问");
-                return true;
-            } else {
-                //  3.4.1 从权限实体中获取当前操作所需要得到权限字符串
-                String urlPermission = accessPermission.getAccessPermission();
-                //  3.4.2 定义一个标记,在循环中使用
-                boolean hasPermission;
+            if (urlRequirePermission != null) {
                 //  3.4.3  循环匹配每一个权限实体里面的权限字符串跟请求的权限字符串是否相等,如果为true就直接跳出循环
-                for (String permissionName : permissions) {
-                    hasPermission = permissionName.equals(urlPermission);
+                for (String permissionName : permissionList) {
+                    hasPermission = permissionName.equals(urlRequirePermission);
                     if (hasPermission) {
-                        logger.info("访问当前页面需要【{}】用户{}有访问【{}】这个权限，放行", urlPermission, account.getAccountName(), urlPermission);
                         return true;
                     }
                 }
-                logger.warn("用户{}没有访问这个操作的权限", account.getAccountName());
-                return false;
             }
+            logger.info("这个页面不需要权限就可以访问");
+            return true;
         }
-        logger.error("用户{}没有任何操作权限", account.getAccountName());
         return false;
     }
 

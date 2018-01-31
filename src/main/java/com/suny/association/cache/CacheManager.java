@@ -1,8 +1,5 @@
 package com.suny.association.cache;
 
-import com.sun.org.apache.regexp.internal.RE;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,9 +12,9 @@ import java.util.Map;
  *  @version 1.0
  **************************************/
 public class CacheManager {
-    private static HashMap<String, Cache> cacheMap = new HashMap();
+    private static HashMap cacheMap = new HashMap();
 
-    public CacheManager() {
+    private CacheManager() {
         super();
     }
 
@@ -29,7 +26,7 @@ public class CacheManager {
      * @return Cache对象
      */
     public static synchronized Cache getCache(String key) {
-        return cacheMap.get(key);
+        return (Cache) cacheMap.get(key);
     }
 
     /**
