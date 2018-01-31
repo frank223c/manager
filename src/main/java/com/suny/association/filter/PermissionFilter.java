@@ -16,10 +16,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -70,7 +67,8 @@ public class PermissionFilter implements Filter {
             logger.info("【PermissionFilter】当前过滤器直接放行");
             chain.doFilter(req, resp);
         } else {
-            String reqURI = request.getRequestURI();
+            // 这里使用getRequestURI会携带项目名字,getServletPath不会携带项目名字
+            String reqURI = request.getServletPath();
             String ticket = (String) request.getAttribute(USER_TICKET);
             int point = ticket.indexOf(TICKET_SPLIT_SYMBOL);
             String username = ticket.substring(0, point);
@@ -95,28 +93,33 @@ public class PermissionFilter implements Filter {
      * @return 有访问这个URL地址的权限就返回true, 否则就返回false
      */
     private boolean isPermission(String username, String path) {
-        Cache cache = CacheManager.getCache(PERMISSION_CACHE_PREFIX + username);
-        List<PermissionAllot> allotList = (List<PermissionAllot>) cache.getValue();
-        // 查看缓存中是否有这个用户的权限缓存,有就直接匹配,没有就去数据库查询
-        if (allotList != null) {
-            // 这里就对权限进行判断
-        }
+//        Cache cache = CacheManager.getCache(PERMISSION_CACHE_PREFIX + username);
+//        List<PermissionAllot> allotList = (List<PermissionAllot>) cache.getValue();
+//         查看缓存中是否有这个用户的权限缓存,有就直接匹配,没有就去数据库查询
+//        if (allotList != null) {
+//             这里就对权限进行判断
+//        }
         // 等于空就是缓存里面没有值,先从数据库查询一次,然后再放到缓存里面去
 
         Account account = accountMapper.selectByName(username);
         //   1. 得到账号的角色,然后查询到用户对应的角色,    注意!这里使用的是单用户单角色
         List<AccountRoles> accountRolesList = account.getAccountRolesList();
         //   2. 取出所有用户拥有的权限,放到HashSet里面去重
-        AtomicReference<HashSet<String>> permissions = new AtomicReference<>(new HashSet<>());
+        List<String> permissions = new ArrayList<>();
+        // 遍历所有的角色
         for (AccountRoles accountRoles : accountRolesList) {
             List<Permission> permissionList = accountRoles.getPermissionList();
+            // 遍历当前循环中角色中所有的权限
             for (Permission permission : permissionList) {
-                String permissionName = permission.getpermissionName();
-                permissions.get().add(permissionName);
+                // 把权限实体转换为String权限,放入集合中去
+                if (!permissions.contains(permission.getpermissionName())) {
+                    String permissionName = permission.getpermissionName();
+                    permissions.add(permissionName);
+                }
             }
         }
         //   3. 首先进行判断，防止角色没有权限导致数据下标溢出
-        if (!permissions.get().isEmpty()) {
+        if (!permissions.isEmpty()) {
             // 3.3 查询当前访问的URL需要什么权限
             AccessPermission accessPermission = accessPermissionService.selectByName(path);
             // 3.4 前面虽然已经判断了一次,但是有些URL也是可以匿名访问的
@@ -129,9 +132,7 @@ public class PermissionFilter implements Filter {
                 //  3.4.2 定义一个标记,在循环中使用
                 boolean hasPermission;
                 //  3.4.3  循环匹配每一个权限实体里面的权限字符串跟请求的权限字符串是否相等,如果为true就直接跳出循环
-                AtomicReference<Iterator<String>> iterator = new AtomicReference<>(permissions.get().iterator());
-                if(iterator.get().hasNext()){
-                    String permissionName = iterator.get().next();
+                for (String permissionName : permissions) {
                     hasPermission = permissionName.equals(urlPermission);
                     if (hasPermission) {
                         logger.info("访问当前页面需要【{}】用户{}有访问【{}】这个权限，放行", urlPermission, account.getAccountName(), urlPermission);
