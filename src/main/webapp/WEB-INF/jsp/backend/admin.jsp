@@ -118,7 +118,7 @@
                 </div>
             </li>
             <li id="logo" class="hidden-xs">
-                <a href="${basePath}/backend/userCenter.html">
+                <a href="${basePath}">
                     <img src="${basePath}/images/logo.png"/>
                 </a>
                 <span id="system_title">协会管理系统</span>
@@ -224,10 +224,8 @@
                         <img src="${basePath}/images/avatar.jpg"/>
                     </div>
                     <div class="sp-info">
-                        <%--<shiro:principal/>--%>
-                        <%--<shiro:user></shiro:user>--%>
-                        <%--【${member.memberRoles.memberRoleName}】 ${member.memberName}，您好！--%>
-                        【${sessionScope.account.accountRolesList.description}】 ${sessionScope.member.memberName}，您好！
+                        <span id="username"></span>
+                        ${sessionScope.account.accountName}，您好！
                         <i class="zmdi zmdi-caret-down"></i>
                     </div>
                 </a>
@@ -392,7 +390,8 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal"
-                                            aria-hidden="true">&times;</button>
+                                            aria-hidden="true">&times;
+                                    </button>
                                     <h4 class="modal-title" id="myModalLabel">修改用户密码</h4>
                                 </div>
                                 <div class="modal-body">
@@ -463,6 +462,14 @@
 <script src="${basePath}/js/common.js"></script>
 <script src="${basePath}/js/admin.js"></script>
 <script>
+    $(function () {
+        var username_span = $("#username");
+        console.log(document.cookie);
+        var username_cookie = document.cookie.split(";")[0].split("=")[1];
+        var username_cookie_split = username_cookie.split(":");
+        var username_string = username_cookie_split[0];
+        username_span.text(username_string);
+    });
     function punch() {
         $.ajax({
             type: "POST",
@@ -478,11 +485,11 @@
                     layer.alert("没有你这个要签到的账号！恶意操作");
                 } else if (status === 303) {
                     layer.alert("今天已经签到成功啦，不要重复签到！");
-                }else if (status === 304) {
+                } else if (status === 304) {
                     layer.alert("再等等啦，还没有到签到时间！");
                 } else if (status === 306) {
                     layer.alert("考勤失败啦，再等等吧！");
-                }  else if (status === 305) {
+                } else if (status === 305) {
                     layer.alert("恭喜你签到成功啦！");
                 } else {
                     layer.alert("服务器除了点小问题，可能执行到Bug了");
@@ -536,7 +543,7 @@
             data: {
                 passWord: passwordVal,
                 newPassword: newPasswordVal,
-                accountId: ${account.accountId}
+                <%--accountId: ${account.accountId}--%>
             },
             success: function (result) {
                 var status = result.status;

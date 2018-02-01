@@ -28,14 +28,10 @@ public class PermissionFilter implements Filter {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(PermissionFilter.class);
     private static final String TICKET_SPLIT_SYMBOL = ":";
     private static final String USER_TICKET = "user_ticket";
-    private static final String IS_LOGIN = "IS_LOGIN";
-    private static final String PORTAL_LOGIN_URL = "/login.html";
     private static final String NO_PERMISSION = "/403.jsp";
-    public static final String PERMISSION_CACHE_PREFIX = "PERMISSION_";
-    public static final String ACCESS_PERMISSION_CACHE_PREFIX = "ACCESS_PERMISSION_";
-    private IPermissionAllotService permissionAllotService;
+    private static final String PERMISSION_CACHE_PREFIX = "PERMISSION_";
+    private static final String ACCESS_PERMISSION_CACHE_PREFIX = "ACCESS_PERMISSION_";
     private IAccessPermissionService accessPermissionService;
-    private LoginTicketMapper loginTicketMapper;
     private AccountMapper accountMapper;
 
 
@@ -48,9 +44,7 @@ public class PermissionFilter implements Filter {
     public void init(FilterConfig filterConfig) {
         ServletContext servletContext = filterConfig.getServletContext();
         ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-        permissionAllotService = (IPermissionAllotService) context.getBean("permissionAllotService");
         accessPermissionService = (IAccessPermissionService) context.getBean("accessPermissionService");
-        loginTicketMapper = (LoginTicketMapper) context.getBean("loginTicketMapper");
         accountMapper = (AccountMapper) context.getBean("accountMapper");
         logger.info("===============权限验证过滤器开始初始化============");
     }

@@ -30,6 +30,10 @@ public class RequestHolder {
         return requestHolder.get();
     }
 
+    public static Account getAccountHolder() {
+        return accountHolder.get();
+    }
+
     public static void remove() {
         accountHolder.remove();
         requestHolder.remove();

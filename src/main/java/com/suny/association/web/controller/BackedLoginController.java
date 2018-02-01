@@ -1,6 +1,7 @@
 package com.suny.association.web.controller;
 
 import com.suny.association.annotation.SystemControllerLog;
+import com.suny.association.common.RequestHolder;
 import com.suny.association.entity.dto.ResultDTO;
 import com.suny.association.entity.po.Account;
 import com.suny.association.entity.po.LoginTicket;
@@ -115,15 +116,15 @@ public class BackedLoginController {
             //   1.4   获取登录的结果,也就是带有ticket则表示登录成功了
             Map<String, Object> loginResult = loginService.login(username, password);
             if (loginResult.containsKey(TICKET)) {
-                //   1.4.1    把获取到的ticket放到Cookie中去
-                String ticket = (String) loginResult.get(TICKET);
-                Cookie cookie = new Cookie(TICKET, ticket);
-                cookie.setPath("/");
                 if (rememberMe) {
+                    //   1.4.1    把获取到的ticket放到Cookie中去
+                    String ticket = (String) loginResult.get(TICKET);
+                    Cookie cookie = new Cookie(TICKET, ticket);
+                    cookie.setPath("/");
                     cookie.setMaxAge(3600 * 24 * 7);
+                    // cookie.setSecure(true); 在http中是客户端cookie无效的；在https中才有效。请注意这里在HTTP连接中会导致导致客户端的cookie无法传输
+                    response.addCookie(cookie);
                 }
-                // cookie.setSecure(true); 在http中是客户端cookie无效的；在https中才有效。请注意这里在HTTP连接中会导致导致客户端的cookie无法传输
-                response.addCookie(cookie);
                 //    1.4.4   把一些进入主页面需要的数据先放进去
                 saveUser(request, response, username);
                 logger.warn("登录成功了,给前端发送通知");
@@ -162,10 +163,15 @@ public class BackedLoginController {
      * @param username 登录的用户名
      */
     private void saveUser(HttpServletRequest request, HttpServletResponse response, String username) {
-        Account account = accountService.selectByName(username);
-        Member member = account.getAccountMember();
-        request.getSession().setAttribute(ACCOUNT_ATTRIBUTE, account);
-        request.getSession().setAttribute(MEMBER_ATTRIBUTE, member);
+        Account accountHolder = RequestHolder.getAccountHolder();
+        if (accountHolder != null) {
+            request.getSession().setAttribute(ACCOUNT_ATTRIBUTE, accountHolder);
+        } else {
+            Account account = accountService.selectByName(username);
+            RequestHolder.add(account);
+            request.getSession().setAttribute(ACCOUNT_ATTRIBUTE, account);
+        }
+
     }
 
 
