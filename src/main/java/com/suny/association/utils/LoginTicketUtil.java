@@ -26,7 +26,7 @@ public class LoginTicketUtil {
      * @param request 请求头
      * @return 如果request中存在ticket标记的话就会返回, 否则就会返回空
      */
-    public static String getTicket(HttpServletRequest request) {
+    public static String getTicketFormCookie(HttpServletRequest request) {
         String ticket = null;
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {

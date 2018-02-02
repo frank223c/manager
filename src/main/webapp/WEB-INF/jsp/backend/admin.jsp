@@ -463,13 +463,17 @@
 <script src="${basePath}/js/admin.js"></script>
 <script>
     $(function () {
+        getUsernameFormCookie();
+    });
+    // 读取Cookie中的用户名
+    function getUsernameFormCookie() {
         var username_span = $("#username");
         console.log(document.cookie);
         var username_cookie = document.cookie.split(";")[0].split("=")[1];
         var username_cookie_split = username_cookie.split(":");
         var username_string = username_cookie_split[0];
         username_span.text(username_string);
-    });
+    }
     function punch() {
         $.ajax({
             type: "POST",

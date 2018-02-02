@@ -16,8 +16,9 @@ import java.util.Objects;
 
 /**
  * Comments:    获取登录用户的信息工具
+ *
  * @author :   孙建荣
- * Create Date: 2017/04/20 19:57
+ *         Create Date: 2017/04/20 19:57
  */
 public class WebUtils {
     private static final Logger logger = LoggerFactory.getLogger(WebUtils.class);
@@ -28,11 +29,13 @@ public class WebUtils {
     /**
      * 可能会出现的本地IP地址
      */
-    private static final String LOCALHOST_IP_IPV4="127.0.0.1";
-    private static final String LOCALHOST_IP_IPV4_2="127.0.1.1";
-    private static final String LOCALHOST_IP_IPV6="0:0:0:0:0:0:0:1";
-    private static final String TAOBAO_GET_IP_INFO_URL="http://ip.taobao.com/service/getData.php?ip=";
+    private static final String LOCALHOST_IP_IPV4 = "127.0.0.1";
+    private static final String LOCALHOST_IP_IPV4_2 = "127.0.1.1";
+    private static final String LOCALHOST_IP_IPV6 = "0:0:0:0:0:0:0:1";
+    private static final String TAOBAO_GET_IP_INFO_URL = "http://ip.taobao.com/service/getData.php?ip=";
 
+    private WebUtils() {
+    }
 
     /**
      * 获取当前请求的request请求实例
@@ -46,27 +49,16 @@ public class WebUtils {
 
 
     /**
-     * 返回项目的绝对路径
-     *
-     * @param request 请求对象
-     * @return 绝对路径
-     */
-    private static String getBasePath(HttpServletRequest request) {
-        String path = request.getContextPath();
-        return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
-    }
-
-    /**
      * 获取普通精度的位置.
      *
      * @param ip ip地址
-     * @return 百度普通定位地址
+     * @return 淘宝普通定位地址
      */
     public static IpInfo getIpInfo(String ip) {
-        if (LOCALHOST_IP_IPV4.equals(ip.trim())||LOCALHOST_IP_IPV6.equals(ip.trim())){
-             return localhostIpInfo();
+        if (LOCALHOST_IP_IPV4.equals(ip.trim()) || LOCALHOST_IP_IPV6.equals(ip.trim())) {
+            return localhostIpInfo();
         }
-        if (LOCALHOST_IP_IPV4_2.equals(ip.trim())||LOCALHOST_IP_IPV4_2.equals(ip.trim())){
+        if (LOCALHOST_IP_IPV4_2.equals(ip.trim()) || LOCALHOST_IP_IPV4_2.equals(ip.trim())) {
             return localhostIpInfo();
         }
         URL myUrl;
@@ -84,7 +76,7 @@ public class WebUtils {
             //　不使用代理进行访问
             urlConnection = myUrl.openConnection();
         } catch (IOException e) {
-            logger.error("发生了输入输出流异常",e.getMessage());
+            logger.error("发生了输入输出流异常", e.getMessage());
         }
         if (urlConnection != null) {
             try (InputStreamReader inputStreamReader = new InputStreamReader(urlConnection.getInputStream(), "UTF-8");
@@ -107,20 +99,20 @@ public class WebUtils {
 
     /**
      * 拼接一个固定的本地网络连接的的信息
-     * @return  IP等信息
+     *
+     * @return IP等信息
      */
-    private static IpInfo localhostIpInfo(){
-        return new IpInfo("59.53.207.251","中国","华东","江西省","南昌市","南昌县","电信");
+    private static IpInfo localhostIpInfo() {
+        return new IpInfo("59.53.207.251", "中国", "华东", "江西省", "南昌市", "南昌县", "电信");
     }
 
-    private static IpInfo parseJsonDate(String jsonInfo){
+    private static IpInfo parseJsonDate(String jsonInfo) {
         ResponseInfo responseInfo = JackJsonUtil.jsonToObject(jsonInfo, ResponseInfo.class);
-        if(responseInfo != null){
-            if(responseInfo.getCode()== 1){
+        if (responseInfo != null) {
+            if (responseInfo.getCode() == 1) {
                 logger.error("淘宝返回的JSON状态码为1,查询失败");
                 return localhostIpInfo();
-            }
-            else{
+            } else {
                 logger.error("淘宝返回的JSON状态码为0,查询成功");
                 return responseInfo.getData();
             }
@@ -128,11 +120,6 @@ public class WebUtils {
         logger.warn("由于未知的原因导致返回的IP查询信息为空");
         return localhostIpInfo();
     }
-
-
-
-
-
 
 
     /***
@@ -173,7 +160,7 @@ public class WebUtils {
         if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        if (LOCALHOST_IP_IPV4.equals(ip) || LOCALHOST_IP_IPV6.equals(ip)){
+        if (LOCALHOST_IP_IPV4.equals(ip) || LOCALHOST_IP_IPV6.equals(ip)) {
             try {
                 ip = InetAddress.getLocalHost().getHostAddress();
             } catch (UnknownHostException ignored) {
@@ -374,7 +361,7 @@ public class WebUtils {
         private String country;
         private String area;
         /**
-         *省
+         * 省
          */
         private String region;
         /**
@@ -406,19 +393,20 @@ public class WebUtils {
         /**
          * 私有的构造方法,不允许空的构造方法
          */
-        private IpInfo(){
+        private IpInfo() {
 
         }
 
         /**
          * 最基本的构造方法,包含常用的
-         * @param ip  ip地址
-         * @param country  国家
-         * @param area  地区
+         *
+         * @param ip      ip地址
+         * @param country 国家
+         * @param area    地区
          * @param region  省
-         * @param city   市
+         * @param city    市
          * @param county  县
-         * @param isp   宽带服务商
+         * @param isp     宽带服务商
          */
         public IpInfo(String ip, String country, String area, String region, String city, String county, String isp) {
             this.ip = ip;
@@ -433,19 +421,20 @@ public class WebUtils {
 
         /**
          * 完整的构造函数,用于网络查询返回封装的构造函数
-         * @param ip  ip地址
-         * @param country  国家
-         * @param area  地区
-         * @param region  省
-         * @param city   市
-         * @param county  县
-         * @param isp   宽带服务商
-         * @param countryId  国家ID
-         * @param areaId   地区ID
+         *
+         * @param ip        ip地址
+         * @param country   国家
+         * @param area      地区
+         * @param region    省
+         * @param city      市
+         * @param county    县
+         * @param isp       宽带服务商
+         * @param countryId 国家ID
+         * @param areaId    地区ID
          * @param regionId  省ID
-         * @param cityId   市ID
+         * @param cityId    市ID
          * @param countyId  县ID
-         * @param ispId  宽带商ID
+         * @param ispId     宽带商ID
          */
         public IpInfo(String ip, String country, String area, String region, String city, String county, String isp, String countryId, String areaId, String regionId, String cityId, String countyId, String ispId) {
             this.ip = ip;
@@ -567,9 +556,6 @@ public class WebUtils {
             this.ispId = ispId;
         }
     }
-
-
-
 
 
 }

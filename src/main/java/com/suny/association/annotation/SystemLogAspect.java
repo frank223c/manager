@@ -1,5 +1,6 @@
 package com.suny.association.annotation;
 
+import com.suny.association.common.RequestHolder;
 import com.suny.association.entity.po.Account;
 import com.suny.association.entity.po.Member;
 import com.suny.association.entity.po.OperationLog;
@@ -67,26 +68,16 @@ public class SystemLogAspect {
     @Before("controllerAspect()")
     public void doBefore(JoinPoint joinPoint) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        //读取session中的用户
-        HttpSession session = request.getSession();
-        Member member = (Member) session.getAttribute("member");
-        Account account = (Account) session.getAttribute("account");
-        //获取请求的ip
-        String ip = WebUtils.getClientIpAdder(request);
+        Account account= RequestHolder.getAccountHolder();
         try {
             /*控制台输出*/
-            logger.info("====前置通知开始");
-            logger.info("请求的方法为======={}",joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()");
-            logger.info("方法描述为======={}",getControllerMethodDescription(joinPoint));
-            logger.info("请求人======={}",member.getMemberName());
-            logger.info("请求人ip======={}",ip);
             /*数据库日志，下面是把数据报存到数据库的的动作*/
             OperationLog operationLog = new OperationLog();
             String userAgent = request.getHeader("user-agent");
              /*  操作动作  */
             operationLog.setOperationMessage(getControllerMethodDescription(joinPoint));
             /* 操作者姓名，可选 */
-            operationLog.setOperationMemberName(member.getMemberName());
+            operationLog.setOperationMemberName(account.getAccountName());
              /*  操作浏览器  */
             operationLog.setOperationBrower(WebUtils.getBrowserInfo(userAgent));
              /*  操作系统 */
@@ -101,25 +92,19 @@ public class SystemLogAspect {
              /*  操作状态  */
             operationLog.setOperationStatus(true);
              /*   操作ip*/
-            String clientIpAdder = WebUtils.getClientIpAdder(WebUtils.getHttpServletRequest());
-            WebUtils.IpInfo ipInfo = WebUtils.getIpInfo(clientIpAdder);
+            String clientIpAdderess = WebUtils.getClientIpAdder(WebUtils.getHttpServletRequest());
+            WebUtils.IpInfo ipInfo = WebUtils.getIpInfo(clientIpAdderess);
             if(ipInfo != null){
                 operationLog.setOperationAddress(ipInfo.getCounty() + ipInfo.getArea() + ipInfo.getRegion() + ipInfo.getCity() + ipInfo.getIsp());
             }else{
                 operationLog.setOperationAddress("未知地址");
             }
-            operationLog.setOperationIp(clientIpAdder);
-            logger.info("准备向数据库插入操作记录");
+            operationLog.setOperationIp(clientIpAdderess);
             // 开始插入操作日志
             operationLogService.insert(operationLog);
-
-            logger.info("数据库插入操作记录结束");
-
-            logger.info("===前置通知结束");
         } catch (Exception e) {
             //记录本地异常日志
-            logger.error("==前置通知异常==");
-            logger.error("异常信息:{}", e.getMessage());
+            logger.error("==前置通知异常==异常信息:{}", e.getMessage());
         }
     }
 
@@ -133,10 +118,7 @@ public class SystemLogAspect {
     @AfterThrowing(pointcut = "serviceAspect()", throwing = "e")
     public void doAfterThrowing(JoinPoint joinPoint, Throwable e) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        HttpSession session = request.getSession();
-        //读取session中的用户
-        Member member = (Member) session.getAttribute("member");
-        Account account = (Account) session.getAttribute("account");
+        Account account= RequestHolder.getAccountHolder();
         //获取请求的ip
         String ip = WebUtils.getClientIpAdder(request);
         //获取用户请求方法的参数并序列化为JSON格式字符串
@@ -150,20 +132,13 @@ public class SystemLogAspect {
         }
         try {
         /*==控制台的输出==*/
-            logger.info("==异常通知开始==");
-            logger.info("异常代码{}",e.getClass().getName());
-            logger.info("异常信息{}" , (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));
-            logger.info("方法描述{}" , getServiceMethodDescription(joinPoint));
-            logger.info("请求人{}" ,member.getMemberName());
-            logger.info("请求人IP{}",ip);
-            logger.info("请求参数{}",params);
             /*数据库日志，下面是把数据报存到数据库的的动作*/
             OperationLog operationLog = new OperationLog();
             String userAgent = request.getHeader("user-agent");
              /*  操作动作  */
             operationLog.setOperationMessage(getControllerMethodDescription(joinPoint));
             /* 操作者姓名，可选 */
-            operationLog.setOperationMemberName(member.getMemberName());
+            operationLog.setOperationMemberName(account.getAccountName());
              /*  操作浏览器  */
             operationLog.setOperationBrower(WebUtils.getBrowserInfo(userAgent));
              /*  操作系统 */

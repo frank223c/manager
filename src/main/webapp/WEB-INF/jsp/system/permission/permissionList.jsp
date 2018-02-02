@@ -19,57 +19,192 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>权限管理页面</title>
     <link href="${basePath}/plugins/bootstrap-3.3.0/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="${basePath}/plugins/bootstrap-table-1.11.0/bootstrap-table.min.css"
-          rel="stylesheet"/>
-    <link href="${basePath}/plugins/bootstrap-table-1.11.0/bootstrap-editable.css"
-          rel="stylesheet"/>
+    <%--<link href="${basePath}/plugins/bootstrap-table-1.11.0/bootstrap-table.min.css"--%>
+    <%--rel="stylesheet"/>--%>
+    <%--<link href="${basePath}/plugins/bootstrap-table-1.11.0/bootstrap-editable.css"
+          rel="stylesheet"/>--%>
+    <link rel="stylesheet" href="${basePath}/plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+    <script src="${basePath}/plugins/jquery-3.2.1.min.js"></script>
+    <script src="${basePath}/plugins/zTree_v3/js/jquery.ztree.core.min.js"></script>
+    <script>
+        var zTreeObj;
+        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+        var setting = {
+            view: {
+                selectedMulti: true, //设置是否能够同时选中多个节点
+                showIcon: true,      //设置是否显示节点图标
+                showLine: true,      //设置是否显示节点与节点之间的连线
+                showTitle: true,     //设置是否显示节点的title提示信息
+            },
+            data: {
+                simpleData: {
+                    enable: false,   //设置是否启用简单数据格式（zTree支持标准数据格式跟简单数据格式，上面例子中是标准数据格式）
+                    idKey: "id",     //设置启用简单数据格式时id对应的属性名称
+                    pidKey: "pId"    //设置启用简单数据格式时parentId对应的属性名称,ztree根据id及pid层级关系构建树结构
+                }
+            },
+            check: {
+                enable: true         //设置是否显示checkbox复选框
+            },
+            /*callback: {
+             onClick: onClick,             //定义节点单击事件回调函数
+             onRightClick: OnRightClick,   //定义节点右键单击事件回调函数
+             beforeRename: beforeRename,   //定义节点重新编辑成功前回调函数，一般用于节点编辑时判断输入的节点名称是否合法
+             onDblClick: onDblClick,       //定义节点双击事件回调函数
+             onCheck: onCheck              //定义节点复选框选中或取消选中事件的回调函数
+             },*/
+            async: {
+                enable: true,                      //设置启用异步加载
+                type: "get",                       //异步加载类型:post和get
+                contentType: "application/json",   //定义ajax提交参数的参数类型，一般为json格式
+                url: "/Design/Get",                //定义数据请求路径
+                autoParam: ["id=id", "name=name"]  //定义提交时参数的名称，=号前面标识节点属性，后面标识提交时json数据中参数的名称
+            }
+        };
+        // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+        var zNodes = [
+            {
+                name: "父节点1", open: true, children: [
+                {name: "父节点1的子节点"}, {name: "父节点1的子节点2"}]
+            },
+            {
+                name: "父节点2", open: true,
+                children: [{
+                    name: "父节点2的子节点"
+                }, {
+                    name: "父节点2的子节点2",
+                    children: [
+                        {name: "父节点2的子节点2的子节点1"}]
+                }]
+            }
+        ];
+        $(document).ready(function () {
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        });
+    </script>
 </head>
 <body>
-<div class="panel-body" style="padding-bottom:0;">
+<%--<div class="panel-body" style="padding-bottom:0;">--%>
 
-    <div id="toolbar" class="btn-group">
-        <button id="btn_add" type="button" class="btn btn-default btn-info">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
-        </button>
-        <button id="btn_edit" type="button" class="btn btn-default btn-warning">
-            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
-        </button>
-        <button id="btn_delete" type="button" class="btn btn-default btn-danger">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
-        </button>
-    </div>
-    <table id="mable" class="table table-hover"></table>
+<%--<div id="toolbar" class="btn-group">--%>
+<%--<button id="btn_add" type="button" class="btn btn-default btn-info">--%>
+<%--<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增--%>
+<%--</button>--%>
+<%--<button id="btn_edit" type="button" class="btn btn-default btn-warning">--%>
+<%--<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改--%>
+<%--</button>--%>
+<%--<button id="btn_delete" type="button" class="btn btn-default btn-danger">--%>
+<%--<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除--%>
+<%--</button>--%>
+<%--</div>--%>
+<%--<table id="mable" class="table table-hover"></table>--%>
+<%--</div>--%>
+
+<div  class="panel panel-default">
+    <div class="panel-heading">{{title}}</div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 control-label">用户名</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="user.username" placeholder="登录账号"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">所属部门</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" style="cursor:pointer;" v-model="user.deptName"
+                       @click="deptTree" readonly="readonly" placeholder="所属部门"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">密码</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="user.password" placeholder="密码"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">邮箱</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="user.email" placeholder="邮箱"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">手机号</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="user.mobile" placeholder="手机号"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">角色</div>
+            <div class="col-sm-10">
+                <label v-for="role in roleList" class="checkbox-inline">
+                    <input type="checkbox" :value="role.roleId" v-model="user.roleIdList">{{role.roleName}}
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">状态</div>
+            <label class="radio-inline">
+                <input type="radio" name="status" value="0" v-model="user.status"/> 禁用
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="status" value="1" v-model="user.status"/> 正常
+            </label>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+            &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+        </div>
+    </form>
 </div>
 
+<form class="form-inline">
+    <div class="form-group">
+        <label for="exampleInputName2">Name</label>
+        <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail2">Email</label>
+        <input type="email" class="form-control" id="exampleInputEmail2" placeholder="jane.doe@example.com">
+    </div>
+    <button type="submit" class="btn btn-default">Send invitation</button>
+</form>
+
+<div style="display: none;padding: 10px;">
+    <ul id="treeDemo" class="ztree"></ul>
+</div>
 
 </body>
-<script src="${basePath}/plugins/jquery.1.12.4.min.js"></script>
-<script src="${basePath}/plugins/bootstrap-table-1.11.0/bootstrap-table.min.js"></script>
-<script src="${basePath}/plugins/bootstrap-3.3.0/js/bootstrap.min.js"></script>
-<script src="${basePath}/plugins/bootstrap-table-1.11.0/locale/bootstrap-table-zh-CN.js"></script>
-<script src="${basePath}/plugins/bootstrap-table-1.11.0/extensions/export/bootstrap-table-export.js"></script>
-<script src="${basePath}/plugins/bootstrap-table-1.11.0/extensions/tableExport.js"></script>
-<script src="${basePath}/plugins/BootstrapMenu.min.js"></script>
-<script src="${basePath}/plugins/layer/layer.js"></script>
+
+<%--<script src="${basePath}/plugins/bootstrap-table-1.11.0/bootstrap-table.min.js"></script>--%>
+<%--<script src="${basePath}/plugins/bootstrap-3.3.0/js/bootstrap.min.js"></script>--%>
+<%--<script src="${basePath}/plugins/bootstrap-table-1.11.0/locale/bootstrap-table-zh-CN.js"></script>--%>
+<%--<script src="${basePath}/plugins/bootstrap-table-1.11.0/extensions/export/bootstrap-table-export.js"></script>--%>
+<%--<script src="${basePath}/plugins/bootstrap-table-1.11.0/extensions/tableExport.js"></script>--%>
+<%--<script src="${basePath}/plugins/BootstrapMenu.min.js"></script>--%>
+<%--<script src="${basePath}/plugins/layer/layer.js"></script>--%>
 <%--suppress JSUnresolvedVariable --%>
 <script>
+
+
     function refresh() {
         $("#mable").bootstrapTable("refresh");
     }
-    $(function () {
-        //1.初始化Table
-        var oTable = new TableInit();
-        oTable.Init();
-        //2.初始化Button的点击事件
-        var oButtonInit = new ButtonInit();
-        oButtonInit.Init();
-        //根据窗口调整表格高度
-        $(window).resize(function () {
-            $('#mable').bootstrapTable('resetView', {
-                height: tableHeight()
-            })
-        });
-    });
+    /* $(function () {
+     //1.初始化Table
+     var oTable = new TableInit();
+     oTable.Init();
+     //2.初始化Button的点击事件
+     var oButtonInit = new ButtonInit();
+     oButtonInit.Init();
+     //根据窗口调整表格高度
+     $(window).resize(function () {
+     $('#mable').bootstrapTable('resetView', {
+     height: tableHeight()
+     })
+     });
+     });*/
 
 
     function tableHeight() {
@@ -279,29 +414,29 @@
      * */
     function delectation(permissionId) {
         $.ajax({
-                    type: "get",
-                    url: "${basePath}/system/permission/deleteById.action/" + permissionId,
-                    success: function (result) {
-                        var statusCode = result.status;
-                        if (statusCode == 103) {
-                            layer.msg("删除成功，请刷新后查看效果", {icon: 1});
-                            layer.load(0, {shade: false, time: 1000});
-                            $("#mable").bootstrapTable("refresh");
-                        }
-                        else if (statusCode == 115) {
-                            layer.msg("权限存在引用，无法删除", {icon: 4});
-                        }
-                        else if (statusCode == 7) {
-                            layer.msg("权限为系统初始权限限制，不能够删除", {icon: 4});
-                        }
-                        else if (statusCode == 5) {
-                            layer.msg("没有查询到你要删除的权限", {icon: 4});
-                        }
-                    },
-                    error: function () {
-                        layer.msg('出了点小问题！', {icon: 1});
+                type: "get",
+                url: "${basePath}/system/permission/deleteById.action/" + permissionId,
+                success: function (result) {
+                    var statusCode = result.status;
+                    if (statusCode == 103) {
+                        layer.msg("删除成功，请刷新后查看效果", {icon: 1});
+                        layer.load(0, {shade: false, time: 1000});
+                        $("#mable").bootstrapTable("refresh");
                     }
+                    else if (statusCode == 115) {
+                        layer.msg("权限存在引用，无法删除", {icon: 4});
+                    }
+                    else if (statusCode == 7) {
+                        layer.msg("权限为系统初始权限限制，不能够删除", {icon: 4});
+                    }
+                    else if (statusCode == 5) {
+                        layer.msg("没有查询到你要删除的权限", {icon: 4});
+                    }
+                },
+                error: function () {
+                    layer.msg('出了点小问题！', {icon: 1});
                 }
+            }
         )
     }
 </script>

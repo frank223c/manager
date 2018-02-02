@@ -4,15 +4,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 事件模型
- * @author  孙建荣 on 17-9-28.下午4:54
+ * 事件模型，一个事件所包含的一些详细信息
+ *
+ * @author 孙建荣 on 17-9-28.下午4:54
  */
 public class EventModel {
 
+    /**
+     * 事件的类型
+     */
     private EventType type;
+    /**
+     * 操作者的ID
+     */
     private int actorId;
+    /**
+     * 实体的类型
+     */
     private int entityType;
+    /**
+     * 实体的ID
+     */
     private int entityId;
+    /**
+     * 实体的所有者
+     */
     private int entityOwnerId;
 
 

@@ -15,14 +15,14 @@ import java.util.List;
  */
 @Service
 public class JedisAdapter implements InitializingBean {
+    public static final String REDIS_ADDRESS = "redis://localhost:6379/1";
     private static Logger logger = LoggerFactory.getLogger(JedisAdapter.class);
-
     private JedisPool jedisPool;
 
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        jedisPool = new JedisPool("redis://localhost:6379/1");
+        jedisPool = new JedisPool(REDIS_ADDRESS);
     }
 
 
@@ -37,7 +37,7 @@ public class JedisAdapter implements InitializingBean {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.sadd(key, value);
         } catch (Exception e) {
-            logger.error("往集合里面添加元素发生了异常" + e.getMessage());
+            logger.error("【检查Redis是否开启】往集合里面添加元素发生了异常{}",e.getMessage());
         }
         return 0;
     }
@@ -53,7 +53,7 @@ public class JedisAdapter implements InitializingBean {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.srem(key, value);
         } catch (Exception e) {
-            logger.error("删除集合里面的元素发生了异常" + e.getMessage());
+            logger.error("【检查Redis是否开启】删除集合里面的元素发生了异常{}" ,e.getMessage());
         }
         return 0;
     }
@@ -69,7 +69,7 @@ public class JedisAdapter implements InitializingBean {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.scard(key);
         } catch (Exception e) {
-            logger.error("查看集合里面的元素数量发生了异常" + e.getMessage());
+            logger.error("【检查Redis是否开启】查看集合里面的元素数量发生了异常{}",e.getMessage());
         }
         return 0;
     }
@@ -85,7 +85,7 @@ public class JedisAdapter implements InitializingBean {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.sismember(key, value);
         } catch (Exception e) {
-            logger.error("查询集合里面是否有元素发生了异常" + e.getMessage());
+            logger.error("【检查Redis是否开启】查询集合里面是否有元素发生了异常{}", e.getMessage());
         }
         return false;
     }
@@ -96,7 +96,7 @@ public class JedisAdapter implements InitializingBean {
             String s = jedis.set(key, value);
             return "OK".equals(s);
         } catch (Exception e) {
-            logger.error("加入元素发生了异常" + e.getMessage());
+            logger.error("【检查Redis是否开启】加入元素发生了异常{}",e.getMessage());
         }
         return false;
     }
@@ -113,7 +113,7 @@ public class JedisAdapter implements InitializingBean {
             String s = jedis.set(key, value);
             return "OK".equals(s);
         } catch (Exception e) {
-            logger.error("加入元素发生了异常" + e.getMessage());
+            logger.error("【检查Redis是否开启】加入元素发生了异常{}",e.getMessage());
         }
         return false;
     }
@@ -128,7 +128,7 @@ public class JedisAdapter implements InitializingBean {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.get(key);
         } catch (Exception e) {
-            logger.error("获取元素数量发生了异常" + e.getMessage());
+            logger.error("【检查Redis是否开启】获取元素数量发生了异常{}",e.getMessage());
         }
         return null;
     }
@@ -143,7 +143,7 @@ public class JedisAdapter implements InitializingBean {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.get(key);
         } catch (Exception e) {
-            logger.error("获取元素数量发生了异常" + e.getMessage());
+            logger.error("【检查Redis是否开启】获取元素数量发生了异常{}",e.getMessage());
         }
         return null;
     }
@@ -160,7 +160,7 @@ public class JedisAdapter implements InitializingBean {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.expire(key, seconds);
         } catch (Exception e) {
-            logger.error("设置过期时间发生了异常" + e.getMessage());
+            logger.error("【检查Redis是否开启】设置过期时间发生了异常{}",e.getMessage());
         }
         return 0;
     }
@@ -175,7 +175,7 @@ public class JedisAdapter implements InitializingBean {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.ttl(key);
         } catch (Exception e) {
-            logger.error("查看过期时间发生了异常" + e.getMessage());
+            logger.error("【检查Redis是否开启】查看过期时间发生了异常{}",e.getMessage());
         }
         return 0;
     }
@@ -185,7 +185,7 @@ public class JedisAdapter implements InitializingBean {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.lpush(key, value);
         } catch (Exception e) {
-            logger.error("发生了异常" + e.getMessage());
+            logger.error("【检查Redis是否开启】发生了异常{}",e.getMessage());
         }
         return 0;
     }
@@ -193,9 +193,9 @@ public class JedisAdapter implements InitializingBean {
 
     public List<String> brpop(int timeout, String key) {
         try (Jedis jedis = jedisPool.getResource()) {
-            return jedis.brpop(key);
+            return jedis.brpop(1,key);
         } catch (Exception e) {
-            logger.error("发生了异常" + e.getMessage());
+            logger.error("【检查Redis是否开启】发生了异常{}",e.getMessage());
         }
         return null;
     }

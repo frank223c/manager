@@ -5,7 +5,6 @@ import com.suny.association.common.RequestHolder;
 import com.suny.association.entity.dto.ResultDTO;
 import com.suny.association.entity.po.Account;
 import com.suny.association.entity.po.LoginTicket;
-import com.suny.association.entity.po.Member;
 import com.suny.association.enums.LoginEnum;
 import com.suny.association.service.interfaces.IAccountService;
 import com.suny.association.service.interfaces.ILoginService;
@@ -183,15 +182,15 @@ public class BackedLoginController {
      */
     @SuppressWarnings("Duplicates")
     private boolean hasValidTicket(HttpServletRequest request) {
-        String ticket = LoginTicketUtil.getTicket(request);
+        String ticket = LoginTicketUtil.getTicketFormCookie(request);
         // 当cookie中ticket不为空的时候才去查询是否ticket有效
         if (ticket != null) {
             int point = ticket.indexOf(TICKET_SPLIT_SYMBOL);
             String username = ticket.substring(0, point);
-            String redisTicket = jedisAdapter.get(RedisKeyUtils.getLoginticket(username));
+            String redisTicket = jedisAdapter.get(RedisKeyUtils.getLoginTicketKey(username));
             // 如果redis里面存在对应用户的ticket
             if (redisTicket != null && !Objects.equals(redisTicket, "")) {
-                long expireTime = jedisAdapter.getExpireTime(RedisKeyUtils.getLoginticket(username));
+                long expireTime = jedisAdapter.getExpireTime(RedisKeyUtils.getLoginTicketKey(username));
                 if (expireTime > 0) {
                     // redis里面读取用户信息成功,直接放行登录
                     return true;

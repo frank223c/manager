@@ -8,18 +8,39 @@ package com.suny.association.utils;
  */
 public class RedisKeyUtils {
 
+    /**
+     * 切分Redis key中的标示
+     */
     private static final String SPLIT = ":";
+    /**
+     * 防止CSRF的token
+     */
     private static final String BIZ_TICKET = "BIZ_TICKET";
+    /**
+     * 用户登录标示ticket
+     */
     private static final String BIZ_LOGIN_TICKET = "BIZ_LOGIN_TICKET";
+    /**
+     * 用户账号key
+     */
     private static final String BIZ_ACCOUNT = "BIZ_ACCOUNT";
+    /**
+     * 用户权限key
+     */
     private static final String BIZ_PERMISSION = "BIZ_PERMISSION";
+    /**
+     * 事件模型key
+     */
     private static final String BIZ_EVENT_QUEUE = "BIZ_EVENT_QUEUE";
+
+    private  RedisKeyUtils() {
+    }
 
     public static String getTicketKey(String ticket) {
         return BIZ_TICKET + SPLIT + ticket;
     }
 
-    public static String getLoginticket(String username) {
+    public static String getLoginTicketKey(String username) {
         return BIZ_LOGIN_TICKET + SPLIT + username;
     }
 

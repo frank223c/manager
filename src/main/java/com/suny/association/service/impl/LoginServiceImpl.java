@@ -111,10 +111,10 @@ public class LoginServiceImpl implements ILoginService {
      */
     private String getRedisValidTicket(String username) {
         // 先从redis里面取
-        String redisTicket = jedisAdapter.get(RedisKeyUtils.getLoginticket(username));
+        String redisTicket = jedisAdapter.get(RedisKeyUtils.getLoginTicketKey(username));
         // 如果redis里面存在对应用户的ticket
         if (redisTicket != null && !Objects.equals(redisTicket, "")) {
-            long expireTime = jedisAdapter.getExpireTime(RedisKeyUtils.getLoginticket(username));
+            long expireTime = jedisAdapter.getExpireTime(RedisKeyUtils.getLoginTicketKey(username));
             if (expireTime > 0) {
                 // redis里面读取用户信息成功,直接放行登录
                 return redisTicket;
@@ -159,7 +159,7 @@ public class LoginServiceImpl implements ILoginService {
      * @param stringTicket  登录ticket字符串
      */
     private void mysqlTicketToRedisTicket(Account account, int expireSeconds, String stringTicket) {
-        String redisTicketKeyName = RedisKeyUtils.getLoginticket(account.getAccountName());
+        String redisTicketKeyName = RedisKeyUtils.getLoginTicketKey(account.getAccountName());
         jedisAdapter.set(redisTicketKeyName, stringTicket);
         jedisAdapter.setExpire(redisTicketKeyName, expireSeconds);
     }

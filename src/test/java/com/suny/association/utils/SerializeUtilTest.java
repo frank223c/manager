@@ -34,7 +34,7 @@ public class SerializeUtilTest {
         loginTicket.setExpired(LocalDateTime.now());
         loginTicket.setStatus(0);
         loginTicket.setTicket(RANDOM_KEY);
-        jedisAdapter.set((RedisKeyUtils.getLoginticket(loginTicket.getTicket())).getBytes(), SerializeUtil.serialize(loginTicket));
+        jedisAdapter.set((RedisKeyUtils.getLoginTicketKey(loginTicket.getTicket())).getBytes(), SerializeUtil.serialize(loginTicket));
         byte[] bytes = jedisAdapter.get((RedisKeyUtils.getTicketKey(loginTicket.getTicket())).getBytes());
         if (bytes != null) {
             logger.info(Arrays.toString(bytes));
