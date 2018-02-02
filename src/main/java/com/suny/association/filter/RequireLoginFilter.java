@@ -30,6 +30,7 @@ import java.util.Objects;
 public class RequireLoginFilter implements Filter {
     private static final String TICKET_SPLIT_SYMBOL = ":";
     private static final String USER_TICKET = "user_ticket";
+    public static final String ACCOUNT = "account";
     private static Logger logger = LoggerFactory.getLogger(RequireLoginFilter.class);
     private static final String EXECUTE_NEXT_FILTER = "EXECUTE_NEXT_FILTER";
     private static final String PORTAL_LOGIN_URL = "/login.html";
@@ -49,7 +50,7 @@ public class RequireLoginFilter implements Filter {
         ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         loginTicketService = (ILoginTicketService) context.getBean("loginTicketServiceImpl");
         jedisAdapter = (JedisAdapter) context.getBean("jedisAdapter");
-        accountService= (IAccountService) context.getBean("accountServiceImpl");
+        accountService = (IAccountService) context.getBean("accountServiceImpl");
         logger.info("===============强制登录验证过滤器开始初始化============");
     }
 
@@ -69,12 +70,15 @@ public class RequireLoginFilter implements Filter {
             String ticket = LoginTicketUtil.getTicketFormCookie(request);
             // 3.判断登录标记是否过期,不过期就自动登录,过期就需要重新登录
             if (ticket != null && hasValidTicket(request)) {
-                // 如果RequestHolder里面没有Account信息就先放进去
-                logger.info(Thread.currentThread().getName());
-                if (RequestHolder.getAccountHolder() == null) {
+                // 首先查看session里面是否有用户信息
+                if (request.getSession().getAttribute(ACCOUNT) == null) {
                     String username = getUsernameFormTicket(ticket);
                     Account account = accountService.selectByName(username);
-                    RequestHolder.add(account);
+                    request.getSession().setAttribute("account", account);
+                }
+                // 如果RequestHolder里面没有Account信息就先放进去
+                if (RequestHolder.getAccountHolder() == null) {
+                    RequestHolder.add((Account) request.getSession().getAttribute(ACCOUNT));
                 }
                 // 3.3 到这里说明ticket是还没有过期的,根据数据库中login_ticket表中的账号去查询账号信息
                 logger.info("【RequireLoginFilter】有效的ticket值为【{}】,直接为登录状态,发送到下一个过滤器", ticket);
